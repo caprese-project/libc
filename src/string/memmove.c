@@ -24,7 +24,7 @@ __weak void* memmove(void* dst, const void* src, size_t n) {
         n -= d_offset;
       }
 
-      uintptr_t*       a1 = ((const uintptr_t*)d) - 1;
+      uintptr_t*       a1 = ((uintptr_t*)d) - 1;
       const uintptr_t* a2 = ((const uintptr_t*)s) - 1;
       while (n >= sizeof(uintptr_t)) {
         *a1-- = *a2--;

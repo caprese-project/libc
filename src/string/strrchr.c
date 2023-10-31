@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <string.h>
 
+#include "./__has_null.h"
+
 __weak char* strrchr(const char* s, int ch) {
   char* result = NULL;
 

@@ -11,7 +11,7 @@ __weak unsigned long long int strtoull(const char* __restrict s, char** __restri
   bool                   err      = false;
 
   if (end != NULL) {
-    *end = s;
+    *end = (char*)s;
   }
 
   while (isspace(*s)) {
@@ -73,7 +73,7 @@ __weak unsigned long long int strtoull(const char* __restrict s, char** __restri
   }
 
   if (end != NULL) {
-    *end = s - 1;
+    *end = (char*)s - 1;
   }
 
   return result;
