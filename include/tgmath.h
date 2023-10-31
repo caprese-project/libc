@@ -1,0 +1,4 @@
+#ifndef CAPRESE_LIBC_TGMATH_H_
+#define CAPRESE_LIBC_TGMATH_H_
+
+#endif // CAPRESE_LIBC_TGMATH_H_

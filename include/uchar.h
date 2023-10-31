@@ -1,0 +1,4 @@
+#ifndef CAPRESE_LIBC_UCHAR_H_
+#define CAPRESE_LIBC_UCHAR_H_
+
+#endif // CAPRESE_LIBC_UCHAR_H_

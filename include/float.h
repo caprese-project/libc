@@ -1,0 +1,4 @@
+#ifndef CAPRESE_LIBC_FLOAT_H_
+#define CAPRESE_LIBC_FLOAT_H_
+
+#endif // CAPRESE_LIBC_FLOAT_H_

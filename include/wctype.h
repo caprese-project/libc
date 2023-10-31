@@ -1,0 +1,4 @@
+#ifndef CAPRESE_LIBC_WCTYPE_H_
+#define CAPRESE_LIBC_WCTYPE_H_
+
+#endif // CAPRESE_LIBC_WCTYPE_H_
