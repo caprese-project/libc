@@ -2,7 +2,7 @@
 
 Standard C library template for operating systems that run on the Caprese microkernel.
 
-## How to Install
+## How to Use
 
 ### Installing Locally
 
