@@ -4,23 +4,23 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-static struct __data {
+struct __vfprintf_data {
   bool  eof;
   int   count;
   FILE* stream;
 };
 
 static void __vfprintf_callback(int ch, void* data) {
-  struct __data* d = data;
+  struct __vfprintf_data* d = data;
   if (fputc(ch, d->stream) == EOF) {
-    return EOF;
+    d->eof = true;
+    return;
   }
   d->count++;
-  return 0;
 }
 
 __weak int vfprintf(FILE* __restrict stream, const char* __restrict format, va_list arg) {
-  struct __data data;
+  struct __vfprintf_data data;
   data.eof    = false;
   data.count  = 0;
   data.stream = stream;

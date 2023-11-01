@@ -33,7 +33,7 @@ static const char __lower_digits[] = "0123456789abcdef";
 #define __t_str       6
 #define __t_raw       7
 
-static struct __field {
+struct __vformat_field {
   int       flags;
   int       width;
   int       precision;
@@ -45,7 +45,7 @@ static struct __field {
 #define max(a, b) ((a) > (b) ? (a) : (b))
 #define min(a, b) ((a) > (b) ? (b) : (a))
 
-static void __parse_flags_field(struct __field* field, const char** ptr) {
+static void __parse_flags_field(struct __vformat_field* field, const char** ptr) {
   while (*++*ptr) {
     switch (**ptr) {
       case '-':
@@ -73,7 +73,7 @@ static void __parse_flags_field(struct __field* field, const char** ptr) {
   }
 }
 
-static void __parse_width_field(struct __field* field, const char** ptr) {
+static void __parse_width_field(struct __vformat_field* field, const char** ptr) {
   ++*ptr;
   if (**ptr == '*') {
     field->width = -1;
@@ -90,7 +90,7 @@ static void __parse_width_field(struct __field* field, const char** ptr) {
   }
 }
 
-static void __parse_precision_field(struct __field* field, const char** ptr) {
+static void __parse_precision_field(struct __vformat_field* field, const char** ptr) {
   ++*ptr;
   if (**ptr == '.') {
     ++*ptr;
@@ -112,7 +112,7 @@ static void __parse_precision_field(struct __field* field, const char** ptr) {
   }
 }
 
-static void __parse_length_field(struct __field* field, const char** ptr) {
+static void __parse_length_field(struct __vformat_field* field, const char** ptr) {
   switch (*++*ptr) {
     case 'h':
       if (*++*ptr == 'h') {
@@ -145,7 +145,7 @@ static void __parse_length_field(struct __field* field, const char** ptr) {
   }
 }
 
-static void __parse_type_field(struct __field* field, va_list* arg, const char** ptr) {
+static void __parse_type_field(struct __vformat_field* field, va_list* arg, const char** ptr) {
   ++*ptr;
 
   switch (**ptr) {
@@ -249,7 +249,7 @@ static void __parse_type_field(struct __field* field, va_list* arg, const char**
   }
 }
 
-static void __print_int(const struct __field* field, void* data, void (*callback)(int ch, void* data)) {
+static void __print_int(const struct __vformat_field* field, void* data, void (*callback)(int ch, void* data)) {
   bool      minus = false;
   uintmax_t value = field->value;
 
@@ -317,7 +317,7 @@ static void __print_int(const struct __field* field, void* data, void (*callback
   }
 }
 
-static void __print_str(const struct __field* field, void* data, void (*callback)(int ch, void* data)) {
+static void __print_str(const struct __vformat_field* field, void* data, void (*callback)(int ch, void* data)) {
   const char* str;
 
   __if_unlikely (field->value == 0) {
@@ -358,7 +358,7 @@ void __vformat(const char* fmt, va_list arg, void* data, void (*callback)(int ch
       continue;
     }
 
-    struct __field field = {};
+    struct __vformat_field field = {};
 
     __parse_flags_field(&field, &ptr);
     __parse_width_field(&field, &ptr);
