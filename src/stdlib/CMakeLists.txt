@@ -32,4 +32,9 @@ target_sources(
   strtoull.c
 )
 
+target_compile_options(
+  caprese_libc_stdlib PRIVATE
+  ${LIBC_COMPILE_OPTIONS}
+)
+
 target_include_directories(caprese_libc_stdlib PUBLIC ${LIBC_INCLUDE_DIR})

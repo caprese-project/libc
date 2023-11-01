@@ -8,4 +8,9 @@ target_sources(
   setjmp.c
 )
 
+target_compile_options(
+  caprese_libc_setjmp PRIVATE
+  ${LIBC_COMPILE_OPTIONS}
+)
+
 target_include_directories(caprese_libc_setjmp PUBLIC ${LIBC_INCLUDE_DIR})

@@ -7,4 +7,9 @@ target_sources(
   cacos.c
 )
 
+target_compile_options(
+  caprese_libc_complex PRIVATE
+  ${LIBC_COMPILE_OPTIONS}
+)
+
 target_include_directories(caprese_libc_complex PUBLIC ${LIBC_INCLUDE_DIR})

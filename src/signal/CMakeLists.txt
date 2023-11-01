@@ -8,4 +8,9 @@ target_sources(
   signal.c
 )
 
+target_compile_options(
+  caprese_libc_signal PRIVATE
+  ${LIBC_COMPILE_OPTIONS}
+)
+
 target_include_directories(caprese_libc_signal PUBLIC ${LIBC_INCLUDE_DIR})

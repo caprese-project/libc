@@ -7,4 +7,9 @@ target_sources(
   clock.c
 )
 
+target_compile_options(
+  caprese_libc_time PRIVATE
+  ${LIBC_COMPILE_OPTIONS}
+)
+
 target_include_directories(caprese_libc_time PUBLIC ${LIBC_INCLUDE_DIR})

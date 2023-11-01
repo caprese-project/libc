@@ -7,4 +7,9 @@ target_sources(
   acos.c
 )
 
+target_compile_options(
+  caprese_libc_math PRIVATE
+  ${LIBC_COMPILE_OPTIONS}
+)
+
 target_include_directories(caprese_libc_math PUBLIC ${LIBC_INCLUDE_DIR})

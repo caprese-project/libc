@@ -52,4 +52,9 @@ target_sources(
   vsscanf.c
 )
 
+target_compile_options(
+  caprese_libc_stdio PRIVATE
+  ${LIBC_COMPILE_OPTIONS}
+)
+
 target_include_directories(caprese_libc_stdio PUBLIC ${LIBC_INCLUDE_DIR})
