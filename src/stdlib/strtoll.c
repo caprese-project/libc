@@ -52,7 +52,7 @@ __weak long long int strtoll(const char* __restrict s, char** __restrict end, in
       break;
     }
 
-    __if_unlikely (val >= base) {
+    __if_unlikely (val >= (unsigned long long)base) {
       break;
     }
 

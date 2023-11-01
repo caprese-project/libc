@@ -51,7 +51,7 @@ __weak unsigned long long int strtoull(const char* __restrict s, char** __restri
       break;
     }
 
-    __if_unlikely (val >= base) {
+    __if_unlikely (val >= (unsigned long long)base) {
       break;
     }
 
