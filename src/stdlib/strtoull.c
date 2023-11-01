@@ -1,5 +1,6 @@
 #include <ctype.h>
 #include <errno.h>
+#include <internal/attribute.h>
 #include <internal/branch.h>
 #include <limits.h>
 #include <stdbool.h>
@@ -39,7 +40,7 @@ __weak unsigned long long int strtoull(const char* __restrict s, char** __restri
   unsigned long long overflow_boundary_remainder = ULLONG_MAX % base;
 
   while (true) {
-    int val;
+    unsigned long long val;
     if (isdigit(*s)) {
       val = *s - '0';
     } else if (isupper(*s)) {

@@ -41,7 +41,7 @@ __weak long long int strtoll(const char* __restrict s, char** __restrict end, in
   unsigned long long overflow_boundary_remainder = overflow_threshold % base;
 
   while (true) {
-    int val;
+    unsigned long long val;
     if (isdigit(*s)) {
       val = *s - '0';
     } else if (isupper(*s)) {

@@ -1,3 +1,4 @@
+#include <internal/attribute.h>
 #include <internal/branch.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -17,7 +18,7 @@ __weak char* strcat(char* __restrict dst, const char* __restrict src) {
 
   size_t d_offset = (uintptr_t)d & (sizeof(uintptr_t) - 1);
   size_t s_offset = (uintptr_t)s & (sizeof(uintptr_t) - 1);
-  __if_likely ((d_offset + s_offset) & (sizeof(uintptr_t) - 1) == 0) {
+  __if_likely (((d_offset + s_offset) & (sizeof(uintptr_t) - 1)) == 0) {
     __if_unlikely (d_offset != 0) {
       const size_t offset = sizeof(uintptr_t) - d_offset;
       for (size_t i = 0; i < offset; ++i) {
