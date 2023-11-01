@@ -1,6 +1,8 @@
 #ifndef CAPRESE_LIBC_STDINT_H_
 #define CAPRESE_LIBC_STDINT_H_
 
+#include <internal/datamodel.h>
+
 #define SIG_ATOMIC_MIN INT_MIN
 #define SIG_ATOMIC_MAX INT_MAX
 
