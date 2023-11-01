@@ -1,0 +1,6 @@
+#ifndef CAPRESE_LIBC_CXX_CFENV_
+#define CAPRESE_LIBC_CXX_CFENV_
+
+#include <fenv.h>
+
+#endif // CAPRESE_LIBC_CXX_CFENV_

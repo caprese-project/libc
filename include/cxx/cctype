@@ -1,0 +1,23 @@
+#ifndef CAPRESE_LIBC_CXX_CCTYPE_
+#define CAPRESE_LIBC_CXX_CCTYPE_
+
+#include <ctype.h>
+
+namespace std {
+  using ::isalnum;
+  using ::isalpha;
+  using ::isblank;
+  using ::iscntrl;
+  using ::isdigit;
+  using ::isgraph;
+  using ::islower;
+  using ::isprint;
+  using ::ispunct;
+  using ::isspace;
+  using ::isupper;
+  using ::isxdigit;
+  using ::tolower;
+  using ::toupper;
+} // namespace std
+
+#endif // CAPRESE_LIBC_CXX_CCTYPE_

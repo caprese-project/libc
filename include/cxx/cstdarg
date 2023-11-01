@@ -1,0 +1,10 @@
+#ifndef CAPRESE_LIBC_CXX_CSTDARG_
+#define CAPRESE_LIBC_CXX_CSTDARG_
+
+#include <stdarg.h>
+
+namespace std {
+  using ::va_list;
+} // namespace std
+
+#endif // CAPRESE_LIBC_CXX_CSTDARG_

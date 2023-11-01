@@ -1,0 +1,6 @@
+#ifndef CAPRESE_LIBC_CXX_CWCTYPE_
+#define CAPRESE_LIBC_CXX_CWCTYPE_
+
+#include <wctype.h>
+
+#endif // CAPRESE_LIBC_CXX_CWCTYPE_

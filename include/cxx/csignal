@@ -1,0 +1,13 @@
+#ifndef CAPRESE_LIBC_CXX_CSIGNAL_
+#define CAPRESE_LIBC_CXX_CSIGNAL_
+
+#include <signal.h>
+
+namespace std {
+  using ::sig_atomic_t;
+
+  using ::raise;
+  using ::signal;
+} // namespace std
+
+#endif // CAPRESE_LIBC_CXX_CSIGNAL_

@@ -7,7 +7,7 @@ project(
   LANGUAGES C
 )
 
-set(LIBC_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
+set(LIBC_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/include/cxx)
 
 add_subdirectory(src/assert)
 add_subdirectory(src/complex)

@@ -1,0 +1,12 @@
+#ifndef CAPRESE_LIBC_CXX_CLOCALE_
+#define CAPRESE_LIBC_CXX_CLOCALE_
+
+#include <locale.h>
+
+namespace std {
+  using ::lconv;
+  using ::localeconv;
+  using ::setlocale;
+} // namespace std
+
+#endif // CAPRESE_LIBC_CXX_CLOCALE_

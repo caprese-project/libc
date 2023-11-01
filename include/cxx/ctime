@@ -1,0 +1,22 @@
+#ifndef CAPRESE_LIBC_CXX_CTIME_
+#define CAPRESE_LIBC_CXX_CTIME_
+
+#include <time.h>
+
+namespace std {
+  using ::clock_t;
+  using ::time_t;
+  using ::tm;
+
+  using ::asctime;
+  using ::clock;
+  using ::ctime;
+  using ::difftime;
+  using ::gmtime;
+  using ::localtime;
+  using ::mktime;
+  using ::strftime;
+  using ::time;
+} // namespace std
+
+#endif // CAPRESE_LIBC_CXX_CTIME_

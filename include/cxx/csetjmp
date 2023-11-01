@@ -1,0 +1,11 @@
+#ifndef CAPRESE_LIBC_CXX_CSETJMP_
+#define CAPRESE_LIBC_CXX_CSETJMP_
+
+#include <setjmp.h>
+
+namespace std {
+  using ::jmp_buf;
+  using ::longjmp;
+} // namespace std
+
+#endif // CAPRESE_LIBC_CXX_CSETJMP_

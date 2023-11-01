@@ -1,0 +1,35 @@
+#ifndef CAPRESE_LIBC_CXX_CSTDLIB_
+#define CAPRESE_LIBC_CXX_CSTDLIB_
+
+#include <stdlib.h>
+
+namespace std {
+  using ::div_t;
+  using ::ldiv_t;
+
+  using ::_Exit;
+  using ::abort;
+  using ::abs;
+  using ::aligned_alloc;
+  using ::at_quick_exit;
+  using ::atexit;
+  using ::atof;
+  using ::atoi;
+  using ::atol;
+  using ::atoll;
+  using ::calloc;
+  using ::exit;
+  using ::free;
+  using ::malloc;
+  using ::quick_exit;
+  using ::realloc;
+  using ::strtod;
+  using ::strtof;
+  using ::strtol;
+  using ::strtold;
+  using ::strtoll;
+  using ::strtoul;
+  using ::strtoull;
+} // namespace std
+
+#endif // CAPRESE_LIBC_CXX_CSTDLIB_

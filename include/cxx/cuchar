@@ -1,0 +1,6 @@
+#ifndef CAPRESE_LIBC_CXX_CUCHAR_
+#define CAPRESE_LIBC_CXX_CUCHAR_
+
+#include <uchar.h>
+
+#endif // CAPRESE_LIBC_CXX_CUCHAR_

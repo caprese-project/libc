@@ -1,0 +1,29 @@
+#ifndef CAPRESE_LIBC_CXX_CSTRING_
+#define CAPRESE_LIBC_CXX_CSTRING_
+
+#include <string.h>
+
+namespace std {
+  using ::memchr;
+  using ::memcmp;
+  using ::memcpy;
+  using ::memmove;
+  using ::memset;
+  using ::strcat;
+  using ::strchr;
+  using ::strcmp;
+  using ::strcpy;
+  using ::strcspn;
+  using ::strerror;
+  using ::strlen;
+  using ::strncat;
+  using ::strncmp;
+  using ::strncpy;
+  using ::strpbrk;
+  using ::strrchr;
+  using ::strspn;
+  using ::strstr;
+  using ::strtok;
+} // namespace std
+
+#endif // CAPRESE_LIBC_CXX_CSTRING_

@@ -1,0 +1,6 @@
+#ifndef CAPRESE_LIBC_CXX_CERRNO_
+#define CAPRESE_LIBC_CXX_CERRNO_
+
+#include <errno.h>
+
+#endif // CAPRESE_LIBC_CXX_CERRNO_

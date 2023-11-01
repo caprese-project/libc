@@ -1,0 +1,6 @@
+#ifndef CAPRESE_LIBC_CXX_CFLOAT_
+#define CAPRESE_LIBC_CXX_CFLOAT_
+
+#include <cfloat>
+
+#endif // CAPRESE_LIBC_CXX_CFLOAT_

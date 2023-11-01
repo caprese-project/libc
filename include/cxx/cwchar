@@ -1,0 +1,6 @@
+#ifndef CAPRESE_LIBC_CXX_CWCHAR_
+#define CAPRESE_LIBC_CXX_CWCHAR_
+
+#include <wchar.h>
+
+#endif // CAPRESE_LIBC_CXX_CWCHAR_

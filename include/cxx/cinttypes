@@ -1,0 +1,17 @@
+#ifndef CAPRESE_LIBC_CXX_CINTTYPES_
+#define CAPRESE_LIBC_CXX_CINTTYPES_
+
+#include <inttypes.h>
+
+namespace std {
+  using ::imaxdiv_t;
+
+  using ::imaxabs;
+  using ::imaxdiv;
+  using ::strtoimax;
+  using ::strtoumax;
+  using ::wcstoimax;
+  using ::wcstoumax;
+} // namespace std
+
+#endif // CAPRESE_LIBC_CXX_CINTTYPES_
