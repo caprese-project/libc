@@ -11,6 +11,21 @@
 extern "C" {
 #endif // __cplusplus
 
+  typedef struct {
+    int quot;
+    int rem;
+  } div_t;
+
+  typedef struct {
+    long int quot;
+    long int rem;
+  } ldiv_t;
+
+  typedef struct {
+    long long int quot;
+    long long int rem;
+  } lldiv_t;
+
   double                 atof(const char* s);
   int                    atoi(const char* s);
   long int               atol(const char* s);
@@ -22,6 +37,10 @@ extern "C" {
   long long int          strtoll(const char* __restrict s, char** __restrict end, int base);
   unsigned long int      strtoul(const char* __restrict s, char** __restrict end, int base);
   unsigned long long int strtoull(const char* __restrict s, char** __restrict end, int base);
+
+  div_t   div(int numer, int denom);
+  ldiv_t  ldiv(long int numer, long int denom);
+  lldiv_t lldiv(long long int numer, long long int denom);
 
   int abs(int x);
 
