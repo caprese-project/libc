@@ -7,8 +7,4 @@ target_sources(
   call_once.c
 )
 
-target_include_directories(
-  caprese_libc_threads PUBLIC
-  $<BUILD_INTERFACE:${LIBC_INCLUDE_DIR}>
-  $<INSTALL_INTERFACE:include>
-)
+target_include_directories(caprese_libc_threads PUBLIC ${LIBC_INCLUDE_DIR})

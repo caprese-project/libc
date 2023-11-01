@@ -8,8 +8,4 @@ target_sources(
   setjmp.c
 )
 
-target_include_directories(
-  caprese_libc_setjmp PUBLIC
-  $<BUILD_INTERFACE:${LIBC_INCLUDE_DIR}>
-  $<INSTALL_INTERFACE:include>
-)
+target_include_directories(caprese_libc_setjmp PUBLIC ${LIBC_INCLUDE_DIR})

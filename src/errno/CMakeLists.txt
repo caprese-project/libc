@@ -7,8 +7,4 @@ target_sources(
   __errno.c
 )
 
-target_include_directories(
-  caprese_libc_errno PUBLIC
-  $<BUILD_INTERFACE:${LIBC_INCLUDE_DIR}>
-  $<INSTALL_INTERFACE:include>
-)
+target_include_directories(caprese_libc_errno PUBLIC ${LIBC_INCLUDE_DIR})

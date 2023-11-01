@@ -7,8 +7,4 @@ target_sources(
   __assertion_failed.c
 )
 
-target_include_directories(
-  caprese_libc_assert PUBLIC
-  $<BUILD_INTERFACE:${LIBC_INCLUDE_DIR}>
-  $<INSTALL_INTERFACE:include>
-)
+target_include_directories(caprese_libc_assert PUBLIC ${LIBC_INCLUDE_DIR})

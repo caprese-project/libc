@@ -7,8 +7,4 @@ target_sources(
   cacos.c
 )
 
-target_include_directories(
-  caprese_libc_complex PUBLIC
-  $<BUILD_INTERFACE:${LIBC_INCLUDE_DIR}>
-  $<INSTALL_INTERFACE:include>
-)
+target_include_directories(caprese_libc_complex PUBLIC ${LIBC_INCLUDE_DIR})

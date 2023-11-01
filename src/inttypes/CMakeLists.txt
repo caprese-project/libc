@@ -12,8 +12,4 @@ target_sources(
   wcstoumax.c
 )
 
-target_include_directories(
-  caprese_libc_inttypes PUBLIC
-  $<BUILD_INTERFACE:${LIBC_INCLUDE_DIR}>
-  $<INSTALL_INTERFACE:include>
-)
+target_include_directories(caprese_libc_inttypes PUBLIC ${LIBC_INCLUDE_DIR})

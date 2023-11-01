@@ -29,8 +29,4 @@ target_sources(
   strtoull.c
 )
 
-target_include_directories(
-  caprese_libc_stdlib PUBLIC
-  $<BUILD_INTERFACE:${LIBC_INCLUDE_DIR}>
-  $<INSTALL_INTERFACE:include>
-)
+target_include_directories(caprese_libc_stdlib PUBLIC ${LIBC_INCLUDE_DIR})

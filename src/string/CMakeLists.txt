@@ -26,8 +26,4 @@ target_sources(
   strtok.c
 )
 
-target_include_directories(
-  caprese_libc_string PUBLIC
-  $<BUILD_INTERFACE:${LIBC_INCLUDE_DIR}>
-  $<INSTALL_INTERFACE:include>
-)
+target_include_directories(caprese_libc_string PUBLIC ${LIBC_INCLUDE_DIR})

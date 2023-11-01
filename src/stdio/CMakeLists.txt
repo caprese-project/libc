@@ -52,8 +52,4 @@ target_sources(
   vsscanf.c
 )
 
-target_include_directories(
-  caprese_libc_stdio PUBLIC
-  $<BUILD_INTERFACE:${LIBC_INCLUDE_DIR}>
-  $<INSTALL_INTERFACE:include>
-)
+target_include_directories(caprese_libc_stdio PUBLIC ${LIBC_INCLUDE_DIR})

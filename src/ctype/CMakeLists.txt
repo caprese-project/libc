@@ -21,8 +21,4 @@ target_sources(
   toupper.c
 )
 
-target_include_directories(
-  caprese_libc_ctype PUBLIC
-  $<BUILD_INTERFACE:${LIBC_INCLUDE_DIR}>
-  $<INSTALL_INTERFACE:include>
-)
+target_include_directories(caprese_libc_ctype PUBLIC ${LIBC_INCLUDE_DIR})
