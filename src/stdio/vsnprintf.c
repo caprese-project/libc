@@ -3,7 +3,7 @@
 #include <internal/branch.h>
 #include <stdio.h>
 
-static struct __vsnprintf_data {
+struct __vsnprintf_data {
   char*  dst;
   size_t n;
 };
@@ -13,7 +13,7 @@ static void __vsnprintf_callback(int ch, void* data) {
   if (d->n == 0) {
     return;
   }
-  *d->dst++ = ch;
+  *d->dst++ = (char)ch;
   d->n--;
 }
 
