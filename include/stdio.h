@@ -70,6 +70,8 @@ extern "C" {
   FILE* __stdout();
   FILE* __stderr();
 
+  void __vformat(const char* fmt, va_list arg, void* data, void (*callback)(int ch, void* data));
+
 #define stdin  __stdin()
 #define stdout __stdout()
 #define stderr __stderr()

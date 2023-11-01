@@ -2,7 +2,14 @@
 #include <internal/attribute.h>
 #include <stdio.h>
 
-__weak int vsprintf(__unused char* __restrict dst, __unused const char* __restrict format, __unused va_list arg) {
-  errno = ENOSYS;
-  return -1;
+static void __vsprintf_callback(int ch, void* data) {
+  char** d = data;
+  *d++     = ch;
+}
+
+__weak int vsprintf(char* __restrict dst, const char* __restrict format, va_list arg) {
+  char* d = dst;
+  __vformat(format, arg, &d);
+  *d = '\0';
+  return d - dst;
 }

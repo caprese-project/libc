@@ -4,6 +4,7 @@ add_library(caprese_libc_stdio)
 
 target_sources(
   caprese_libc_stdio PRIVATE
+  __vformat.c
   clearerr.c
   fclose.c
   feof.c
