@@ -15,8 +15,11 @@ target_sources(
   atol.c
   atoll.c
   calloc.c
+  div.c
   exit.c
   free.c
+  ldiv.c
+  lldiv.c
   malloc.c
   quick_exit.c
   realloc.c
