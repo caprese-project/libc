@@ -5,7 +5,7 @@
 static void __vsprintf_callback(int ch, void* data) {
   char** d = data;
   **d = (char)ch;
-  *d++;
+  ++*d;
 }
 
 __weak int vsprintf(char* __restrict dst, const char* __restrict format, va_list arg) {
