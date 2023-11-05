@@ -5,7 +5,7 @@ namespace std {
   template<typename To, typename From>
   [[nodiscard]] constexpr To bit_cast(const From& from) noexcept {
     static_assert(sizeof(To) == sizeof(From));
-#if define(__GNUC__)
+#if defined(__GNUC__)
     return __builtin_bit_cast(To, from);
 #else  // ^^^ __GNUC__ ^^^ / vvv !__GNUC__ vvv
     To to;
