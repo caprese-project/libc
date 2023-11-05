@@ -1,0 +1,162 @@
+#ifndef CAPRESE_LIBC_CXX_ITERATOR_
+#define CAPRESE_LIBC_CXX_ITERATOR_
+
+#include <cstddef>
+
+namespace std {
+  template<class Category, class T, class Distance = ptrdiff_t, class Pointer = T*, class Reference = T&>
+  struct iterator {
+    using value_type        = T;
+    using difference_type   = Distance;
+    using pointer           = Pointer;
+    using reference         = Reference;
+    using iterator_category = Category;
+  };
+
+  template<class I>
+  struct iterator_traits {
+    using difference_type   = typename I::difference_type;
+    using value_type        = typename I::value_type;
+    using pointer           = typename I::pointer;
+    using reference         = typename I::reference;
+    using iterator_category = typename I::iterator_category;
+  };
+
+  template<typename I>
+  class reverse_iterator: public iterator<typename iterator_traits<I>::iterator_category,
+                                          typename iterator_traits<I>::value_type,
+                                          typename iterator_traits<I>::difference_type,
+                                          typename iterator_traits<I>::pointer,
+                                          typename iterator_traits<I>::reference> {
+  protected:
+    I current;
+
+  public:
+    constexpr reverse_iterator(): current(I {}) { }
+
+    constexpr explicit reverse_iterator(I x): current(x) { }
+
+    ~reverse_iterator() = default;
+
+    constexpr reverse_iterator& operator=(const reverse_iterator& u) = default;
+
+    constexpr I base() const {
+      return current;
+    }
+
+    constexpr reference operator*() const {
+      I tmp = current;
+      return *--tmp;
+    }
+
+    constexpr pointer operator->() const {
+      return &(operator*());
+    }
+
+    constexpr reverse_iterator& operator++() {
+      --current;
+      return *this;
+    }
+
+    constexpr reverse_iterator operator++([[maybe_unused]] int) {
+      reverse_iterator tmp = *this;
+      --current;
+      return tmp;
+    }
+
+    constexpr reverse_iterator& operator--() {
+      ++current;
+      return *this;
+    }
+
+    constexpr reverse_iterator& operator--([[maybe_unused]] int) {
+      reverse_iterator tmp = *this;
+      ++current;
+      return tmp;
+    }
+
+    constexpr reverse_iterator operator+(difference_type n) const {
+      return reverse_iterator(current - n);
+    }
+
+    constexpr reverse_iterator& operator+=(difference_type n) {
+      current -= n;
+      return *this;
+    }
+
+    constexpr reverse_iterator operator-(difference_type n) const {
+      return reverse_iterator(current + n);
+    }
+
+    constexpr reverse_iterator& operator-=(difference_type n) {
+      current += n;
+      return *this;
+    }
+
+    constexpr reference operator[](difference_type n) const {
+      return current[-n - 1];
+    }
+  };
+
+  template<typename T>
+  constexpr auto begin(T& value) -> decltype(value.begin()) {
+    return value.begin();
+  }
+
+  template<typename T>
+  constexpr auto begin(const T& value) -> decltype(value.begin()) {
+    return value.begin();
+  }
+
+  template<typename T, size_t N>
+  constexpr T* begin(T (&array)[N]) noexcept {
+    return array;
+  }
+
+  template<typename T>
+  constexpr auto end(T& value) -> decltype(value.end()) {
+    return value.end();
+  }
+
+  template<typename T>
+  constexpr auto end(const T& value) -> decltype(value.end()) {
+    return value.end();
+  }
+
+  template<typename T, size_t N>
+  constexpr T* end(const T (&array)[N]) noexcept {
+    return array + N;
+  }
+
+  template<typename T>
+  auto rbegin(T& value) -> decltype(value.rbegin()) {
+    return value.rbegin();
+  }
+
+  template<typename T>
+  auto rbegin(const T& value) -> decltype(value.rbegin()) {
+    return value.rbegin();
+  }
+
+  template<typename T, size_t N>
+  constexpr reverse_iterator<T*> rbegin(T (&array)[N]) {
+    return reverse_iterator<T*>(array + N);
+  }
+
+  template<typename T>
+  auto rend(T& value) -> decltype(value.rend()) {
+    return value.rend();
+  }
+
+  template<typename T>
+  auto rend(const T& value) -> decltype(value.rend()) {
+    return value.rend();
+  }
+
+  template<typename T, size_t N>
+  constexpr reverse_iterator<T*> rend(T (&array)[N]) {
+    return reverse_iterator<T*>(array);
+  }
+} // namespace std
+
+#endif // CAPRESE_LIBC_CXX_ITERATOR_
