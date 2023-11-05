@@ -1,0 +1,15 @@
+#ifndef CAPRESE_LIBC_CXX_ALGORITHM_
+#define CAPRESE_LIBC_CXX_ALGORITHM_
+
+namespace std {
+  template<typename InputIterator, typename Function>
+  constexpr Function for_each(InputIterator first, InputIterator last, Function f) {
+    while (first != last) {
+      f(*first);
+      ++first;
+    }
+    return f;
+  }
+} // namespace std
+
+#endif // CAPRESE_LIBC_CXX_ALGORITHM_
