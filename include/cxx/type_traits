@@ -100,6 +100,12 @@ namespace std {
   };
 
   template<typename T>
+  constexpr bool is_trivial_v = is_trivial<T>::value;
+
+  template<typename T>
+  constexpr bool is_standard_layout_v = is_standard_layout<T>::value;
+
+  template<typename T>
   using remove_const_t = typename remove_const<T>::type;
 
   template<typename T>
