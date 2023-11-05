@@ -1,0 +1,45 @@
+#ifndef CAPRESE_LIBC_CXX_ATOMIC_
+#define CAPRESE_LIBC_CXX_ATOMIC_
+
+#include <stdatomic.h>
+
+namespace std {
+  using ::memory_order;
+  using ::memory_order_acq_rel;
+  using ::memory_order_acquire;
+  using ::memory_order_consume;
+  using ::memory_order_relaxed;
+  using ::memory_order_release;
+  using ::memory_order_seq_cst;
+
+  struct atomic_flag {
+    atomic_flag() noexcept                              = default;
+    ~atomic_flag() noexcept                             = default;
+    atomic_flag(const atomic_flag&)                     = delete;
+    atomic_flag& operator=(const atomic_flag&)          = delete;
+    atomic_flag& operator=(const atomic_flag&) volatile = delete;
+
+    constexpr atomic_flag(bool flag) noexcept: _flag((::atomic_flag)ATOMIC_VAR_INIT(flag)) { }
+
+    inline bool test_and_set(memory_order order = memory_order_seq_cst) noexcept {
+      return atomic_flag_test_and_set_explicit(&_flag, order);
+    }
+
+    inline bool test_and_set(memory_order order = memory_order_seq_cst) volatile noexcept {
+      return atomic_flag_test_and_set_explicit(&_flag, order);
+    }
+
+    inline void clear(memory_order order = memory_order_seq_cst) noexcept {
+      atomic_flag_clear_explicit(&_flag, order);
+    };
+
+    inline void clear(memory_order order = memory_order_seq_cst) volatile noexcept {
+      atomic_flag_clear_explicit(&_flag, order);
+    };
+
+  private:
+    ::atomic_flag _flag;
+  };
+} // namespace std
+
+#endif // CAPRESE_LIBC_CXX_ATOMIC_
