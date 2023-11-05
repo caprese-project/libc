@@ -2,6 +2,7 @@
 #define CAPRESE_LIBC_STDATOMIC_H_
 
 #include <internal/version.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -50,14 +51,14 @@ extern "C" {
 
 #else // ^^^ __CXX_STD_20__ ^^^ / vvv !__CXX_STD_20__ vvv
 
-  typedef enum {
-    memory_order_relaxed = __ATOMIC_RELAXED,
-    memory_order_consume = __ATOMIC_CONSUME,
-    memory_order_acquire = __ATOMIC_ACQUIRE,
-    memory_order_release = __ATOMIC_RELEASE,
-    memory_order_acq_rel = __ATOMIC_ACQ_REL,
-    memory_order_seq_cst = __ATOMIC_SEQ_CST,
-  } memory_order;
+typedef enum {
+  memory_order_relaxed = __ATOMIC_RELAXED,
+  memory_order_consume = __ATOMIC_CONSUME,
+  memory_order_acquire = __ATOMIC_ACQUIRE,
+  memory_order_release = __ATOMIC_RELEASE,
+  memory_order_acq_rel = __ATOMIC_ACQ_REL,
+  memory_order_seq_cst = __ATOMIC_SEQ_CST,
+} memory_order;
 
 #endif // !__CXX_STD_20__
 

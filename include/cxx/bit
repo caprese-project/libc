@@ -1,6 +1,8 @@
 #ifndef CAPRESE_LIBC_CXX_BIT_
 #define CAPRESE_LIBC_CXX_BIT_
 
+#include <cstdint>
+
 namespace std {
   template<typename To, typename From>
   [[nodiscard]] constexpr To bit_cast(const From& from) noexcept {
