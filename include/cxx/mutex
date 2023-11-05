@@ -1,0 +1,33 @@
+#ifndef CAPRESE_LIBC_CXX_MUTEX_
+#define CAPRESE_LIBC_CXX_MUTEX_
+
+namespace std {
+  struct adopt_lock_t {
+    explicit adopt_lock_t() = default;
+  };
+
+  inline constexpr adopt_lock_t adopt_lock {};
+
+  template<typename M>
+  class lock_guard {
+    M& _mutex;
+
+  public:
+    using mutex_type = M;
+
+    explicit lock_guard(mutex_type& m): _mutex(m) {
+      _mutex.lock();
+    }
+
+    lock_guard(mutex_type& m, adopt_lock_t): _mutex(m) { }
+
+    ~lock_guard() {
+      _mutex.unlock();
+    }
+
+    lock_guard(const lock_guard&)            = delete;
+    lock_guard& operator=(const lock_guard&) = delete;
+  };
+} // namespace std
+
+#endif // CAPRESE_LIBC_CXX_MUTEX_
