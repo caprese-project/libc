@@ -9,4 +9,8 @@
 #define false ((_Bool)0)
 #endif // !__cplusplus && !__C_STD_23__
 
+#ifdef __cplusplus
+#define _Bool bool
+#endif // __cplusplus
+
 #endif // CAPRESE_LIBC_STDBOOL_H_
