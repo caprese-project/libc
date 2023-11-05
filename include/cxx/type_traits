@@ -2,6 +2,33 @@
 #define CAPRESE_LIBC_CXX_TYPE_TRAITS_
 
 namespace std {
+  template<typename T, T _v>
+  struct integral_constant {
+    static constexpr T value = _v;
+    using value_type         = T;
+    using type               = integral_constant<T, _v>;
+
+    constexpr operator value_type() const noexcept {
+      return value;
+    }
+
+    constexpr value_type operator()() const noexcept {
+      return value;
+    }
+  };
+
+  using true_type  = integral_constant<bool, true>;
+  using false_type = integral_constant<bool, false>;
+
+  template<bool _v>
+  using bool_constant = integral_constant<bool, _v>;
+
+  template<typename T>
+  struct is_trivial: public integral_constant<bool, __is_trivial(T)> { };
+
+  template<typename T>
+  struct is_standard_layout: public integral_constant<bool, __is_standard_layout(T)> { };
+
   template<typename T>
   struct remove_const {
     using type = T;
