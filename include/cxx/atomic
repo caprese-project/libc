@@ -21,19 +21,19 @@ namespace std {
 
     constexpr atomic_flag(bool flag) noexcept: _flag((::atomic_flag)ATOMIC_VAR_INIT(flag)) { }
 
-    inline bool test_and_set(memory_order order = memory_order_seq_cst) noexcept {
+    inline bool test_and_set([[maybe_unused]] memory_order order = memory_order_seq_cst) noexcept {
       return atomic_flag_test_and_set_explicit(&_flag, order);
     }
 
-    inline bool test_and_set(memory_order order = memory_order_seq_cst) volatile noexcept {
+    inline bool test_and_set([[maybe_unused]] memory_order order = memory_order_seq_cst) volatile noexcept {
       return atomic_flag_test_and_set_explicit(&_flag, order);
     }
 
-    inline void clear(memory_order order = memory_order_seq_cst) noexcept {
+    inline void clear([[maybe_unused]] memory_order order = memory_order_seq_cst) noexcept {
       atomic_flag_clear_explicit(&_flag, order);
     };
 
-    inline void clear(memory_order order = memory_order_seq_cst) volatile noexcept {
+    inline void clear([[maybe_unused]] memory_order order = memory_order_seq_cst) volatile noexcept {
       atomic_flag_clear_explicit(&_flag, order);
     };
 
