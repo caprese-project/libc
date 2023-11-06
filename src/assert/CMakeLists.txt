@@ -13,3 +13,5 @@ target_compile_options(
 )
 
 target_include_directories(caprese_libc_assert PUBLIC ${LIBC_INCLUDE_DIR})
+
+target_link_libraries(caprese_libc_assert PUBLIC caprese_libc_stdio)
