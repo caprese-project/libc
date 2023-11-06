@@ -50,6 +50,14 @@ namespace std {
                                           typename iterator_traits<I>::difference_type,
                                           typename iterator_traits<I>::pointer,
                                           typename iterator_traits<I>::reference> {
+  public:
+    using difference_type   = typename iterator_traits<I>::difference_type;
+    using value_type        = typename iterator_traits<I>::value_type;
+    using pointer           = typename iterator_traits<I>::pointer;
+    using reference         = typename iterator_traits<I>::reference;
+    using iterator_type     = I;
+    using iterator_category = typename iterator_traits<I>::iterator_category;
+
   protected:
     I current;
 
