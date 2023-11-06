@@ -29,5 +29,6 @@ extern "C" {
 #define SIGINT  3
 #define SIGSEGV 4
 #define SIGTERM 5
+#define NSIG    6
 
 #endif // CAPRESE_LIBC_SIGNAL_H_
