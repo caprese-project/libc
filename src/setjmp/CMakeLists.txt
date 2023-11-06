@@ -4,8 +4,8 @@ add_library(caprese_libc_setjmp)
 
 target_sources(
   caprese_libc_setjmp PRIVATE
-  longjmp.c
-  setjmp.c
+  longjmp.S
+  setjmp.S
 )
 
 target_compile_options(
