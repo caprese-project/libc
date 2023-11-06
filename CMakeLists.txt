@@ -4,7 +4,7 @@ project(
   caprese-libc
   VERSION 0.0.1
   HOMEPAGE_URL https://github.com/caprese-project/libc
-  LANGUAGES C
+  LANGUAGES C ASM
 )
 
 set(
