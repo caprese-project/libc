@@ -128,6 +128,46 @@ namespace std {
     }
   };
 
+  template<typename L, typename R>
+  constexpr bool operator==(const reverse_iterator<L>& lhs, const reverse_iterator<R>& rhs) {
+    return lhs.base() == rhs.base();
+  }
+
+  template<typename L, typename R>
+  constexpr bool operator!=(const reverse_iterator<L>& lhs, const reverse_iterator<R>& rhs) {
+    return lhs.base() != rhs.base();
+  }
+
+  template<typename L, typename R>
+  constexpr bool operator<(const reverse_iterator<L>& lhs, const reverse_iterator<R>& rhs) {
+    return lhs.base() < rhs.base();
+  }
+
+  template<typename L, typename R>
+  constexpr bool operator<=(const reverse_iterator<L>& lhs, const reverse_iterator<R>& rhs) {
+    return lhs.base() <= rhs.base();
+  }
+
+  template<typename L, typename R>
+  constexpr bool operator>(const reverse_iterator<L>& lhs, const reverse_iterator<R>& rhs) {
+    return lhs.base() > rhs.base();
+  }
+
+  template<typename L, typename R>
+  constexpr bool operator>=(const reverse_iterator<L>& lhs, const reverse_iterator<R>& rhs) {
+    return lhs.base() >= rhs.base();
+  }
+
+  template<class L, class R>
+  constexpr auto operator-(const reverse_iterator<L>& lhs, const reverse_iterator<R>& rhs) -> decltype(lhs.base() - rhs.base()) {
+    return lhs.base() - rhs.base();
+  }
+
+  template<typename I>
+  constexpr reverse_iterator<I> operator+(typename reverse_iterator<I>::difference_type n, const reverse_iterator<I>& it) {
+    return reverse_iterator<I>(it.base() - n);
+  }
+
   template<typename T>
   constexpr auto begin(T& value) -> decltype(value.begin()) {
     return value.begin();
