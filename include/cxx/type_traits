@@ -207,25 +207,25 @@ namespace std {
   struct __is_integral<unsigned long long>: public true_type {};
 
   template<typename T>
-  struct is_integral: public __is_integral<remove_cv<T>::type>::type { };
+  struct is_integral: public __is_integral<typename remove_cv<T>::type>::type { };
 
-  static_assert(std::is_integral<bool>::value == true);
-  static_assert(std::is_integral<char>::value == true);
-  static_assert(std::is_integral<signed char>::value == true);
-  static_assert(std::is_integral<unsigned char>::value == true);
-  static_assert(std::is_integral<char16_t>::value == true);
-  static_assert(std::is_integral<char32_t>::value == true);
-  static_assert(std::is_integral<wchar_t>::value == true);
-  static_assert(std::is_integral<short>::value == true);
-  static_assert(std::is_integral<unsigned short>::value == true);
-  static_assert(std::is_integral<int>::value == true);
-  static_assert(std::is_integral<unsigned int>::value == true);
-  static_assert(std::is_integral<long>::value == true);
-  static_assert(std::is_integral<unsigned long>::value == true);
-  static_assert(std::is_integral<long long>::value == true);
-  static_assert(std::is_integral<unsigned long long>::value == true);
-  static_assert(std::is_integral<const volatile int>::value == true);
-  static_assert(std::is_integral<float>::value == false);
+  static_assert(is_integral<bool>::value == true);
+  static_assert(is_integral<char>::value == true);
+  static_assert(is_integral<signed char>::value == true);
+  static_assert(is_integral<unsigned char>::value == true);
+  static_assert(is_integral<char16_t>::value == true);
+  static_assert(is_integral<char32_t>::value == true);
+  static_assert(is_integral<wchar_t>::value == true);
+  static_assert(is_integral<short>::value == true);
+  static_assert(is_integral<unsigned short>::value == true);
+  static_assert(is_integral<int>::value == true);
+  static_assert(is_integral<unsigned int>::value == true);
+  static_assert(is_integral<long>::value == true);
+  static_assert(is_integral<unsigned long>::value == true);
+  static_assert(is_integral<long long>::value == true);
+  static_assert(is_integral<unsigned long long>::value == true);
+  static_assert(is_integral<const volatile int>::value == true);
+  static_assert(is_integral<float>::value == false);
 
   template<typename>
   struct __is_floating_point: public false_type {};
@@ -240,7 +240,7 @@ namespace std {
   struct __is_floating_point<long double>: public true_type {};
 
   template<typename T>
-  struct is_floating_point: public __is_floating_point<remove_cv<T>::type>::type { };
+  struct is_floating_point: public __is_floating_point<typename remove_cv<T>::type>::type { };
 
   static_assert(is_floating_point<float>::value == true);
   static_assert(is_floating_point<double>::value == true);
@@ -312,7 +312,7 @@ namespace std {
   struct __is_void<void>: public true_type {};
 
   template<typename T>
-  struct is_void: public __is_void<remove_cv<T>::type>::type { };
+  struct is_void: public __is_void<typename remove_cv<T>::type>::type { };
 
   static_assert(is_void<void>::value == true);
   static_assert(is_void<int>::value == false);
@@ -337,7 +337,7 @@ namespace std {
   struct __is_pointer<T*>: public true_type {};
 
   template<typename T>
-  struct is_pointer: public __is_pointer<remove_cv<T>::type>::type { };
+  struct is_pointer: public __is_pointer<typename remove_cv<T>::type>::type { };
 
   static_assert(is_pointer<int*>::value == true);
   static_assert(is_pointer<int>::value == false);
@@ -349,7 +349,7 @@ namespace std {
   struct __is_lvalue_reference<T&>: public true_type {};
 
   template<typename T>
-  struct is_lvalue_reference: public __is_lvalue_reference<remove_cv<T>::type>::type { };
+  struct is_lvalue_reference: public __is_lvalue_reference<typename remove_cv<T>::type>::type { };
 
   static_assert(is_lvalue_reference<int&>::value == true);
   static_assert(is_lvalue_reference<int&&>::value == false);
@@ -362,14 +362,14 @@ namespace std {
   struct __is_rvalue_reference<T&&>: public true_type {};
 
   template<typename T>
-  struct is_rvalue_reference: public __is_rvalue_reference<remove_cv<T>::type>::type { };
+  struct is_rvalue_reference: public __is_rvalue_reference<typename remove_cv<T>::type>::type { };
 
   static_assert(is_rvalue_reference<int&&>::value == true);
   static_assert(is_rvalue_reference<int&>::value == false);
   static_assert(is_rvalue_reference<int>::value == false);
 
   template<typename T>
-  struct is_reference: public __or<is_lvalue_reference<T>::type, is_rvalue_reference<T>::type>::type { };
+  struct is_reference: public __or<typename is_lvalue_reference<T>::type, typename is_rvalue_reference<T>::type>::type { };
 
   static_assert(is_reference<int&&>::value == true);
   static_assert(is_reference<int&>::value == true);
@@ -391,7 +391,7 @@ namespace std {
   struct __is_member_object_pointer<T U::*>: public __not<is_function<T>>::type {};
 
   template<typename T>
-  struct is_member_object_pointer: public __is_member_object_pointer<remove_cv<T>::type>::type { };
+  struct is_member_object_pointer: public __is_member_object_pointer<typename remove_cv<T>::type>::type { };
 
   template<typename>
   struct __is_member_function_pointer: public false_type {};
@@ -400,7 +400,7 @@ namespace std {
   struct __is_member_function_pointer<T U::*>: public is_function<T>::type {};
 
   template<typename T>
-  struct is_member_function_pointer: public __is_member_function_pointer<remove_cv<T>::type>::type { };
+  struct is_member_function_pointer: public __is_member_function_pointer<typename remove_cv<T>::type>::type { };
 
 #if defined(__GNUC__)
 
@@ -423,7 +423,7 @@ namespace std {
 
 #ifdef __CXX_STD_14__
   template<typename T>
-  struct is_null_pointer: public __is_null_pointer<remove_cv<T>::type>::type { };
+  struct is_null_pointer: public __is_null_pointer<typename remove_cv<T>::type>::type { };
 
   static_assert(is_null_pointer<decltype(nullptr)>::value == true);
   static_assert(is_null_pointer<int>::value == false);
@@ -431,7 +431,7 @@ namespace std {
 #endif // __CXX_STD_14__
 
   template<typename T>
-  struct is_fundamental: public __or<is_arithmetic<T>::type, is_void<T>::type, __is_null_pointer<remove_cv<T>::type>::type>::type { };
+  struct is_fundamental: public __or<typename is_arithmetic<T>::type, typename is_void<T>::type, typename __is_null_pointer<typename remove_cv<T>::type>::type>::type { };
 
   static_assert(is_fundamental<int>::value == true);
 
