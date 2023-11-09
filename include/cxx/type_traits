@@ -1,34 +1,12 @@
 #ifndef CAPRESE_LIBC_CXX_TYPE_TRAITS_
 #define CAPRESE_LIBC_CXX_TYPE_TRAITS_
 
+#include <cstddef>
+#include <internal/version.h>
+
+#ifdef __CXX_STD_11__
+
 namespace std {
-  template<typename T, T _v>
-  struct integral_constant {
-    static constexpr T value = _v;
-    using value_type         = T;
-    using type               = integral_constant<T, _v>;
-
-    constexpr operator value_type() const noexcept {
-      return value;
-    }
-
-    constexpr value_type operator()() const noexcept {
-      return value;
-    }
-  };
-
-  using true_type  = integral_constant<bool, true>;
-  using false_type = integral_constant<bool, false>;
-
-  template<bool _v>
-  using bool_constant = integral_constant<bool, _v>;
-
-  template<typename T>
-  struct is_trivial: public integral_constant<bool, __is_trivial(T)> { };
-
-  template<typename T>
-  struct is_standard_layout: public integral_constant<bool, __is_standard_layout(T)> { };
-
   template<typename T>
   struct remove_const {
     using type = T;
@@ -99,6 +77,374 @@ namespace std {
     using type = T;
   };
 
+  template<typename T, T _v>
+  struct integral_constant {
+    static constexpr T value = _v;
+    using value_type         = T;
+    using type               = integral_constant<T, _v>;
+
+    constexpr operator value_type() const noexcept {
+      return value;
+    }
+
+    constexpr value_type operator()() const noexcept {
+      return value;
+    }
+  };
+
+#ifdef __CXX_STD_17__
+
+  template<bool _v>
+  using bool_constant = integral_constant<bool, _v>;
+  using true_type     = bool_constant<true>;
+  using false_type    = bool_constant<false>;
+
+#else // ^^^ __CXX_STD_17__ ^^^ / vvv !__CXX_STD_17__ vvv
+
+  using true_type  = integral_constant<bool, true>;
+  using false_type = integral_constant<bool, false>;
+
+#endif // __CXX_STD_17__
+
+  template<typename...>
+  struct __or;
+
+  template<>
+  struct __or<>: public false_type { };
+
+  template<typename T1>
+  struct __or<T1>: public T1 { };
+
+  template<typename T1, typename T2>
+  struct __or<T1, T2>: public integral_constant<bool, T1::value || T2::value>::type { };
+
+  template<typename T1, typename T2, typename... Tn>
+  struct __or<T1, T2, Tn...>: public integral_constant<bool, __or<T1, T2>::value || __or<Tn...>::value>::type { };
+
+  static_assert(__or<>::value == false);
+  static_assert(__or<false_type>::value == false);
+  static_assert(__or<false_type, false_type>::value == false);
+  static_assert(__or<false_type, false_type, false_type>::value == false);
+  static_assert(__or<true_type>::value == true);
+  static_assert(__or<true_type, false_type>::value == true);
+  static_assert(__or<true_type, false_type, false_type>::value == true);
+
+  template<typename...>
+  struct __and;
+
+  template<>
+  struct __and<>: public true_type { };
+
+  template<typename T1>
+  struct __and<T1>: public T1 { };
+
+  template<typename T1, typename T2>
+  struct __and<T1, T2>: public integral_constant<bool, T1::value && T2::value>::type { };
+
+  template<typename T1, typename T2, typename... Tn>
+  struct __and<T1, T2, Tn...>: public integral_constant<bool, __and<T1, T2>::value && __and<Tn...>::value>::type { };
+
+  static_assert(__and<>::value == true);
+  static_assert(__and<true_type>::value == true);
+  static_assert(__and<true_type, true_type>::value == true);
+  static_assert(__and<true_type, true_type, true_type>::value == true);
+  static_assert(__and<false_type>::value == false);
+  static_assert(__and<false_type, true_type>::value == false);
+  static_assert(__and<false_type, true_type, true_type>::value == false);
+
+  template<typename T>
+  struct __not: public integral_constant<bool, (bool)!T::value> { };
+
+  static_assert(__not<true_type>::value == false);
+  static_assert(__not<false_type>::value == true);
+
+  template<typename>
+  struct __is_integral: public false_type {};
+
+  template<>
+  struct __is_integral<bool>: public true_type {};
+
+  template<>
+  struct __is_integral<char>: public true_type {};
+
+  template<>
+  struct __is_integral<signed char>: public true_type {};
+
+  template<>
+  struct __is_integral<unsigned char>: public true_type {};
+
+  template<>
+  struct __is_integral<char16_t>: public true_type {};
+
+  template<>
+  struct __is_integral<char32_t>: public true_type {};
+
+  template<>
+  struct __is_integral<wchar_t>: public true_type {};
+
+  template<>
+  struct __is_integral<short>: public true_type {};
+
+  template<>
+  struct __is_integral<unsigned short>: public true_type {};
+
+  template<>
+  struct __is_integral<int>: public true_type {};
+
+  template<>
+  struct __is_integral<unsigned int>: public true_type {};
+
+  template<>
+  struct __is_integral<long>: public true_type {};
+
+  template<>
+  struct __is_integral<unsigned long>: public true_type {};
+
+  template<>
+  struct __is_integral<long long>: public true_type {};
+
+  template<>
+  struct __is_integral<unsigned long long>: public true_type {};
+
+  template<typename T>
+  struct is_integral: public __is_integral<remove_cv<T>::type>::type { };
+
+  static_assert(std::is_integral<bool>::value == true);
+  static_assert(std::is_integral<char>::value == true);
+  static_assert(std::is_integral<signed char>::value == true);
+  static_assert(std::is_integral<unsigned char>::value == true);
+  static_assert(std::is_integral<char16_t>::value == true);
+  static_assert(std::is_integral<char32_t>::value == true);
+  static_assert(std::is_integral<wchar_t>::value == true);
+  static_assert(std::is_integral<short>::value == true);
+  static_assert(std::is_integral<unsigned short>::value == true);
+  static_assert(std::is_integral<int>::value == true);
+  static_assert(std::is_integral<unsigned int>::value == true);
+  static_assert(std::is_integral<long>::value == true);
+  static_assert(std::is_integral<unsigned long>::value == true);
+  static_assert(std::is_integral<long long>::value == true);
+  static_assert(std::is_integral<unsigned long long>::value == true);
+  static_assert(std::is_integral<const volatile int>::value == true);
+  static_assert(std::is_integral<float>::value == false);
+
+  template<typename>
+  struct __is_floating_point: public false_type {};
+
+  template<>
+  struct __is_floating_point<float>: public true_type {};
+
+  template<>
+  struct __is_floating_point<double>: public true_type {};
+
+  template<>
+  struct __is_floating_point<long double>: public true_type {};
+
+  template<typename T>
+  struct is_floating_point: public __is_floating_point<remove_cv<T>::type>::type { };
+
+  static_assert(is_floating_point<float>::value == true);
+  static_assert(is_floating_point<double>::value == true);
+  static_assert(is_floating_point<long double>::value == true);
+  static_assert(is_floating_point<const volatile float>::value == true);
+  static_assert(is_floating_point<int>::value == false);
+
+  template<typename T>
+  struct is_arithmetic: public __or<is_integral<T>, is_floating_point<T>>::type { };
+
+  template<typename>
+  struct is_const: public false_type { };
+
+  template<typename T>
+  struct is_const<const T>: public true_type { };
+
+  static_assert(is_const<const int>::value == true);
+  static_assert(is_const<int>::value == false);
+
+  template<typename>
+  struct is_volatile: public false_type { };
+
+  template<typename T>
+  struct is_volatile<volatile T>: public true_type { };
+
+  static_assert(is_volatile<volatile int>::value == true);
+  static_assert(is_volatile<int>::value == false);
+
+#if defined(__GNUC__)
+
+  template<typename T>
+  struct is_trivial: public integral_constant<bool, __is_trivial(T)> { };
+
+  template<typename T>
+  struct is_trivial_copyable: public integral_constant<bool, __is_trivially_copyable(T)> { };
+
+  template<typename T>
+  struct is_standard_layout: public integral_constant<bool, __is_standard_layout(T)> { };
+
+  template<typename T>
+  struct is_empty: public integral_constant<bool, __is_empty(T)> { };
+
+  template<typename T>
+  struct is_polymorphic: public integral_constant<bool, __is_polymorphic(T)> { };
+
+  template<typename T>
+  struct is_abstract: public integral_constant<bool, __is_abstract(T)> { };
+
+#ifdef __CXX_STD_14__
+
+  template<typename T>
+  struct is_final: public integral_constant<bool, __is_final(T)> { };
+
+#endif // __CXX_STD_14__
+
+#ifdef __CXX_STD_17__
+
+  template<typename T>
+  struct is_aggregate: public integral_constant<bool, __is_aggregate(T)> { };
+
+#endif // __CXX_STD_17__
+
+#endif // __GNUC__
+
+  template<typename>
+  struct __is_void: public false_type {};
+
+  template<>
+  struct __is_void<void>: public true_type {};
+
+  template<typename T>
+  struct is_void: public __is_void<remove_cv<T>::type>::type { };
+
+  static_assert(is_void<void>::value == true);
+  static_assert(is_void<int>::value == false);
+
+  template<typename>
+  struct is_array: public false_type { };
+
+  template<typename T, std::size_t N>
+  struct is_array<T[N]>: public true_type { };
+
+  template<typename T>
+  struct is_array<T[]>: public true_type { };
+
+  static_assert(is_array<int[5]>::value == true);
+  static_assert(is_array<int[]>::value == true);
+  static_assert(is_array<int>::value == false);
+
+  template<typename>
+  struct __is_pointer: public false_type {};
+
+  template<typename T>
+  struct __is_pointer<T*>: public true_type {};
+
+  template<typename T>
+  struct is_pointer: public __is_pointer<remove_cv<T>::type>::type { };
+
+  static_assert(is_pointer<int*>::value == true);
+  static_assert(is_pointer<int>::value == false);
+
+  template<typename>
+  struct __is_lvalue_reference: public false_type {};
+
+  template<typename T>
+  struct __is_lvalue_reference<T&>: public true_type {};
+
+  template<typename T>
+  struct is_lvalue_reference: public __is_lvalue_reference<remove_cv<T>::type>::type { };
+
+  static_assert(is_lvalue_reference<int&>::value == true);
+  static_assert(is_lvalue_reference<int&&>::value == false);
+  static_assert(is_lvalue_reference<int>::value == false);
+
+  template<typename>
+  struct __is_rvalue_reference: public false_type {};
+
+  template<typename T>
+  struct __is_rvalue_reference<T&&>: public true_type {};
+
+  template<typename T>
+  struct is_rvalue_reference: public __is_rvalue_reference<remove_cv<T>::type>::type { };
+
+  static_assert(is_rvalue_reference<int&&>::value == true);
+  static_assert(is_rvalue_reference<int&>::value == false);
+  static_assert(is_rvalue_reference<int>::value == false);
+
+  template<typename T>
+  struct is_reference: public __or<is_lvalue_reference<T>::type, is_rvalue_reference<T>::type>::type { };
+
+  static_assert(is_reference<int&&>::value == true);
+  static_assert(is_reference<int&>::value == true);
+  static_assert(is_reference<int>::value == false);
+
+  template<typename T>
+  struct is_function: public integral_constant<bool, !is_const<const T>::value> { };
+
+  template<typename T>
+  struct is_function<T&>: public false_type { };
+
+  template<typename T>
+  struct is_function<T&&>: public false_type { };
+
+  template<typename>
+  struct __is_member_object_pointer: public false_type {};
+
+  template<typename T, typename U>
+  struct __is_member_object_pointer<T U::*>: public __not<is_function<T>>::type {};
+
+  template<typename T>
+  struct is_member_object_pointer: public __is_member_object_pointer<remove_cv<T>::type>::type { };
+
+  template<typename>
+  struct __is_member_function_pointer: public false_type {};
+
+  template<typename T, typename U>
+  struct __is_member_function_pointer<T U::*>: public is_function<T>::type {};
+
+  template<typename T>
+  struct is_member_function_pointer: public __is_member_function_pointer<remove_cv<T>::type>::type { };
+
+#if defined(__GNUC__)
+
+  template<typename T>
+  struct is_enum: public integral_constant<bool, __is_enum(T)> { };
+
+  template<typename T>
+  struct is_union: public integral_constant<bool, __is_union(T)> { };
+
+  template<typename T>
+  struct is_class: public integral_constant<bool, __is_class(T)> { };
+
+#endif // __GNUC__
+
+  template<typename>
+  struct __is_null_pointer: public false_type { };
+
+  template<>
+  struct __is_null_pointer<decltype(nullptr)>: public true_type { };
+
+#ifdef __CXX_STD_14__
+  template<typename T>
+  struct is_null_pointer: public __is_null_pointer<remove_cv<T>::type>::type { };
+
+  static_assert(is_null_pointer<decltype(nullptr)>::value == true);
+  static_assert(is_null_pointer<int>::value == false);
+
+#endif // __CXX_STD_14__
+
+  template<typename T>
+  struct is_fundamental: public __or<is_arithmetic<T>::type, is_void<T>::type, __is_null_pointer<remove_cv<T>::type>::type>::type { };
+
+  static_assert(is_fundamental<int>::value == true);
+
+#if defined(__GNUC__)
+
+  template<typename T, typename U>
+  struct is_same: public integral_constant<bool, __is_same(T, U)> { };
+
+  template<typename B, typename D>
+  struct is_base_of: public integral_constant<bool, __is_base_of(B, D)> { };
+
+#endif // defined(__GNUC__)
+
   template<typename T>
   constexpr bool is_trivial_v = is_trivial<T>::value;
 
@@ -126,5 +472,7 @@ namespace std {
   template<typename T>
   using remove_reference_t = typename remove_reference<T>::type;
 } // namespace std
+
+#endif // __CXX_STD_11__
 
 #endif // CAPRESE_LIBC_CXX_TYPE_TRAITS_
