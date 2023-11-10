@@ -1,6 +1,7 @@
 #ifndef CAPRESE_LIBC_CXX_CSTDDEF_
 #define CAPRESE_LIBC_CXX_CSTDDEF_
 
+#include <internal/cxx/stddef.h>
 #include <stddef.h>
 
 using nullptr_t = decltype(nullptr);
@@ -8,8 +9,8 @@ using nullptr_t = decltype(nullptr);
 namespace std {
   using ::max_align_t;
   using ::nullptr_t;
-  using ::ptrdiff_t;
-  using ::size_t;
+  using ptrdiff_t = __ptrdiff_t;
+  using size_t    = __size_t;
 } // namespace std
 
 #endif // CAPRESE_LIBC_CXX_CSTDDEF_

@@ -18,6 +18,14 @@
 
 #endif // !__CXX_STD_11__
 
+// __force_inline
+
+#ifdef __GNUC__
+#define __force_inline [[__gnu__::__always_inline__]] inline
+#else // ^^^ __GNUC__ ^^^ / vvv !__GNUC__ vvv
+#define __force_inline inline
+#endif // !__GNUC__
+
 // __restrict
 
 #ifdef __GNUC__
@@ -38,6 +46,46 @@
 #endif // !__GNUC__
 #endif // !__CXX_STD_17__
 
+// __noexcept
+
+#ifdef __CXX_STD_11__
+#define __noexcept noexcept
+#else // ^^^ __CXX_STD_11__ ^^^ / vvv !__CXX_STD_11__ vvv
+#define __noexcept throw()
+#endif // !__CXX_STD_11__
+
+// __noexcept_cxx_std_14
+
+#ifdef __CXX_STD_14__
+#define __noexcept_cxx_std_14 noexcept
+#else // ^^^ __CXX_STD_14__ ^^^ / vvv !__CXX_STD_14__ vvv
+#define __noexcept
+#endif // !__CXX_STD_14__
+
+// __constexpr_cxx_std_14
+
+#ifdef __CXX_STD_14__
+#define __constexpr_cxx_std_14 constexpr
+#else // ^^^ __CXX_STD_14__ ^^^ / vvv !__CXX_STD_14__ vvv
+#define __constexpr_cxx_std_14
+#endif // !__CXX_STD_14__
+
+// __constexpr_cxx_std_17
+
+#ifdef __CXX_STD_17__
+#define __constexpr_cxx_std_17 constexpr
+#else // ^^^ __CXX_STD_17__ ^^^ / vvv !__CXX_STD_17__ vvv
+#define __constexpr_cxx_std_17
+#endif // !__CXX_STD_17__
+
+// __constexpr_cxx_std_20
+
+#ifdef __CXX_STD_20__
+#define __constexpr_cxx_std_20 constexpr
+#else // ^^^ __CXX_STD_20__ ^^^ / vvv !__CXX_STD_20__ vvv
+#define __constexpr_cxx_std_20
+#endif // !__CXX_STD_20__
+
 #else // ^^^ __cplusplus ^^^ / vvv !__cplusplus
 
 // __noreturn
@@ -51,6 +99,13 @@
 #define __noreturn
 #endif // !__GNUC__
 #endif // !__C_STD_11__
+
+// __force_inline
+#ifdef __GNUC__
+#define __force_inline __attribute__((always_inline)) inline
+#else // ^^^ __GNUC__ ^^^ / vvv !__GNUC__ vvv
+#define __force_inline inline
+#endif // !__GNUC__
 
 // __restrict
 
@@ -71,6 +126,16 @@
 #else // ^^^ __GNUC__ ^^^ / vvv !__GNUC__ vvv
 #define __unused
 #endif // !__GNUC__
+
+// __noexcept
+
+#define __noexcept
+
+// __constexpr_cxx_std_xx
+
+#define __constexpr_cxx_std_14
+#define __constexpr_cxx_std_17
+#define __constexpr_cxx_std_20
 
 #endif // !__cplusplus
 

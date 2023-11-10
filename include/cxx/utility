@@ -1,14 +1,13 @@
 #ifndef CAPRESE_LIBC_CXX_UTILITY_
 #define CAPRESE_LIBC_CXX_UTILITY_
 
+#include <internal/cxx/utility/declval.h>
+#include <internal/cxx/utility/fwd.h>
+#include <internal/cxx/utility/unreachable.h>
+
 namespace std {
-  [[noreturn]] inline void unreachable() {
-#if defined(__GNUC__)
-    __builtin_unreachable();
-#else  // ^^^ __GNUC__ ^^^ / vvv !__GNUC__ vvv
-    static_assert(false, "Unsupported compiler");
-#endif // !__GNUC__
-  }
+  template<typename T>
+  auto declval() noexcept -> decltype(__declval<T>());
 } // namespace std
 
 #endif // CAPRESE_LIBC_CXX_UTILITY_

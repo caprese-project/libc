@@ -2,6 +2,7 @@
 #define CAPRESE_LIBC_STDDEF_H_
 
 #include <internal/datamodel.h>
+#include <internal/stddef.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -19,15 +20,9 @@ extern "C" {
 #define offsetof(type, member) ((size_t) & ((type*)0)->member)
 #endif // __GNUC__
 
-#if defined(__LP64)
-  typedef long          ptrdiff_t;
-  typedef unsigned long size_t;
-  typedef long          ssize_t;
-#elif defined(__ILP32)
-  typedef int          ptrdiff_t;
-  typedef unsigned int size_t;
-  typedef int          ssize_t;
-#endif // defined(data-model)
+  typedef __PTRDIFF_TYPE ptrdiff_t;
+  typedef __SIZE_TYPE    size_t;
+  typedef __SSIZE_TYPE   ssize_t;
 
   typedef int    errno_t;
   typedef size_t rsize_t;

@@ -1,31 +1,36 @@
 #ifndef CAPRESE_LIBC_CXX_ALGORITHM_
 #define CAPRESE_LIBC_CXX_ALGORITHM_
 
+#include <internal/attribute.h>
+#include <internal/cxx/functional/compare.h>
 #include <iterator>
 
 namespace std {
   template<typename T>
-  constexpr const T& min(const T& a, const T& b) {
+  using less = __less<T>;
+
+  template<typename T>
+  const __constexpr_cxx_std_14 T& min(const T& a, const T& b) {
     return a < b ? a : b;
   }
 
   template<typename T, typename Compare>
-  constexpr const T& min(const T& a, const T& b, Compare comp) {
+  const __constexpr_cxx_std_14 T& min(const T& a, const T& b, Compare comp) {
     return comp(a, b) ? a : b;
   }
 
   template<typename T>
-  constexpr const T& max(const T& a, const T& b) {
+  const __constexpr_cxx_std_14 T& max(const T& a, const T& b) {
     return a > b ? a : b;
   }
 
   template<typename T, typename Compare>
-  constexpr const T& max(const T& a, const T& b, Compare comp) {
+  const __constexpr_cxx_std_14 T& max(const T& a, const T& b, Compare comp) {
     return comp(a, b) ? b : a;
   }
 
   template<typename InputIterator, typename Function>
-  constexpr Function for_each(InputIterator first, InputIterator last, Function f) {
+  __constexpr_cxx_std_14 Function for_each(InputIterator first, InputIterator last, Function f) {
     while (first != last) {
       f(*first);
       ++first;
@@ -33,15 +38,15 @@ namespace std {
     return f;
   }
 
-  template<typename ForwardIterator, typename T>
-  constexpr ForwardIterator lower_bound(ForwardIterator first, ForwardIterator last, const T& value) {
+  template<typename ForwardIterator, typename T, typename Compare>
+  __constexpr_cxx_std_20 ForwardIterator lower_bound(ForwardIterator first, ForwardIterator last, const T& value, Compare comp) {
     auto len = std::distance(first, last);
 
     while (len > 0) {
       auto half   = len / 2;
       auto middle = first;
       std::advance(middle, half);
-      if (*middle < value) {
+      if (comp(*middle, value) != false) {
         first = middle;
         ++first;
         len = len - half - 1;
@@ -54,7 +59,12 @@ namespace std {
   }
 
   template<typename ForwardIterator, typename T>
-  constexpr bool binary_search(ForwardIterator first, ForwardIterator last, const T& value) {
+  __constexpr_cxx_std_20 ForwardIterator lower_bound(ForwardIterator first, ForwardIterator last, const T& value) {
+    return std::lower_bound(first, last, value, __less<T>());
+  }
+
+  template<typename ForwardIterator, typename T>
+  __constexpr_cxx_std_20 bool binary_search(ForwardIterator first, ForwardIterator last, const T& value) {
     ForwardIterator iter = std::lower_bound(first, last, value);
     return iter != last && !(value < *iter);
   }

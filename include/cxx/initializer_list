@@ -1,0 +1,53 @@
+#ifndef CAPRESE_LIBC_CXX_INITIALIZER_LIST_
+#define CAPRESE_LIBC_CXX_INITIALIZER_LIST_
+
+#include <internal/attribute.h>
+#include <internal/cxx/stddef.h>
+
+namespace std {
+  template<typename E>
+  class initializer_list {
+  public:
+    using value_type      = E;
+    using reference       = const E&;
+    using const_reference = const E&;
+    using size_type       = std::__size_t;
+    using iterator        = const E*;
+    using const_iterator  = const E*;
+
+  private:
+    iterator  _iter;
+    size_type _size;
+
+    __constexpr_cxx_std_14 initializer_list(const_iterator iter, size_type size): _iter(iter), _size(size) { }
+
+  public:
+    __constexpr_cxx_std_14 initializer_list(): _iter(0), _size(0) __noexcept { }
+
+    ~initializer_list() = default;
+
+    __constexpr_cxx_std_14 std::__size_t size() const __noexcept {
+      return _size;
+    }
+
+    __constexpr_cxx_std_14 const_iterator begin() const __noexcept {
+      return _iter;
+    }
+
+    __constexpr_cxx_std_14 const_iterator end() const __noexcept {
+      return _iter + _size;
+    }
+  };
+
+  template<typename T>
+  const __constexpr_cxx_std_14 T* begin(initializer_list<T> initializer_list) __noexcept {
+    return initializer_list.begin();
+  }
+
+  template<typename T>
+  const __constexpr_cxx_std_14 T* end(initializer_list<T> initializer_list) __noexcept {
+    return initializer_list.end();
+  }
+} // namespace std
+
+#endif // CAPRESE_LIBC_CXX_INITIALIZER_LIST_

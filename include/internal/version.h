@@ -52,6 +52,11 @@
 #define __CXX_STD_20__
 #endif // __cplusplus >= 202002l
 
+// TODO: Rewrite when the value of __cplusplus for C++23 is determined.
+#if __cplusplus > 202002l
+#define __CXX_STD_23__
+#endif // __cplusplus > 202002l
+
 #endif // __cplusplus
 
 #endif // CAPRESE_LIBC_INTERNAL_VERSION_H_
