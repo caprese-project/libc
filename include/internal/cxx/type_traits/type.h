@@ -119,6 +119,15 @@ namespace std {
   template<typename T>
   struct __is_rvalue_reference: public __is_rvalue_reference<typename __remove_cv<T>::type> {};
 
+  template<typename T>
+  struct __is_function: public __bool_constant<!__is_const<const T>::value> {};
+
+  template<typename T>
+  struct __is_function<T&>: public __false_type {};
+
+  template<typename T>
+  struct __is_function<T&&>: public __false_type {};
+
   template<typename>
   struct __is_member_object_pointer_helper: public __false_type { };
 
@@ -145,15 +154,6 @@ namespace std {
 
   template<typename T>
   struct __is_null_pointer: public __is_null_pointer_helper<typename __remove_cv<T>::type> { };
-
-  template<typename T>
-  struct __is_function: public __bool_constant<!__is_const<const T>::value> {};
-
-  template<typename T>
-  struct __is_function<T&>: public __false_type {};
-
-  template<typename T>
-  struct __is_function<T&&>: public __false_type {};
 
 #if defined(__GNUC__)
 
