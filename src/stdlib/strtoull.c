@@ -64,6 +64,7 @@ __weak unsigned long long int strtoull(const char* __restrict s, char** __restri
 
     result *= base;
     result += val;
+    ++s;
   }
 
   __if_unlikely (err) {
