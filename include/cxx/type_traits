@@ -160,7 +160,7 @@ namespace std {
   using void_t = __void_t<Tn...>;
 
   template<typename... Traits>
-  using conjuction = __conjuction<Traits...>;
+  using conjunction = __conjunction<Traits...>;
 
   template<typename... Traits>
   using disjunction = __disjunction<Traits...>;

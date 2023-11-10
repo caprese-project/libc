@@ -15,28 +15,28 @@ namespace std {
   };
 
   template<typename... Traits>
-  struct __conjuction;
+  struct __conjunction;
 
   template<>
-  struct __conjuction<>: public __true_type { };
+  struct __conjunction<>: public __true_type { };
 
   template<typename T>
-  struct __conjuction<T>: public T { };
+  struct __conjunction<T>: public T { };
 
   template<typename T, typename... Traits>
-  struct __conjuction<T, Traits...>: public __conditional<T::value, typename __conjuction<Traits...>::type, T>::type { };
+  struct __conjunction<T, Traits...>: public __conditional<T::value, typename __conjunction<Traits...>::type, T>::type { };
 
   template<typename... Traits>
-  struct __disjuction;
+  struct __disjunction;
 
   template<>
-  struct __disjuction<>: public __false_type { };
+  struct __disjunction<>: public __false_type { };
 
   template<typename T>
-  struct __disjuction<T>: public T { };
+  struct __disjunction<T>: public T { };
 
   template<typename T, typename... Traits>
-  struct __disjuction<T, Traits...>: public __conditional<T::value, T, typename __disjuction<Traits...>::type>::type { };
+  struct __disjunction<T, Traits...>: public __conditional<T::value, T, typename __disjunction<Traits...>::type>::type { };
 
   template<typename T>
   struct __negation: public __bool_constant<!T::value> { };

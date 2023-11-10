@@ -12,7 +12,7 @@ namespace std {
   template<typename Base, typename Derived>
   struct __is_base_of_t: public __bool_constant<__is_base_of(Base, Derived)> { };
 
-  template<typename From, typename To, bool = __disjuction<typename __is_void<From>::type, typename __is_function<To>::type, typename __is_array<To>::type>::value>
+  template<typename From, typename To, bool = __disjunction<typename __is_void<From>::type, typename __is_function<To>::type, typename __is_array<To>::type>::value>
   struct __is_convertible_helper: public __is_void<To> { };
 
   template<typename From, typename To>
