@@ -35,7 +35,7 @@ namespace std {
 
   template<typename ForwardIterator, typename T>
   constexpr ForwardIterator lower_bound(ForwardIterator first, ForwardIterator last, const T& value) {
-    auto len std::distance(first, last);
+    auto len = std::distance(first, last);
 
     while (len > 0) {
       auto half   = len / 2;
