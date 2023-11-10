@@ -68,6 +68,12 @@ namespace std {
     ForwardIterator iter = std::lower_bound(first, last, value);
     return iter != last && !(value < *iter);
   }
+
+  template<typename ForwardIterator, typename T, typename Compare>
+  __constexpr_cxx_std_20 bool binary_search(ForwardIterator first, ForwardIterator last, const T& value, Compare comp) {
+    ForwardIterator iter = std::lower_bound(first, last, value, comp);
+    return iter != last && !comp(value, *iter);
+  }
 } // namespace std
 
 #endif // CAPRESE_LIBC_CXX_ALGORITHM_
