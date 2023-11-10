@@ -1,6 +1,7 @@
 #ifndef CAPRESE_LIBC_INTERNAL_CXX_TYPE_TRAITS_CONSTANT_H_
 #define CAPRESE_LIBC_INTERNAL_CXX_TYPE_TRAITS_CONSTANT_H_
 
+#include <internal/attribute.h>
 #include <internal/version.h>
 
 namespace std {

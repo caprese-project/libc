@@ -19,34 +19,34 @@ namespace std {
 #if defined(__GNUC__)
 
   template<typename T>
-  struct __is_trivial: public __bool_constant<__is_trivial(T)> {};
+  struct __is_trivial_t: public __bool_constant<__is_trivial(T)> { };
 
   template<typename T>
-  struct __is_trivial_copyable: public __bool_constant<__is_trivially_copyable(T)> { };
+  struct __is_trivially_copyable_t: public __bool_constant<__is_trivially_copyable(T)> { };
 
   template<typename T>
-  struct __is_standard_layout: public __bool_constant<__is_standard_layout(T)> {};
+  struct __is_standard_layout_t: public __bool_constant<__is_standard_layout(T)> { };
 
   template<typename T>
-  struct __is_empty: public __bool_constant<__is_empty(T)> {};
+  struct __is_empty_t: public __bool_constant<__is_empty(T)> { };
 
   template<typename T>
-  struct __is_polymorphic: public __bool_constant<__is_polymorphic(T)> {};
+  struct __is_polymorphic_t: public __bool_constant<__is_polymorphic(T)> { };
 
   template<typename T>
-  struct __is_abstract: public __bool_constant<__is_abstract(T)> {};
+  struct __is_abstract_t: public __bool_constant<__is_abstract(T)> { };
 
 #ifdef __CXX_STD_14__
 
   template<typename T>
-  struct __is_final: public __bool_constant<__is_final(T)> {};
+  struct __is_final_t: public __bool_constant<__is_final(T)> { };
 
 #endif // __CXX_STD_14__
 
 #ifdef __CXX_STD_17__
 
   template<typename T>
-  struct __is_aggregate: public __bool_constant<__is_aggregate(T)> {};
+  struct __is_aggregate_t: public __bool_constant<__is_aggregate(T)> { };
 
 #endif // __CXX_STD_17__
 

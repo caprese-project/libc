@@ -2,7 +2,9 @@
 #define CAPRESE_LIBC_INTERNAL_CXX_TYPE_TRAITS_TYPE_H_
 
 #include <internal/cxx/stddef.h>
+#include <internal/cxx/type_traits/characteristic.h>
 #include <internal/cxx/type_traits/constant.h>
+#include <internal/cxx/type_traits/logic.h>
 #include <internal/cxx/type_traits/modify.h>
 
 namespace std {
@@ -97,7 +99,7 @@ namespace std {
   struct __is_pointer_helper<T*>: public __true_type { };
 
   template<typename T>
-  struct __is_pointer: public __is_pointer_helper<typename remove_cv<T>::type> {};
+  struct __is_pointer: public __is_pointer_helper<typename __remove_cv<T>::type> {};
 
   template<typename>
   struct __is_lvalue_reference_helper: public __false_type { };
@@ -106,7 +108,7 @@ namespace std {
   struct __is_lvalue_reference_helper<T&>: public __true_type { };
 
   template<typename T>
-  struct __is_lvalue_reference: public __is_lvalue_reference_helper<typename remove_cv<T>::type> {};
+  struct __is_lvalue_reference: public __is_lvalue_reference_helper<typename __remove_cv<T>::type> {};
 
   template<typename>
   struct __is_rvalue_reference_helper: public __false_type { };
@@ -119,15 +121,6 @@ namespace std {
 
   template<typename T>
   struct __is_reference: public __disjuction<typename __is_lvalue_reference<T>::type, typename __is_rvalue_reference<T>::type> {};
-
-  template<typename T>
-  struct __is_function: public __bool_constant<!__is_const<const T>::value> {};
-
-  template<typename T>
-  struct __is_function<T&>: public __false_type {};
-
-  template<typename T>
-  struct __is_function<T&&>: public __false_type {};
 
   template<typename>
   struct __is_member_object_pointer_helper: public __false_type { };
@@ -159,16 +152,22 @@ namespace std {
   template<typename T>
   struct __is_function: public __bool_constant<!__is_const<const T>::value> {};
 
+  template<typename T>
+  struct __is_function<T&>: public __false_type {};
+
+  template<typename T>
+  struct __is_function<T&&>: public __false_type {};
+
 #if defined(__GNUC__)
 
   template<typename T>
-  struct __is_enum: public __bool_constant<__is_enum(T)> {};
+  struct __is_enum_t: public __bool_constant<__is_enum(T)> { };
 
   template<typename T>
-  struct __is_union: public __bool_constant<__is_union(T)> {};
+  struct __is_union_t: public __bool_constant<__is_union(T)> { };
 
   template<typename T>
-  struct __is_class: public __bool_constant<__is_class(T)> {};
+  struct __is_class_t: public __bool_constant<__is_class(T)> { };
 
 #endif // __GNUC__
 
@@ -186,7 +185,7 @@ namespace std {
 
   template<typename T>
   struct __is_scalar
-      : public __disjuction<typename __is_arthmetic<T>::type, typename __is_enum<T>::type, typename __is_pointer<T>::type, typename __is_member_pointer<T>::type, typename __is_null_pointer<T>::type> {};
+      : public __disjuction<typename __is_arthmetic<T>::type, typename __is_enum_t<T>::type, typename __is_pointer<T>::type, typename __is_member_pointer<T>::type, typename __is_null_pointer<T>::type> {};
 
   template<typename T>
   struct __is_compound: public __negation<typename __is_fundamental<T>::type> {};
@@ -201,8 +200,8 @@ namespace std {
 
   // clang-format off
 
-  template<typename T> requires __is_enum<T>::value && requires(T t) { t = t; }
-  struct __is_scoped_enum<T>: public __bool_constant<!requires(T t, void(*f)(int) { f(t); })> {};
+  template<typename T> requires __is_enum_t<T>::value && requires(T t) { t = t; }
+  struct __is_scoped_enum<T>: public __bool_constant<!requires(T t, void(*f)(int)) { f(t); }> {};
 
   // clang-format on
 

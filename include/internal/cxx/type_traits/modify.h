@@ -1,6 +1,8 @@
 #ifndef CAPRESE_INTERNAL_CXX_TYPE_TRAITS_MODIFY_H_
 #define CAPRESE_INTERNAL_CXX_TYPE_TRAITS_MODIFY_H_
 
+#include <internal/cxx/type_traits/constant.h>
+
 namespace std {
   template<typename...>
   using __void_t = void;

@@ -7,10 +7,10 @@
 
 namespace std {
   template<typename T, typename U>
-  struct __is_same: public __bool_constant<__is_same(T)> {};
+  struct __is_same_t: public __bool_constant<__is_same(T)> { };
 
   template<typename Base, typename Derived>
-  struct __is_base_of: public __bool_constant<__is_base_of(Base, Derived)> {};
+  struct __is_base_of_t: public __bool_constant<__is_base_of(Base, Derived)> { };
 
   template<typename From, typename To, bool = __disjuction<typename __is_void<From>::type, typename __is_function<To>::type, typename __is_array<To>::type>::value>
   struct __is_convertible_helper: public __is_void<To> { };

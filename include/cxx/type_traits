@@ -51,13 +51,13 @@ namespace std {
   using is_member_function_pointer = __is_member_function_pointer<T>;
 
   template<typename T>
-  using is_enum = __is_enum<T>;
+  using is_enum = __is_enum_t<T>;
 
   template<typename T>
-  using is_union = __is_union<T>;
+  using is_union = __is_union_t<T>;
 
   template<typename T>
-  using is_class = __is_class<T>;
+  using is_class = __is_class_t<T>;
 
   template<typename T>
   using is_function = __is_function<T>;
@@ -97,34 +97,34 @@ namespace std {
   using is_volatile = __is_volatile<T>;
 
   template<typename T>
-  using is_trivial = __is_trivial<T>;
+  using is_trivial = __is_trivial_t<T>;
 
   template<typename T>
-  using is_trivial_copyable = __is_trivial_copyable<T>;
+  using is_trivial_copyable = __is_trivially_copyable_t<T>;
 
   template<typename T>
-  using is_standard_layout = __is_standard_layout<T>;
+  using is_standard_layout = __is_standard_layout_t<T>;
 
   template<typename T>
-  using is_empty = __is_empty<T>;
+  using is_empty = __is_empty_t<T>;
 
   template<typename T>
-  using is_polymorphic = __is_polymorphic<T>;
+  using is_polymorphic = __is_polymorphic_t<T>;
 
   template<typename T>
-  using is_abstract = __is_abstract<T>;
+  using is_abstract = __is_abstract_t<T>;
 
   template<typename T>
-  using is_final = __is_final<T>;
+  using is_final = __is_final_t<T>;
 
   template<typename T>
-  using is_aggregate = __is_aggregate<T>;
+  using is_aggregate = __is_aggregate_t<T>;
 
   template<typename T>
-  using is_same = __is_same<T>;
+  using is_same = __is_same_t<T>;
 
   template<typename Base, typename Derived>
-  using is_base_of = __is_base_of<Base, Derived>;
+  using is_base_of = __is_base_of_t<Base, Derived>;
 
   template<typename From, typename To>
   using is_convertible = __is_convertible<From, To>;
