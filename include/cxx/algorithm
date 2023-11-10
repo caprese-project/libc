@@ -1,7 +1,29 @@
 #ifndef CAPRESE_LIBC_CXX_ALGORITHM_
 #define CAPRESE_LIBC_CXX_ALGORITHM_
 
+#include <iterator>
+
 namespace std {
+  template<typename T>
+  constexpr const T& min(const T& a, const T& b) {
+    return a < b ? a : b;
+  }
+
+  template<typename T, typename Compare>
+  constexpr const T& min(const T& a, const T& b, Compare comp) {
+    return comp(a, b) ? a : b;
+  }
+
+  template<typename T>
+  constexpr const T& max(const T& a, const T& b) {
+    return a > b ? a : b;
+  }
+
+  template<typename T, typename Compare>
+  constexpr const T& max(const T& a, const T& b, Compare comp) {
+    return comp(a, b) ? b : a;
+  }
+
   template<typename InputIterator, typename Function>
   constexpr Function for_each(InputIterator first, InputIterator last, Function f) {
     while (first != last) {
@@ -9,6 +31,32 @@ namespace std {
       ++first;
     }
     return f;
+  }
+
+  template<typename ForwardIterator, typename T>
+  constexpr ForwardIterator lower_bound(ForwardIterator first, ForwardIterator last, const T& value) {
+    auto len std::distance(first, last);
+
+    while (len > 0) {
+      auto half   = len / 2;
+      auto middle = first;
+      std::advance(middle, half);
+      if (*middle < value) {
+        first = middle;
+        ++first;
+        len = len - half - 1;
+      } else {
+        len = half;
+      }
+    }
+
+    return first;
+  }
+
+  template<typename ForwardIterator, typename T>
+  constexpr bool binary_search(ForwardIterator first, ForwardIterator last, const T& value) {
+    ForwardIterator iter = std::lower_bound(first, last, value);
+    return iter != last && !(value < *iter);
   }
 } // namespace std
 

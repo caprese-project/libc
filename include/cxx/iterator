@@ -1,6 +1,7 @@
 #ifndef CAPRESE_LIBC_CXX_ITERATOR_
 #define CAPRESE_LIBC_CXX_ITERATOR_
 
+#include <cassert>
 #include <cstddef>
 #include <type_traits>
 
@@ -226,6 +227,60 @@ namespace std {
   template<typename T, size_t N>
   constexpr reverse_iterator<T*> rend(T (&array)[N]) {
     return reverse_iterator<T*>(array);
+  }
+
+  template<typename InputIterator>
+  constexpr typename iterator_traits<InputIterator>::difference_type __distance(InputIterator first, InputIterator last, [[maybe_unused]] input_iterator_tag) {
+    typename iterator_traits<InputIterator>::difference_type n = 0;
+    while (first != last) {
+      ++first;
+      ++n;
+    }
+    return n;
+  }
+
+  template<typename RandomAccessIterator>
+  constexpr typename iterator_traits<RandomAccessIterator>::difference_type __distance(RandomAccessIterator first, RandomAccessIterator last, [[maybe_unused]] random_access_iterator_tag) {
+    return last - first;
+  }
+
+  template<typename InputIterator>
+  constexpr typename iterator_traits<InputIterator>::difference_type distance(InputIterator first, InputIterator last) {
+    using category = typename iterator_traits<InputIterator>::iterator_category;
+    return __distance(first, last, category {});
+  }
+
+  template<typename InputIterator, typename Distance>
+  constexpr void __advance(InputIterator& iter, Distance n, [[maybe_unused]] input_iterator_tag) {
+    assert(n >= 0);
+
+    while (n--) {
+      ++iter;
+    }
+  }
+
+  template<typename BidirectionalIterator, typename Distance>
+  constexpr void __advance(BidirectionalIterator iter, Distance n, [[maybe_unused]] bidirectional_iterator_tag) {
+    if (n > 0) {
+      while (n--) {
+        ++iter;
+      }
+    } else {
+      while (n++) {
+        --iter;
+      }
+    }
+  }
+
+  template<typename RandomAccessIterator, typename Distance>
+  constexpr void __advance(RandomAccessIterator& iter, Distance n, [[maybe_unused]] random_access_iterator_tag) {
+    iter += n;
+  }
+
+  template<typename InputIterator, typename Distance>
+  constexpr void advance(InputIterator& iter, Distance n) {
+    using category = typename iterator_traits<InputIterator>::iterator_category;
+    __advance(iter, n, category {});
   }
 } // namespace std
 
