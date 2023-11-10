@@ -182,7 +182,7 @@ namespace std {
 
   template<typename T>
   struct __is_scalar
-      : public __disjuction<typename __is_arthmetic<T>::type, typename __is_enum_t<T>::type, typename __is_pointer<T>::type, typename __is_member_pointer<T>::type, typename __is_null_pointer<T>::type> {};
+      : public __disjuction<typename __is_arithmetic<T>::type, typename __is_enum_t<T>::type, typename __is_pointer<T>::type, typename __is_member_pointer<T>::type, typename __is_null_pointer<T>::type> {};
 
   template<typename T>
   struct __is_compound: public __negation<typename __is_fundamental<T>::type> {};
