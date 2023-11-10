@@ -26,6 +26,13 @@ namespace std {
   template<typename T>
   using is_void = __is_void<T>;
 
+#ifdef __CXX_STD_14__
+
+  template<typename T>
+  using is_null_pointer = __is_null_pointer<T>;
+
+#endif // __CXX_STD_14__
+
   template<typename T>
   using is_integral = __is_integral<T>;
 
@@ -167,6 +174,119 @@ namespace std {
 
   template<typename T>
   using negation = __negation<T>;
+
+#ifdef __CXX_STD_17__
+
+  template<typename T>
+  inline constexpr bool is_void_v = is_void<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_null_pointer_v = is_null_pointer<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_integral_v = is_integral<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_floating_point_v = is_floating_point<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_array_v = is_array<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_pointer_v = is_pointer<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_lvalue_reference_v = is_lvalue_reference<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_rvalue_reference_v = is_rvalue_reference<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_member_object_pointer_v = is_member_object_pointer<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_member_function_pointer_v = is_member_function_pointer<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_enum_v = is_enum<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_union_v = is_union<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_class_v = is_class<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_function_v = is_function<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_reference_v = is_reference<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_arithmetic_v = is_arithmetic<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_fundamental_v = is_fundamental<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_object_v = is_object<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_scalar_v = is_scalar<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_compound_v = is_compound<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_member_pointer_v = is_member_pointer<T>::value;
+
+#ifdef __CXX_STD_23__
+
+  template<typename T>
+  inline constexpr bool is_scoped_enum_v = is_scoped_enum<T>::value;
+
+#endif // __CXX_STD_23__
+
+  template<typename T>
+  inline constexpr bool is_const_v = is_const<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_volatile_v = is_volatile<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_trivial_v = is_trivial<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_trivial_copyable_v = is_trivial_copyable<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_standard_layout_v = is_standard_layout<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_empty_v = is_empty<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_polymorphic_v = is_polymorphic<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_abstract_v = is_abstract<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_final_v = is_final<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_aggregate_v = is_aggregate<T>::value;
+
+  template<typename T, typename U>
+  inline constexpr bool is_same_v = is_same<T, U>::value;
+
+  template<typename Base, typename Derived>
+  inline constexpr bool is_base_of_v = is_base_of<Base, Derived>::value;
+
+  template<typename From, typename To>
+  inline constexpr bool is_convertible_v = is_convertible<From, To>::value;
+
+#endif // __CXX_STD_17__
 } // namespace std
 
 #endif // __CXX_STD_11__
