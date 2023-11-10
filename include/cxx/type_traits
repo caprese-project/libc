@@ -120,8 +120,8 @@ namespace std {
   template<typename T>
   using is_aggregate = __is_aggregate_t<T>;
 
-  template<typename T>
-  using is_same = __is_same_t<T>;
+  template<typename T, typename U>
+  using is_same = __is_same_t<T, U>;
 
   template<typename Base, typename Derived>
   using is_base_of = __is_base_of_t<Base, Derived>;

@@ -7,7 +7,7 @@
 
 namespace std {
   template<typename T, typename U>
-  struct __is_same_t: public __bool_constant<__is_same(T)> { };
+  struct __is_same_t: public __bool_constant<__is_same(T, U)> { };
 
   template<typename Base, typename Derived>
   struct __is_base_of_t: public __bool_constant<__is_base_of(Base, Derived)> { };
