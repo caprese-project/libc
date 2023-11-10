@@ -181,14 +181,14 @@ namespace std {
   struct __is_object: public __negation<typename __disjuction<typename __is_function<T>::type, typename __is_reference<T>::type, typename __is_void<T>::type>::type> {};
 
   template<typename T>
+  struct __is_member_pointer: public __disjuction<typename __is_member_object_pointer<T>::type, typename __is_member_function_pointer<T>::type> {};
+
+  template<typename T>
   struct __is_scalar
       : public __disjuction<typename __is_arithmetic<T>::type, typename __is_enum_t<T>::type, typename __is_pointer<T>::type, typename __is_member_pointer<T>::type, typename __is_null_pointer<T>::type> {};
 
   template<typename T>
   struct __is_compound: public __negation<typename __is_fundamental<T>::type> {};
-
-  template<typename T>
-  struct __is_member_pointer: public __disjuction<typename __is_member_object_pointer<T>::type, typename __is_member_function_pointer<T>::type> {};
 
 #ifdef __CXX_STD_23__
 
