@@ -119,14 +119,11 @@ namespace std {
   template<typename T>
   struct __is_rvalue_reference: public __is_rvalue_reference<typename __remove_cv<T>::type> {};
 
-  template<typename T>
-  struct __is_reference: public __disjuction<typename __is_lvalue_reference<T>::type, typename __is_rvalue_reference<T>::type> {};
-
   template<typename>
   struct __is_member_object_pointer_helper: public __false_type { };
 
   template<typename T, typename U>
-  struct __is_member_object_pointer_helper<T U::*>: public __negation<typename _is_function<T>::type> { };
+  struct __is_member_object_pointer_helper<T U::*>: public __negation<typename __is_function<T>::type> { };
 
   template<typename T>
   struct __is_member_object_pointer: public __is_member_object_pointer_helper<typename __remove_cv<T>::type> {};
@@ -135,7 +132,7 @@ namespace std {
   struct __is_member_function_pointer_helper: public __false_type { };
 
   template<typename T, typename U>
-  struct __is_member_function_pointer_helper<T U::*>: public is_function<T> { };
+  struct __is_member_function_pointer_helper<T U::*>: public __is_function<T> { };
 
   template<typename T>
   struct __is_member_function_pointer: public __is_member_function_pointer_helper<typename __remove_cv<T>::type> {};
