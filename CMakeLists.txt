@@ -43,6 +43,8 @@ add_subdirectory(src/uchar)
 add_subdirectory(src/wchar)
 add_subdirectory(src/wctype)
 
+add_subdirectory(src/cxx/bit)
+
 add_library(caprese_libc_freestanding INTERFACE)
 target_link_libraries(
   caprese_libc_freestanding INTERFACE
@@ -95,10 +97,28 @@ target_link_libraries(
   caprese_libc_hosted
 )
 
+add_library(caprese_libcxx_freestanding INTERFACE)
+target_link_libraries(
+  caprese_libcxx_freestanding INTERFACE
+  caprese_libcxx_bit
+)
+
+add_library(caprese_libcxx_hosted INTERFACE)
+target_link_libraries(
+  caprese_libcxx_hosted INTERFACE
+)
+
+add_library(caprese_libcxx INTERFACE)
+target_link_libraries(
+  caprese_libcxx INTERFACE
+  caprese_libcxx_freestanding
+  caprese_libcxx_hosted
+)
+
 enable_testing()
 
 install(
-  TARGETS caprese_libc
+  TARGETS caprese_libc caprese_libcxx
   EXPORT libc-config
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
