@@ -235,7 +235,7 @@ namespace std {
   }
 
   template<typename T, size_t N>
-  constexpr size_t size(const T (&array)[N]) noexcept {
+  constexpr size_t size([[maybe_unused]] const T (&array)[N]) noexcept {
     return N;
   }
 
