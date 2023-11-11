@@ -229,6 +229,16 @@ namespace std {
     return reverse_iterator<T*>(array);
   }
 
+  template<typename T>
+  constexpr auto size(const T& t) -> decltype(t.size()) {
+    return t.size();
+  }
+
+  template<typename T, size_t N>
+  constexpr size_t size(const T (&array)[N]) noexcept {
+    return N;
+  }
+
   template<typename InputIterator>
   constexpr typename iterator_traits<InputIterator>::difference_type __distance(InputIterator first, InputIterator last, [[maybe_unused]] input_iterator_tag) {
     typename iterator_traits<InputIterator>::difference_type n = 0;
