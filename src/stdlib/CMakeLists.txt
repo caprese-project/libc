@@ -4,6 +4,7 @@ add_library(caprese_libc_stdlib)
 
 target_sources(
   caprese_libc_stdlib PRIVATE
+  __alloc.c
   _Exit.c
   abort.c
   abs.c
