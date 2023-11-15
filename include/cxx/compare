@@ -53,7 +53,7 @@ namespace std {
       return v.__order == __compare_order::less || v.__order == __compare_order::equivalent;
     }
 
-    friend constexpr bool operator>=([[maybe_unused]] __compare_unspecified_type, partial_ordering v) noexcept {
+    friend constexpr bool operator<=([[maybe_unused]] __compare_unspecified_type, partial_ordering v) noexcept {
       return v.__order == __compare_order::greater || v.__order == __compare_order::equivalent;
     }
 
