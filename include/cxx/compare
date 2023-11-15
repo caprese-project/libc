@@ -218,10 +218,10 @@ namespace std {
     }
   };
 
-  constexpr strong_ordering strong_ordering::less(__compare_order::less);
-  constexpr strong_ordering strong_ordering::equal(__compare_order::equivalent);
-  constexpr strong_ordering strong_ordering::equivalent(__compare_order::equivalent);
-  constexpr strong_ordering strong_ordering::greater(__compare_order::greater);
+  inline constexpr strong_ordering strong_ordering::less(__compare_order::less);
+  inline constexpr strong_ordering strong_ordering::equal(__compare_order::equivalent);
+  inline constexpr strong_ordering strong_ordering::equivalent(__compare_order::equivalent);
+  inline constexpr strong_ordering strong_ordering::greater(__compare_order::greater);
 
   constexpr bool is_eq(partial_ordering cmp) noexcept {
     return cmp == 0;
