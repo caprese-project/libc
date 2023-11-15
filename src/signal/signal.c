@@ -3,8 +3,6 @@
 #include <internal/branch.h>
 #include <signal.h>
 
-extern __signal_handler_t __signal(int sig, __signal_handler_t handler);
-
-__weak __signal_handler_t signal(int sig, __signal_handler_t handler) {
-  return __signal(sig, handler);
+__weak void (*signal(__unused int sig, __unused void (*handler)(int)))(int) {
+  return SIG_ERR;
 }

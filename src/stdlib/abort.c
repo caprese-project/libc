@@ -1,3 +1,4 @@
+#include <internal/attribute.h>
 #include <internal/unreachable.h>
 #include <signal.h>
 #include <stdbool.h>
