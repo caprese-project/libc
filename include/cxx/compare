@@ -80,10 +80,10 @@ namespace std {
     }
   };
 
-  constexpr partial_ordering partial_ordering::less(__compare_order::less);
-  constexpr partial_ordering partial_ordering::equivalent(__compare_order::equivalent);
-  constexpr partial_ordering partial_ordering::greater(__compare_order::greater);
-  constexpr partial_ordering partial_ordering::unordered(__compare_order::unordered);
+  inline constexpr partial_ordering partial_ordering::less(__compare_order::less);
+  inline constexpr partial_ordering partial_ordering::equivalent(__compare_order::equivalent);
+  inline constexpr partial_ordering partial_ordering::greater(__compare_order::greater);
+  inline constexpr partial_ordering partial_ordering::unordered(__compare_order::unordered);
 
   class weak_ordering {
     __compare_order __order;
@@ -148,9 +148,9 @@ namespace std {
     }
   };
 
-  constexpr weak_ordering weak_ordering::less(__compare_order::less);
-  constexpr weak_ordering weak_ordering::equivalent(__compare_order::equivalent);
-  constexpr weak_ordering weak_ordering::greater(__compare_order::greater);
+  inline constexpr weak_ordering weak_ordering::less(__compare_order::less);
+  inline constexpr weak_ordering weak_ordering::equivalent(__compare_order::equivalent);
+  inline constexpr weak_ordering weak_ordering::greater(__compare_order::greater);
 
   class strong_ordering {
     __compare_order __order;
