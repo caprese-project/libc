@@ -195,7 +195,7 @@ namespace std {
   }
 
   template<typename T, size_t N>
-  constexpr T* end(const T (&array)[N]) noexcept {
+  constexpr T* end(T (&array)[N]) noexcept {
     return array + N;
   }
 
