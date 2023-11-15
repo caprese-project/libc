@@ -1,0 +1,251 @@
+#ifndef CAPRESE_LIBC_CXX_COMPARE_
+#define CAPRESE_LIBC_CXX_COMPARE_
+
+namespace std {
+  enum class __compare_order {
+    less       = -1,
+    equivalent = 0,
+    greater    = 1,
+    unordered  = 2,
+  };
+
+  struct __compare_unspecified_type {
+    constexpr __compare_unspecified_type([[maybe_unused]] int) noexcept { }
+  };
+
+  class partial_ordering {
+    __compare_order __order;
+
+    constexpr explicit partial_ordering(__compare_order order) noexcept: __order(order) { }
+
+    friend class weak_ordering;
+    friend class strong_ordering;
+
+  public:
+    static const partial_ordering less;
+    static const partial_ordering equivalent;
+    static const partial_ordering greater;
+    static const partial_ordering unordered;
+
+    friend constexpr bool operator==(partial_ordering v, partial_ordering w) noexcept = default;
+
+    friend constexpr bool operator==(partial_ordering v, [[maybe_unused]] __compare_unspecified_type) noexcept {
+      return v.__order == __compare_order::equivalent;
+    }
+
+    friend constexpr bool operator<(partial_ordering v, [[maybe_unused]] __compare_unspecified_type) noexcept {
+      return v.__order == __compare_order::less;
+    }
+
+    friend constexpr bool operator<([[maybe_unused]] __compare_unspecified_type, partial_ordering v) noexcept {
+      return v.__order == __compare_order::greater;
+    }
+
+    friend constexpr bool operator>(partial_ordering v, [[maybe_unused]] __compare_unspecified_type) noexcept {
+      return v.__order == __compare_order::greater;
+    }
+
+    friend constexpr bool operator>([[maybe_unused]] __compare_unspecified_type, partial_ordering v) noexcept {
+      return v.__order == __compare_order::less;
+    }
+
+    friend constexpr bool operator<=(partial_ordering v, [[maybe_unused]] __compare_unspecified_type) noexcept {
+      return v.__order == __compare_order::less || v.__order == __compare_order::equivalent;
+    }
+
+    friend constexpr bool operator>=([[maybe_unused]] __compare_unspecified_type, partial_ordering v) noexcept {
+      return v.__order == __compare_order::greater || v.__order == __compare_order::equivalent;
+    }
+
+    friend constexpr bool operator>=(partial_ordering v, [[maybe_unused]] __compare_unspecified_type) noexcept {
+      return v.__order == __compare_order::greater || v.__order == __compare_order::equivalent;
+    }
+
+    friend constexpr bool operator>=([[maybe_unused]] __compare_unspecified_type, partial_ordering v) noexcept {
+      return v.__order == __compare_order::less || v.__order == __compare_order::equivalent;
+    }
+
+    friend constexpr partial_ordering operator<=>(partial_ordering v, [[maybe_unused]] __compare_unspecified_type) noexcept {
+      return v;
+    }
+
+    friend constexpr partial_ordering operator<=>([[maybe_unused]] __compare_unspecified_type, partial_ordering v) noexcept {
+      if (v.__order == __compare_order::less) {
+        return partial_ordering::greater;
+      } else if (v.__order == __compare_order::greater) {
+        return partial_ordering::less;
+      } else {
+        return v;
+      }
+    }
+  };
+
+  constexpr partial_ordering partial_ordering::less(__compare_order::less);
+  constexpr partial_ordering partial_ordering::equivalent(__compare_order::equivalent);
+  constexpr partial_ordering partial_ordering::greater(__compare_order::greater);
+  constexpr partial_ordering partial_ordering::unordered(__compare_order::unordered);
+
+  class weak_ordering {
+    __compare_order __order;
+
+    constexpr explicit weak_ordering(__compare_order order) noexcept: __order(order) { }
+
+    friend class strong_ordering;
+
+  public:
+    static const weak_ordering less;
+    static const weak_ordering equivalent;
+    static const weak_ordering greater;
+
+    constexpr operator partial_ordering() const noexcept {
+      return partial_ordering(__order);
+    }
+
+    friend constexpr bool operator==(weak_ordering v, weak_ordering w) noexcept = default;
+
+    friend constexpr bool operator==(weak_ordering v, [[maybe_unused]] __compare_unspecified_type) noexcept {
+      return v.__order == __compare_order::equivalent;
+    }
+
+    friend constexpr bool operator<(weak_ordering v, [[maybe_unused]] __compare_unspecified_type) noexcept {
+      return v.__order == __compare_order::less;
+    }
+
+    friend constexpr bool operator<([[maybe_unused]] __compare_unspecified_type, weak_ordering v) noexcept {
+      return v.__order == __compare_order::greater;
+    }
+
+    friend constexpr bool operator>(weak_ordering v, [[maybe_unused]] __compare_unspecified_type) noexcept {
+      return v.__order == __compare_order::greater;
+    }
+
+    friend constexpr bool operator>([[maybe_unused]] __compare_unspecified_type, weak_ordering v) noexcept {
+      return v.__order == __compare_order::less;
+    }
+
+    friend constexpr bool operator<=(weak_ordering v, [[maybe_unused]] __compare_unspecified_type) noexcept {
+      return (int)v.__order <= 0;
+    }
+
+    friend constexpr bool operator<=([[maybe_unused]] __compare_unspecified_type, weak_ordering v) noexcept {
+      return 0 <= (int)v.__order;
+    }
+
+    friend constexpr bool operator>=(weak_ordering v, [[maybe_unused]] __compare_unspecified_type) noexcept {
+      return (int)v.__order >= 0;
+    }
+
+    friend constexpr bool operator>=([[maybe_unused]] __compare_unspecified_type, weak_ordering v) noexcept {
+      return 0 >= (int)v.__order;
+    }
+
+    friend constexpr weak_ordering operator<=>(weak_ordering v, [[maybe_unused]] __compare_unspecified_type) noexcept {
+      return v;
+    }
+
+    friend constexpr weak_ordering operator<=>([[maybe_unused]] __compare_unspecified_type, weak_ordering v) noexcept {
+      return weak_ordering((__compare_order) - (int)v.__order);
+    }
+  };
+
+  constexpr weak_ordering weak_ordering::less(__compare_order::less);
+  constexpr weak_ordering weak_ordering::equivalent(__compare_order::equivalent);
+  constexpr weak_ordering weak_ordering::greater(__compare_order::greater);
+
+  class strong_ordering {
+    __compare_order __order;
+
+    constexpr explicit strong_ordering(__compare_order order) noexcept: __order(order) { }
+
+  public:
+    static const strong_ordering less;
+    static const strong_ordering equal;
+    static const strong_ordering equivalent;
+    static const strong_ordering greater;
+
+    constexpr operator partial_ordering() const noexcept {
+      return partial_ordering(__order);
+    }
+
+    constexpr operator weak_ordering() const noexcept {
+      return weak_ordering(__order);
+    }
+
+    friend constexpr bool operator==(strong_ordering v, strong_ordering w) noexcept = default;
+
+    friend constexpr bool operator==(strong_ordering v, [[maybe_unused]] __compare_unspecified_type) noexcept {
+      return v.__order == __compare_order::equivalent;
+    }
+
+    friend constexpr bool operator<(strong_ordering v, [[maybe_unused]] __compare_unspecified_type) noexcept {
+      return v.__order == __compare_order::less;
+    }
+
+    friend constexpr bool operator<([[maybe_unused]] __compare_unspecified_type, strong_ordering v) noexcept {
+      return v.__order == __compare_order::greater;
+    }
+
+    friend constexpr bool operator>(strong_ordering v, [[maybe_unused]] __compare_unspecified_type) noexcept {
+      return v.__order == __compare_order::greater;
+    }
+
+    friend constexpr bool operator>([[maybe_unused]] __compare_unspecified_type, strong_ordering v) noexcept {
+      return v.__order == __compare_order::less;
+    }
+
+    friend constexpr bool operator<=(strong_ordering v, [[maybe_unused]] __compare_unspecified_type) noexcept {
+      return (int)v.__order <= 0;
+    }
+
+    friend constexpr bool operator<=([[maybe_unused]] __compare_unspecified_type, strong_ordering v) noexcept {
+      return 0 <= (int)v.__order;
+    }
+
+    friend constexpr bool operator>=(strong_ordering v, [[maybe_unused]] __compare_unspecified_type) noexcept {
+      return (int)v.__order >= 0;
+    }
+
+    friend constexpr bool operator>=([[maybe_unused]] __compare_unspecified_type, strong_ordering v) noexcept {
+      return 0 >= (int)v.__order;
+    }
+
+    friend constexpr strong_ordering operator<=>(strong_ordering v, [[maybe_unused]] __compare_unspecified_type) noexcept {
+      return v;
+    }
+
+    friend constexpr strong_ordering operator<=>([[maybe_unused]] __compare_unspecified_type, strong_ordering v) noexcept {
+      return strong_ordering((__compare_order) - (int)v.__order);
+    }
+  };
+
+  constexpr strong_ordering strong_ordering::less(__compare_order::less);
+  constexpr strong_ordering strong_ordering::equal(__compare_order::equivalent);
+  constexpr strong_ordering strong_ordering::equivalent(__compare_order::equivalent);
+  constexpr strong_ordering strong_ordering::greater(__compare_order::greater);
+
+  constexpr bool is_eq(partial_ordering cmp) noexcept {
+    return cmp == 0;
+  }
+
+  constexpr bool is_neq(partial_ordering cmp) noexcept {
+    return cmp != 0;
+  }
+
+  constexpr bool is_lt(partial_ordering cmp) noexcept {
+    return cmp < 0;
+  }
+
+  constexpr bool is_lteq(partial_ordering cmp) noexcept {
+    return cmp <= 0;
+  }
+
+  constexpr bool is_gt(partial_ordering cmp) noexcept {
+    return cmp > 0;
+  }
+
+  constexpr bool is_gteq(partial_ordering cmp) noexcept {
+    return cmp >= 0;
+  }
+} // namespace std
+
+#endif // CAPRESE_LIBC_CXX_COMPARE_
