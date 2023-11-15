@@ -39,4 +39,4 @@ target_compile_options(
 
 target_include_directories(caprese_libc_stdlib PUBLIC ${LIBC_INCLUDE_DIR})
 
-target_link_libraries(caprese_libc_stdlib PUBLIC caprese_libc_signal)
+target_link_libraries(caprese_libc_stdlib PUBLIC caprese_libc_signal caprese_libc_string)
