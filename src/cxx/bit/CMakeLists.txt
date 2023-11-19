@@ -6,6 +6,7 @@ target_sources(
   caprese_libcxx_bit PRIVATE
   __bswapdi2.c
   __bswapsi2.c
+  __ctzdi2.c
   __popcountdi2.c
   __popcountsi2.c
 )
