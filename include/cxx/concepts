@@ -1,0 +1,26 @@
+#ifndef CAPRESE_LIBC_CXX_CONCEPTS_
+#define CAPRESE_LIBC_CXX_CONCEPTS_
+
+#include <internal/version.h>
+
+#ifdef __CXX_STD_20__
+
+#include <type_traits>
+
+namespace std {
+  template<typename T>
+  concept integral = is_integral_v<T>;
+
+  template<typename T>
+  concept signed_integral = integral<T> && is_signed_v<T>;
+
+  template<typename T>
+  concept unsigned_integral = integral<T> && !signed_integral<T>;
+
+  template<typename T>
+  concept floating_point = is_floating_point_v<T>;
+} // namespace std
+
+#endif // __CXX_STD_20__
+
+#endif // CAPRESE_LIBC_CXX_CONCEPTS_
