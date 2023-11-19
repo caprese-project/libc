@@ -43,6 +43,16 @@ namespace std {
       return __builtin_ctzll(value);
     }
   }
+
+  template<typename T>
+  constexpr int popcount(T value) noexcept {
+    if constexpr (sizeof(T) <= 4) {
+      return __builtin_popcount(value);
+    }
+    if constexpr (sizeof(T) == 8) {
+      return __builtin_popcountll(value);
+    }
+  }
 } // namespace std
 
 #endif // CAPRESE_LIBC_CXX_BIT_
