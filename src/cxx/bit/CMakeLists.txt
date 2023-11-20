@@ -16,6 +16,4 @@ target_compile_options(
   ${LIBC_COMPILE_OPTIONS}
 )
 
-target_link_libraries(caprese_libcxx_bit PUBLIC caprese_libc_stdint)
-
 target_include_directories(caprese_libcxx_bit PUBLIC ${LIBC_INCLUDE_DIR})

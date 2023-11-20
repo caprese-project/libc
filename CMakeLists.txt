@@ -58,33 +58,36 @@ target_link_libraries(
 )
 
 add_library(caprese_libc_hosted INTERFACE)
+target_sources(
+  caprese_libc_hosted INTERFACE
+  $<TARGET_OBJECTS:caprese_libc_assert>
+  $<TARGET_OBJECTS:caprese_libc_complex>
+  $<TARGET_OBJECTS:caprese_libc_ctype>
+  $<TARGET_OBJECTS:caprese_libc_errno>
+  $<TARGET_OBJECTS:caprese_libc_fenv>
+  $<TARGET_OBJECTS:caprese_libc_inttypes>
+  $<TARGET_OBJECTS:caprese_libc_limits>
+  $<TARGET_OBJECTS:caprese_libc_locale>
+  $<TARGET_OBJECTS:caprese_libc_math>
+  $<TARGET_OBJECTS:caprese_libc_setjmp>
+  $<TARGET_OBJECTS:caprese_libc_signal>
+  $<TARGET_OBJECTS:caprese_libc_stdio>
+  $<TARGET_OBJECTS:caprese_libc_stdlib>
+  $<TARGET_OBJECTS:caprese_libc_string>
+  $<TARGET_OBJECTS:caprese_libc_threads>
+  $<TARGET_OBJECTS:caprese_libc_time>
+)
 target_link_libraries(
   caprese_libc_hosted INTERFACE
-  caprese_libc_assert
-  caprese_libc_complex
-  caprese_libc_ctype
-  caprese_libc_errno
-  caprese_libc_fenv
   caprese_libc_float
-  caprese_libc_inttypes
   caprese_libc_iso646
-  caprese_libc_limits
-  caprese_libc_locale
-  caprese_libc_math
-  caprese_libc_setjmp
-  caprese_libc_signal
   caprese_libc_stdarg
   caprese_libc_stdatomic
   caprese_libc_stdbool
   caprese_libc_stddef
   caprese_libc_stdint
-  caprese_libc_stdio
-  caprese_libc_stdlib
   caprese_libc_stdnoreturn
-  caprese_libc_string
   caprese_libc_tgmath
-  caprese_libc_threads
-  caprese_libc_time
   caprese_libc_uchar
   caprese_libc_wchar
   caprese_libc_wctype
