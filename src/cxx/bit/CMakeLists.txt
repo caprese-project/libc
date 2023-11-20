@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-add_library(caprese_libcxx_bit)
+add_library(caprese_libcxx_bit OBJECT)
 
 target_sources(
   caprese_libcxx_bit PRIVATE

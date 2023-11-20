@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-add_library(caprese_libc_fenv)
+add_library(caprese_libc_fenv OBJECT)
 
 target_sources(
   caprese_libc_fenv PRIVATE

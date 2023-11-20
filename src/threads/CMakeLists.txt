@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-add_library(caprese_libc_threads)
+add_library(caprese_libc_threads OBJECT)
 
 target_sources(
   caprese_libc_threads PRIVATE

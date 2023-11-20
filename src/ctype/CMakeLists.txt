@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-add_library(caprese_libc_ctype)
+add_library(caprese_libc_ctype OBJECT)
 
 target_sources(
   caprese_libc_ctype PRIVATE

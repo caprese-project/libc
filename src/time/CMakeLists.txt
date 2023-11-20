@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-add_library(caprese_libc_time)
+add_library(caprese_libc_time OBJECT)
 
 target_sources(
   caprese_libc_time PRIVATE
