@@ -66,7 +66,6 @@ target_sources(
   $<TARGET_OBJECTS:caprese_libc_errno>
   $<TARGET_OBJECTS:caprese_libc_fenv>
   $<TARGET_OBJECTS:caprese_libc_inttypes>
-  $<TARGET_OBJECTS:caprese_libc_limits>
   $<TARGET_OBJECTS:caprese_libc_locale>
   $<TARGET_OBJECTS:caprese_libc_math>
   $<TARGET_OBJECTS:caprese_libc_setjmp>
@@ -81,6 +80,7 @@ target_link_libraries(
   caprese_libc_hosted INTERFACE
   caprese_libc_float
   caprese_libc_iso646
+  caprese_libc_limits
   caprese_libc_stdarg
   caprese_libc_stdatomic
   caprese_libc_stdbool
