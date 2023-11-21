@@ -1,0 +1,22 @@
+#ifndef CAPRESE_LIBC_CXX_TUPLE_
+#define CAPRESE_LIBC_CXX_TUPLE_
+
+#include <internal/cxx/tuple/tuple.h>
+#include <internal/cxx/tuple/tuple_size.h>
+
+namespace std {
+  template<typename... Tn>
+  using tuple = __tuple<Tn...>;
+
+  template<typename... Tn>
+  using tuple_size = __tuple_size<Tn...>;
+
+#ifdef __CXX_STD_17__
+
+  template<typename T>
+  inline constexpr __size_t tuple_size_v = std::tuple_size<T>::value;
+
+#endif // __CXX_STD_17__
+} // namespace std
+
+#endif // CAPRESE_LIBC_CXX_TUPLE_

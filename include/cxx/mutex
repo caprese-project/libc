@@ -1,6 +1,10 @@
 #ifndef CAPRESE_LIBC_CXX_MUTEX_
 #define CAPRESE_LIBC_CXX_MUTEX_
 
+#include <internal/cxx/tuple/apply.h>
+#include <internal/cxx/tuple/tie.h>
+#include <internal/cxx/tuple/tuple.h>
+
 namespace std {
   struct adopt_lock_t {
     explicit adopt_lock_t() = default;
@@ -27,6 +31,57 @@ namespace std {
 
     lock_guard(const lock_guard&)            = delete;
     lock_guard& operator=(const lock_guard&) = delete;
+  };
+
+  template<typename... MutexTypes>
+  class scoped_lock {
+    std::__tuple<MutexTypes&...> _mutex;
+
+  public:
+    explicit scoped_lock(MutexTypes&... _mutex): _mutex(std::tie(_mutex...)) {
+      std::lock(_mutex...);
+    }
+
+    scoped_lock(adopt_lock_t, MutexTypes&... _mutex): _mutex(std::tie(_mutex...)) { }
+
+    ~scoped_lock() {
+      std::apply([](auto&... _mutex) { (_mutex.unlock(), ...); }, _mutex);
+    }
+
+    scoped_lock(const scoped_lock&)            = delete;
+    scoped_lock& operator=(const scoped_lock&) = delete;
+  };
+
+  template<>
+  class scoped_lock<> {
+  public:
+    explicit scoped_lock() = default;
+    explicit scoped_lock(adopt_lock_t) noexcept {};
+    ~scoped_lock() = default;
+
+    scoped_lock(const scoped_lock&)            = delete;
+    scoped_lock& operator=(const scoped_lock&) = delete;
+  };
+
+  template<typename M>
+  class scoped_lock<M> {
+    M& _mutex;
+
+  public:
+    using mutex_type = M;
+
+    explicit scoped_lock(mutex_type& _mutex): _mutex(_mutex) {
+      _mutex.lock();
+    }
+
+    scoped_lock(mutex_type& _mutex, adopt_lock_t): _mutex(_mutex) { }
+
+    ~scoped_lock() {
+      _mutex.unlock();
+    }
+
+    scoped_lock(const scoped_lock&)            = delete;
+    scoped_lock& operator=(const scoped_lock&) = delete;
   };
 } // namespace std
 
