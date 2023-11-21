@@ -4,8 +4,27 @@
 #include <internal/cxx/tuple/apply.h>
 #include <internal/cxx/tuple/tie.h>
 #include <internal/cxx/tuple/tuple.h>
+#include <internal/cxx/type_traits/type_relation.h>
 
 namespace std {
+  template<typename L1, typename L2, typename... Ln>
+  void lock(L1& l1, L2& l2, Ln&... ln) {
+    // TODO: avoid deadlock.
+    while (true) {
+      if (l1.try_lock()) {
+        if (l2.try_lock()) {
+          if ((ln.try_lock() && ...)) {
+            return;
+          } else {
+            (ln.unlock(), ...);
+          }
+        }
+        l2.unlock();
+      }
+      l1.unlock();
+    }
+  }
+
   struct adopt_lock_t {
     explicit adopt_lock_t() = default;
   };

@@ -14,23 +14,27 @@ namespace std {
   public:
     constexpr __tuple_head()                    = default;
     constexpr __tuple_head(const __tuple_head&) = default;
-    constexpr __tuple_head(_tuple_head&&)       = default;
+    constexpr __tuple_head(__tuple_head&&)      = default;
 
     constexpr __tuple_head(const Head& head): _head(head) { }
 
     template<typename U>
-    constexpr __tuple_head(U&& head) _head(std::forward<U>(head)) { }
+    constexpr __tuple_head(U&& head): _head(std::forward<U>(head)) { }
 
     static constexpr Head& __get_head(__tuple_head& head) noexcept {
       return head._head;
     };
+
+    static constexpr const Head& __get_head(const __tuple_head& head) noexcept {
+      return head._head;
+    }
   };
 
   template<__size_t Index, typename... Tn>
   class __tuple_helper;
 
   template<__size_t Index, typename Head>
-  class __tuple_helper: private __tuple_head<Index, Head> {
+  class __tuple_helper<Index, Head>: private __tuple_head<Index, Head> {
     template<__size_t, typename...>
     friend struct __tuple_helper;
 
@@ -45,12 +49,20 @@ namespace std {
 
     template<typename U>
     explicit constexpr __tuple_helper(U&& head): __head(std::forward<U>(head)) { }
+
+    static constexpr Head& __get_head(__tuple_helper& head) noexcept {
+      return __head::__get_head(head);
+    }
+
+    static constexpr const Head& __get_head(const __tuple_helper& head) noexcept {
+      return __head::__get_head(head);
+    }
   };
 
   template<__size_t Index, typename Head, typename... Tn>
-  class __tuple_helper: public __tuple_helper<Index + 1, Tn...>, private __tuple_head<Index, Head> {
+  class __tuple_helper<Index, Head, Tn...>: public __tuple_helper<Index + 1, Tn...>, private __tuple_head<Index, Head> {
     template<__size_t, typename...>
-    friend struct __tuple_helper<Index + 1, Tn...>;
+    friend class __tuple_helper;
 
     using __next = __tuple_helper<Index + 1, Tn...>;
     using __head = __tuple_head<Index, Head>;
@@ -63,11 +75,19 @@ namespace std {
     __tuple_helper& operator=(const __tuple_helper&) = delete;
     __tuple_helper& operator=(__tuple_helper&&)      = default;
 
-    explicit constexpr __tuple_helper(const Head& head, const Tail&... tail): __next(tail...), __head(head) { }
+    explicit constexpr __tuple_helper(const Head& head, const Tn&... tail): __next(tail...), __head(head) { }
 
     template<typename U, typename... Un>
     explicit constexpr __tuple_helper(U&& head, Un&&... tail): __next(std::forward<Un>(tail)...),
                                                                __head(std::forward<U>(head)) { }
+
+    static constexpr Head& __get_head(__tuple_helper& head) noexcept {
+      return __head::__get_head(head);
+    }
+
+    static constexpr const Head& __get_head(const __tuple_helper& head) noexcept {
+      return __head::__get_head(head);
+    }
   };
 
   template<typename... Tn>
