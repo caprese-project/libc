@@ -1,6 +1,8 @@
 #ifndef CAPRESE_LIBC_CXX_MUTEX_
 #define CAPRESE_LIBC_CXX_MUTEX_
 
+#include <cstdlib>
+#include <internal/cxx/memory/addressof.h>
 #include <internal/cxx/tuple/apply.h>
 #include <internal/cxx/tuple/tie.h>
 #include <internal/cxx/tuple/tuple.h>
@@ -29,7 +31,17 @@ namespace std {
     explicit adopt_lock_t() = default;
   };
 
-  inline constexpr adopt_lock_t adopt_lock {};
+  struct defer_lock_t {
+    explicit defer_lock_t() = default;
+  };
+
+  struct try_to_lock_t {
+    explicit try_to_lock_t() = default;
+  };
+
+  inline constexpr adopt_lock_t  adopt_lock {};
+  inline constexpr defer_lock_t  defer_lock {};
+  inline constexpr try_to_lock_t try_to_lock {};
 
   template<typename M>
   class lock_guard {
@@ -50,6 +62,85 @@ namespace std {
 
     lock_guard(const lock_guard&)            = delete;
     lock_guard& operator=(const lock_guard&) = delete;
+  };
+
+  template<typename M>
+  class unique_lock {
+    M*   _mutex;
+    bool _owns;
+
+  public:
+    using mutex_type = M;
+
+    unique_lock() noexcept: _mutex(nullptr), _owns(false) { }
+
+    unique_lock(const unique_lock&) = delete;
+
+    unique_lock(unique_lock&& ul) noexcept: _mutex(ul._mutex), _owns(ul._owns) {
+      ul._mutex = nullptr;
+      ul._owns  = false;
+    }
+
+    explicit unique_lock(mutex_type& m): _mutex(__addressof(m)), _owns(false) {
+      lock();
+      _owns = true;
+    }
+
+    unique_lock(mutex_type& m, defer_lock_t) noexcept: _mutex(__addressof(m)), _owns(false) { }
+
+    unique_lock(mutex_type& m, try_to_lock_t): _mutex(__addressof(m)), _owns(_mutex->try_lock()) { }
+
+    unique_lock(mutex_type& m, adopt_lock_t) noexcept: _mutex(__addressof(m)), _owns(true) { }
+
+    ~unique_lock() {
+      if (_owns) {
+        unlock();
+      }
+    }
+
+    unique_lock& operator=(const unique_lock&) = delete;
+
+    unique_lock& operator=(unique_lock&& ul) noexcept {
+      if (_owns) {
+        unlock();
+      }
+      _mutex    = ul._mutex;
+      _owns     = ul._owns;
+      ul._mutex = nullptr;
+      ul._owns  = false;
+      return *this;
+    }
+
+    void lock() {
+      // TODO: throw system error.
+      if (_mutex == nullptr) {
+        abort();
+      } else if (_owns) {
+        abort();
+      }
+      _mutex->lock();
+      _owns = true;
+    }
+
+    bool try_lock() {
+      // TODO: throw system error.
+      if (_mutex == nullptr) {
+        abort();
+      } else if (_owns) {
+        abort();
+      }
+      _owns = _mutex->try_lock();
+      return _owns;
+    }
+
+    void unlock() {
+      // TODO: throw system error.
+      if (!_owns) {
+        abort();
+      }
+      _mutex->unlock();
+      _owns = false;
+    }
   };
 
   template<typename... MutexTypes>

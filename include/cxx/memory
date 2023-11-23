@@ -1,0 +1,17 @@
+#ifndef CAPRESE_LIBC_CXX_MEMORY_
+#define CAPRESE_LIBC_CXX_MEMORY_
+
+#include <internal/attribute.h>
+#include <internal/cxx/memory/addressof.h>
+
+namespace std {
+  template<typename T>
+  __constexpr_cxx_std_17 T* addressof(T& arg) noexcept {
+    return __addressof(arg);
+  }
+
+  template<typename T>
+  const T* addressof(const T&&) = delete;
+} // namespace std
+
+#endif // CAPRESE_LIBC_CXX_MEMORY_
