@@ -3,14 +3,10 @@
 
 #include <internal/attribute.h>
 
-namespace __cxxabiv1 {
-  class __class_type_info;
-} // namespace __cxxabiv1
-
 namespace std {
   class type_info {
-    type_info(const type_info&);
-    type_info& operator=(const type_info&);
+    type_info(const type_info&)            = delete;
+    type_info& operator=(const type_info&) = delete;
 
   protected:
     const char* __name;
@@ -20,38 +16,11 @@ namespace std {
   public:
     virtual ~type_info();
 
-    inline const char* name() const __noexcept {
-      return __name[0] == '*' ? __name + 1 : __name;
-    }
+    const char* name() const __noexcept;
 
-    inline bool before(const type_info& rhs) const __noexcept {
-      if (__name[0] == '*' && rhs.__name[0] == '*') {
-        return __name < rhs.__name;
-      } else {
-        return __builtin_strcmp(__name, rhs.__name) < 0;
-      }
-    }
+    bool before(const type_info& rhs) const __noexcept;
 
-    bool operator==(const type_info& rhs) const __noexcept {
-      if (__name == rhs.__name) {
-        return true;
-      } else if (__name[0] != '*' && __builtin_strcmp(__name, rhs.__name) == 0) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-
-    bool operator!=(const type_info& rhs) const __noexcept {
-      return !(*this == rhs);
-    }
-
-    virtual bool __is_pointer_p() const;
-    virtual bool __is_function_p() const;
-    virtual bool __do_catch(const type_info* thrown_type, void** thrown_object, unsigned outer) const;
-    virtual bool __do_upcast(const __cxxabiv1::__class_type_info* dst_type, void** obj_ptr) const;
-    virtual bool __do_catch(const type_info* thrown_type, void** thrown_object, unsigned outer) const;
-    virtual bool __do_upcast(const __cxxabiv1::__class_type_info* dst_type, void** obj_ptr) const;
+    bool operator==(const type_info& rhs) const __noexcept;
   };
 } // namespace std
 

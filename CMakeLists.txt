@@ -47,6 +47,7 @@ add_subdirectory(src/cxx/bit)
 add_subdirectory(src/cxx/exception)
 add_subdirectory(src/cxx/new)
 add_subdirectory(src/cxx/stdexcept)
+add_subdirectory(src/cxx/typeinfo)
 
 add_library(caprese_libc_freestanding INTERFACE)
 target_link_libraries(
@@ -109,6 +110,7 @@ target_link_libraries(
   $<TARGET_OBJECTS:caprese_libcxx_bit>
   $<TARGET_OBJECTS:caprese_libcxx_exception>
   $<TARGET_OBJECTS:caprese_libcxx_new>
+  $<TARGET_OBJECTS:caprese_libcxx_typeinfo>
 )
 
 add_library(caprese_libcxx_hosted INTERFACE)
