@@ -6,32 +6,6 @@
 #include <internal/cxx/ios/types.h>
 
 namespace std {
-  template<typename T>
-  struct char_traits;
-
-  template<>
-  struct char_traits<char>;
-
-  template<>
-  struct char_traits<wchar_t>;
-
-#ifdef __CXX_STD_20__
-
-  template<>
-  struct char_traits<char8_t>;
-
-#endif // __CXX_STD_20__
-
-#ifdef __CXX_STD_11__
-
-  template<>
-  struct char_traits<char16_t>;
-
-  template<>
-  struct char_traits<char32_t>;
-
-#endif // __CXX_STD_11__
-
   using streampos  = fpos<mbstate_t>;
   using wstreampos = fpos<mbstate_t>;
 
