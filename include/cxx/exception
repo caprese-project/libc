@@ -1,0 +1,8 @@
+#ifndef CAPRESE_LIBC_CXX_EXCEPTION_
+#define CAPRESE_LIBC_CXX_EXCEPTION_
+
+#include <internal/cxx/exception/bad_exception.h>
+#include <internal/cxx/exception/exception.h>
+#include <internal/cxx/exception/terminate.h>
+
+#endif // CAPRESE_LIBC_CXX_EXCEPTION_

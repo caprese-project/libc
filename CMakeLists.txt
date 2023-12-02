@@ -4,7 +4,7 @@ project(
   caprese-libc
   VERSION 0.0.1
   HOMEPAGE_URL https://github.com/caprese-project/libc
-  LANGUAGES C ASM
+  LANGUAGES CXX C ASM
 )
 
 set(
@@ -44,6 +44,8 @@ add_subdirectory(src/wchar)
 add_subdirectory(src/wctype)
 
 add_subdirectory(src/cxx/bit)
+add_subdirectory(src/cxx/exception)
+add_subdirectory(src/cxx/stdexcept)
 
 add_library(caprese_libc_freestanding INTERFACE)
 target_link_libraries(
@@ -103,13 +105,16 @@ target_link_libraries(
 add_library(caprese_libcxx_freestanding INTERFACE)
 target_link_libraries(
   caprese_libcxx_freestanding INTERFACE
-  caprese_libcxx_bit
+  $<TARGET_OBJECTS:caprese_libcxx_bit>
+  $<TARGET_OBJECTS:caprese_libcxx_exception>
 )
 
 add_library(caprese_libcxx_hosted INTERFACE)
 target_sources(
   caprese_libcxx_hosted INTERFACE
   $<TARGET_OBJECTS:caprese_libcxx_bit>
+  $<TARGET_OBJECTS:caprese_libcxx_exception>
+  $<TARGET_OBJECTS:caprese_libcxx_stdexcept>
 )
 target_link_libraries(
   caprese_libcxx_hosted INTERFACE
