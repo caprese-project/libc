@@ -26,4 +26,20 @@ namespace std {
       return false;
     }
   }
+
+  bool type_info::__is_pointer_p() const {
+    return false;
+  }
+
+  bool type_info::__is_function_p() const {
+    return false;
+  }
+
+  bool type_info::__do_catch(const type_info*, void**, unsigned) const {
+    return false;
+  }
+
+  bool type_info::__do_upcast(const __cxxabiv1::__class_type_info*, void**) const {
+    return false;
+  }
 } // namespace std
