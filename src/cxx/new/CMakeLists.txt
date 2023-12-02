@@ -5,6 +5,7 @@ add_library(caprese_libcxx_new OBJECT)
 target_sources(
   caprese_libcxx_new PRIVATE
   bad_alloc.cpp
+  handler.cpp
   operator.cpp
 )
 
