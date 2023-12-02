@@ -11,7 +11,7 @@ namespace std {
   protected:
     const char* __name;
 
-    explicit type_info(const char* name): __name(name) { }
+    explicit type_info(const char* name);
 
   public:
     virtual ~type_info();
