@@ -1,0 +1,11 @@
+#ifndef CAPRESE_LIBC_CXX_LIMITS_
+#define CAPRESE_LIBC_CXX_LIMITS_
+
+#include <internal/cxx/limits/numeric_limits.h>
+
+namespace std {
+  template<typename T>
+  using numeric_limits = __numeric_limits<T>;
+} // namespace std
+
+#endif // CAPRESE_LIBC_CXX_LIMITS_

@@ -1,0 +1,17 @@
+#ifndef CAPRESE_LIBC_CXX_STRING_
+#define CAPRESE_LIBC_CXX_STRING_
+
+#include <compare>
+#include <initializer_list>
+#include <internal/cxx/string/basic_string.h>
+#include <internal/cxx/string/char_traits.h>
+
+namespace std {
+  using string    = basic_string<char>;
+  using u8string  = basic_string<char8_t>;
+  using u16string = basic_string<char16_t>;
+  using u32string = basic_string<char32_t>;
+  using wstring   = basic_string<wchar_t>;
+} // namespace std
+
+#endif // CAPRESE_LIBC_CXX_STRING_

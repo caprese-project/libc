@@ -1,0 +1,6 @@
+#ifndef CAPRESE_LIBC_CXX_IOS_
+#define CAPRESE_LIBC_CXX_IOS_
+
+#include <internal/cxx/ios/types.h>
+
+#endif // CAPRESE_LIBC_CXX_IOS_

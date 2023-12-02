@@ -59,8 +59,16 @@
 #ifdef __CXX_STD_14__
 #define __noexcept_cxx_std_14 noexcept
 #else // ^^^ __CXX_STD_14__ ^^^ / vvv !__CXX_STD_14__ vvv
-#define __noexcept
+#define __noexcept_cxx_std_14
 #endif // !__CXX_STD_14__
+
+// __noexcept_cxx_std_17
+
+#ifdef __CXX_STD_17__
+#define __noexcept_cxx_std_17 noexcept
+#else // ^^^ __CXX_STD_17__ ^^^ / vvv !__CXX_STD_17__ vvv
+#define __noexcept_cxx_std_17
+#endif // !__CXX_STD_17__
 
 // __throw
 
@@ -97,6 +105,42 @@
 #else // ^^^ __CXX_STD_20__ ^^^ / vvv !__CXX_STD_20__ vvv
 #define __nodiscard_cxx_std_20
 #endif // !__CXX_STD_20__
+
+// __deprecated
+
+#ifdef __CXX_STD_14__
+#define __deprecated [[deprecated]]
+#else // ^^^ __CXX_STD_14__ ^^^ / vvv !__CXX_STD_14__ vvv
+#ifdef __GNUC__
+#define __deprecated __attribute__((deprecated))
+#else // ^^^ __GNUC__ ^^^ / vvv !__GNUC__ vvv
+#define __deprecated
+#endif // !__GNUC__
+#endif // !__CXX_STD_14__
+
+// __deprecated_cxx_std_17
+
+#ifdef __CXX_STD_17__
+#define __deprecated_cxx_std_17 [[deprecated]]
+#else // ^^^ __CXX_STD_17__ ^^^ / vvv !__CXX_STD_17__ vvv
+#define __deprecated_cxx_std_17
+#endif // !__CXX_STD_17__
+
+// __deprecated_cxx_std_20
+
+#ifdef __CXX_STD_20__
+#define __deprecated_cxx_std_20 [[deprecated]]
+#else // ^^^ __CXX_STD_20__ ^^^ / vvv !__CXX_STD_20__ vvv
+#define __deprecated_cxx_std_20
+#endif // !__CXX_STD_20__
+
+// __constexpr_cxx_std_11
+
+#ifdef __CXX_STD_11__
+#define __constexpr_cxx_std_11 constexpr
+#else // ^^^ __CXX_STD_11__ ^^^ / vvv !__CXX_STD_11__ vvv
+#define __constexpr_cxx_std_11
+#endif // !__CXX_STD_11__
 
 // __constexpr_cxx_std_14
 
@@ -167,6 +211,11 @@
 
 #define __noexcept
 
+// __noexcept_cxx_std_xx
+
+#define __noexcept_cxx_std_14
+#define __noexcept_cxx_std_17
+
 // __throw
 
 #define __throw(...)
@@ -184,8 +233,22 @@
 
 #define __nodiscard_cxx_std_20
 
+// __deprecated
+
+#ifdef __GNUC__
+#define __deprecated __attribute__((deprecated))
+#else // ^^^ __GNUC__ ^^^ / vvv !__GNUC__ vvv
+#define __deprecated
+#endif // !__GNUC__
+
+// __deprecated_cxx_std_xx
+
+#define __deprecated_cxx_std_17
+#define __deprecated_cxx_std_20
+
 // __constexpr_cxx_std_xx
 
+#define __constexpr_cxx_std_11
 #define __constexpr_cxx_std_14
 #define __constexpr_cxx_std_17
 #define __constexpr_cxx_std_20

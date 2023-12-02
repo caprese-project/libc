@@ -3,10 +3,14 @@
 
 #include <internal/attribute.h>
 #include <internal/cxx/memory/addressof.h>
+#include <internal/cxx/memory/allocator.h>
+#include <internal/cxx/memory/allocator_traits.h>
+#include <internal/cxx/memory/pointer_traits.h>
+#include <internal/cxx/memory/uninit.h>
 
 namespace std {
   template<typename T>
-  __constexpr_cxx_std_17 T* addressof(T& arg) noexcept {
+  __constexpr_cxx_std_17 inline T* addressof(T& arg) noexcept {
     return __addressof(arg);
   }
 

@@ -1,0 +1,34 @@
+#ifndef CAPRESE_LIBC_CXX_IOSFWD_
+#define CAPRESE_LIBC_CXX_IOSFWD_
+
+#include <cwchar>
+#include <internal/cxx/ios/fpos.h>
+#include <internal/cxx/ios/types.h>
+
+namespace std {
+  template<typename T>
+  struct char_traits;
+
+  template<>
+  struct char_traits<char>;
+
+  template<>
+  struct char_traits<wchar_t>;
+
+  template<>
+  struct char_traits<char8_t>;
+
+  template<>
+  struct char_traits<char16_t>;
+
+  template<>
+  struct char_traits<char32_t>;
+
+  using streampos    = fpos<mbstate_t>;
+  using wstreampos   = fpos<mbstate_t>;
+  using u8streampos  = fpos<mbstate_t>;
+  using u16streampos = fpos<mbstate_t>;
+  using u32streampos = fpos<mbstate_t>;
+} // namespace std
+
+#endif // CAPRESE_LIBC_CXX_IOSFWD_

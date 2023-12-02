@@ -7,8 +7,10 @@
 
 #include <internal/cxx/type_traits/characteristic.h>
 #include <internal/cxx/type_traits/constant.h>
+#include <internal/cxx/type_traits/detection.h>
 #include <internal/cxx/type_traits/logic.h>
 #include <internal/cxx/type_traits/modify.h>
+#include <internal/cxx/type_traits/sign.h>
 #include <internal/cxx/type_traits/type.h>
 #include <internal/cxx/type_traits/type_relation.h>
 
@@ -163,6 +165,15 @@ namespace std {
   template<typename T>
   using add_rvalue_reference = __add_rvalue_reference<T>;
 
+  template<bool Cond, typename T = void>
+  using enable_if = __enable_if<Cond, T>;
+
+  template<typename T>
+  using make_signed = __make_signed<T>;
+
+  template<typename T>
+  using make_unsigned = __make_unsigned<T>;
+
 #ifdef __CXX_STD_17__
 
   template<typename... Tn>
@@ -207,6 +218,15 @@ namespace std {
 
   template<typename T>
   using add_rvalue_reference_t = add_rvalue_reference<T>::type;
+
+  template<bool Cond, typename T = void>
+  using enable_if_t = typename enable_if<Cond, T>::type;
+
+  template<typename T>
+  using make_signed_t = typename make_signed<T>::type;
+
+  template<typename T>
+  using make_unsigned_t = typename make_unsigned<T>::type;
 
 #endif // __CXX_STD_14__
 
