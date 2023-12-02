@@ -1,6 +1,10 @@
 #ifndef CAPRESE_LIBC_CXX_COMPARE_
 #define CAPRESE_LIBC_CXX_COMPARE_
 
+#include <internal/version.h>
+
+#ifdef __CXX_STD_20__
+
 namespace std {
   enum class __compare_order {
     less       = -1,
@@ -247,5 +251,7 @@ namespace std {
     return cmp >= 0;
   }
 } // namespace std
+
+#endif // __CXX_STD_20__
 
 #endif // CAPRESE_LIBC_CXX_COMPARE_

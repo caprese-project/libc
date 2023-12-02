@@ -15,8 +15,14 @@ namespace std {
   template<>
   struct char_traits<wchar_t>;
 
+#ifdef __CXX_STD_20__
+
   template<>
   struct char_traits<char8_t>;
+
+#endif // __CXX_STD_20__
+
+#ifdef __CXX_STD_11__
 
   template<>
   struct char_traits<char16_t>;
@@ -24,11 +30,23 @@ namespace std {
   template<>
   struct char_traits<char32_t>;
 
-  using streampos    = fpos<mbstate_t>;
-  using wstreampos   = fpos<mbstate_t>;
-  using u8streampos  = fpos<mbstate_t>;
+#endif // __CXX_STD_11__
+
+  using streampos  = fpos<mbstate_t>;
+  using wstreampos = fpos<mbstate_t>;
+
+#ifdef __CXX_STD_20__
+
+  using u8streampos = fpos<mbstate_t>;
+
+#endif // __CXX_STD_20__
+
+#ifdef __CXX_STD_11__
+
   using u16streampos = fpos<mbstate_t>;
   using u32streampos = fpos<mbstate_t>;
+
+#endif // __CXX_STD_11__
 } // namespace std
 
 #endif // CAPRESE_LIBC_CXX_IOSFWD_

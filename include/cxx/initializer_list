@@ -22,7 +22,7 @@ namespace std {
     __constexpr_cxx_std_14 initializer_list(const_iterator iter, size_type size): _iter(iter), _size(size) { }
 
   public:
-    __constexpr_cxx_std_14 initializer_list(): _iter(0), _size(0) __noexcept { }
+    __constexpr_cxx_std_14 initializer_list() __noexcept: _iter(0), _size(0) { }
 
     ~initializer_list() = default;
 

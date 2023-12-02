@@ -7,11 +7,21 @@
 #include <internal/cxx/string/char_traits.h>
 
 namespace std {
-  using string    = basic_string<char>;
-  using u8string  = basic_string<char8_t>;
+  using string  = basic_string<char>;
+  using wstring = basic_string<wchar_t>;
+
+#ifdef __CXX_STD_20__
+
+  using u8string = basic_string<char8_t>;
+
+#endif // __CXX_STD_20__
+
+#ifdef __CXX_STD_11__
+
   using u16string = basic_string<char16_t>;
   using u32string = basic_string<char32_t>;
-  using wstring   = basic_string<wchar_t>;
+
+#endif // __CXX_STD_11__
 } // namespace std
 
 #endif // CAPRESE_LIBC_CXX_STRING_

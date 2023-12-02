@@ -1,6 +1,7 @@
 #include <cstddef>
 #include <cstdlib>
 #include <internal/branch.h>
+#include <internal/cxx/new/handler.h>
 #include <internal/cxx/new/operator.h>
 
 extern "C" {
@@ -38,7 +39,7 @@ __weak void* operator new(std::__size_t size, const std::nothrow_t&) __noexcept 
   return ptr;
 }
 
-__weak void* operator new(std::__size_t size, void* ptr) __noexcept {
+__weak void* operator new(std::__size_t, void* ptr) __noexcept {
   return ptr;
 }
 
@@ -97,7 +98,7 @@ __weak void* operator new[](std::__size_t size, const std::nothrow_t&) __noexcep
   return ptr;
 }
 
-__weak void* operator new[](std::__size_t size, void* ptr) __noexcept {
+__weak void* operator new[](std::__size_t, void* ptr) __noexcept {
   return ptr;
 }
 
@@ -163,7 +164,7 @@ __weak void operator delete[](void* ptr, const std::nothrow_t&) __noexcept {
   ::operator delete[](ptr);
 }
 
-__weak void operator delete[](void*, void*) __noexcept {}
+__weak void operator delete[](void*, void*) __noexcept { }
 
 #ifdef __CXX_STD_14__
 

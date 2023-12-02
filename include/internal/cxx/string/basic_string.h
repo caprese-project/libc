@@ -3,6 +3,7 @@
 
 #include <cassert>
 #include <internal/attribute.h>
+#include <internal/cxx/iterator/base.h>
 #include <internal/cxx/memory/allocator.h>
 #include <internal/cxx/memory/allocator_traits.h>
 #include <internal/cxx/string/char_traits.h>
@@ -14,7 +15,7 @@ namespace std {
   class basic_string {
   public:
     using traits_type     = Traits;
-    using value_type      = typename Traits::char_type;
+    using value_type      = typename traits_type::char_type;
     using allocator_type  = Allocator;
     using size_type       = typename allocator_traits<Allocator>::size_type;
     using difference_type = typename allocator_traits<Allocator>::difference_type;
@@ -23,28 +24,25 @@ namespace std {
     using pointer         = typename allocator_traits<Allocator>::pointer;
     using const_pointer   = typename allocator_traits<Allocator>::const_pointer;
 
-    template<typename T>
-    struct __iterator_base { };
+    struct iterator: public __iterator_base<pointer, basic_string> { };
 
-    struct iterator: public __iterator_base<pointer> { };
-
-    struct const_iterator: public __iterator_base<const_pointer> { };
+    struct const_iterator: public __iterator_base<const_pointer, basic_string> { };
 
     using reverse_iterator       = ::std::reverse_iterator<iterator>;
     using const_reverse_iterator = ::std::reverse_iterator<const_iterator>;
 
   private:
+    static constexpr size_type _threshold = sizeof(max_align_t) / sizeof(value_type);
+
     union {
       pointer    _data;
-      value_type _short_data[sizeof(max_align_t) / sizeof(value_type)];
+      value_type _short_data[_threshold];
     };
 
     size_type _size;
     size_type _capacity;
 
     allocator_type _allocator;
-
-    static constexpr size_type _threshold = std::size(_short_data);
 
   public:
     static constexpr size_type npos = static_cast<size_type>(-1);
@@ -345,6 +343,54 @@ namespace std {
 #ifdef __CXX_STD_23__
     basic_string& operator=(nullptr_t) = delete;
 #endif // __CXX_STD_23__
+
+    __constexpr_cxx_std_20 iterator begin() __noexcept {
+      return iterator(_data);
+    }
+
+    __constexpr_cxx_std_20 const_iterator begin() const __noexcept {
+      return cbegin();
+    }
+
+    __constexpr_cxx_std_20 iterator end() __noexcept {
+      return iterator(_data + _size);
+    }
+
+    __constexpr_cxx_std_20 const_iterator end() const __noexcept {
+      return cend();
+    }
+
+    __constexpr_cxx_std_20 const_iterator cbegin() const __noexcept {
+      return const_iterator(_data);
+    }
+
+    __constexpr_cxx_std_20 const_iterator cend() const __noexcept {
+      return const_iterator(_data + _size);
+    }
+
+    __constexpr_cxx_std_20 reverse_iterator rbegin() __noexcept {
+      return reverse_iterator(end());
+    }
+
+    __constexpr_cxx_std_20 const_reverse_iterator rbegin() const __noexcept {
+      return crbegin();
+    }
+
+    __constexpr_cxx_std_20 reverse_iterator rend() __noexcept {
+      return reverse_iterator(begin());
+    }
+
+    __constexpr_cxx_std_20 const_reverse_iterator rend() const __noexcept {
+      return crend();
+    }
+
+    __constexpr_cxx_std_20 const_reverse_iterator crbegin() const __noexcept {
+      return const_reverse_iterator(cend());
+    }
+
+    __constexpr_cxx_std_20 const_reverse_iterator crend() const __noexcept {
+      return const_reverse_iterator(cbegin());
+    }
 
     __constexpr_cxx_std_20 size_type size() const __noexcept {
       return _size;

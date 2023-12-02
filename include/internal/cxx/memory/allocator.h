@@ -16,10 +16,10 @@ namespace std {
     using difference_type = __ptrdiff_t;
 
 #ifndef __CXX_STD_20__
-    __deprecated_cxx_std_17 using pointer         = T*;
-    __deprecated_cxx_std_17 using const_pointer   = const T*;
-    __deprecated_cxx_std_17 using reference       = T&;
-    __deprecated_cxx_std_17 using const_reference = const T&;
+    using pointer         = T*;
+    using const_pointer   = const T*;
+    using reference       = T&;
+    using const_reference = const T&;
 #endif // __CXX_STD_20__
 
 #ifdef __CXX_STD_14__
@@ -39,7 +39,7 @@ namespace std {
 
     __constexpr_cxx_std_20 ~allocator() __noexcept { }
 
-    __constexpr_cxx_std_20 operator=(const allocator&) = default;
+    __constexpr_cxx_std_20 allocator& operator=(const allocator&) = default;
 
     __nodiscard_cxx_std_20 __constexpr_cxx_std_20 T* allocate(size_type n) {
       return static_cast<T*>(::operator new(n * sizeof(T)));

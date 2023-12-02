@@ -15,7 +15,7 @@ namespace std {
   using __detect_t = typename __detect<Cond, __void_t<Cond<Args...>>>::type;
 
   template<template<typename...> typename Cond, typename... Args>
-  using __detect_v = __detect<Cond, __void_t<Cond<Args...>>>::value;
+  inline constexpr bool __detect_v = __detect<Cond, __void_t<Cond<Args...>>>::value;
 
   template<template<typename...> typename Then, typename Else, typename = void, typename... Args>
   struct __detect_type {

@@ -26,6 +26,8 @@ namespace std {
     using state_type = mbstate_t;
   };
 
+#ifdef __CXX_STD_20__
+
   template<>
   struct __char_traits_types<char8_t> {
     using int_type   = unsigned int;
@@ -33,6 +35,10 @@ namespace std {
     using pos_type   = u8streampos;
     using state_type = mbstate_t;
   };
+
+#endif // __CXX_STD_20__
+
+#ifndef __CXX_STD_11__
 
   template<>
   struct __char_traits_types<char16_t> {
@@ -49,6 +55,8 @@ namespace std {
     using pos_type   = u32streampos;
     using state_type = mbstate_t;
   };
+
+#endif // __CXX_STD_11__
 
   template<typename T>
   struct char_traits {

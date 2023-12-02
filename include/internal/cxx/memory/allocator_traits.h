@@ -1,8 +1,11 @@
 #ifndef CAPRESE_LIBC_INTERNAL_CXX_MEMORY_ALLOCATOR_TRAITS_H_
 #define CAPRESE_LIBC_INTERNAL_CXX_MEMORY_ALLOCATOR_TRAITS_H_
 
+#include <internal/cxx/limits/numeric_limits.h>
 #include <internal/cxx/memory/pointer_traits.h>
+#include <internal/cxx/type_traits/characteristic.h>
 #include <internal/cxx/type_traits/detection.h>
+#include <internal/cxx/type_traits/sign.h>
 #include <internal/cxx/utility/fwd.h>
 
 namespace std {
@@ -57,7 +60,7 @@ namespace std {
     using propagate_on_container_copy_assignment = typename __detect_type<__propagate_on_container_copy_assignment, __false_type, allocator_type>::type;
     using propagate_on_container_move_assignment = typename __detect_type<__propagate_on_container_move_assignment, __false_type, allocator_type>::type;
     using propagate_on_container_swap            = typename __detect_type<__propagate_on_container_swap, __false_type, allocator_type>::type;
-    using is_always_equal                        = typename __detect_type<__is_always_equal, __is_empty_t<allocator_type>::type, allocator_type>::type;
+    using is_always_equal                        = typename __detect_type<__is_always_equal, typename __is_empty_t<allocator_type>::type, allocator_type>::type;
 
   private:
     template<typename Alloc>
