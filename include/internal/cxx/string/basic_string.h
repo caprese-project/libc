@@ -465,7 +465,7 @@ namespace std {
 
     __constexpr_cxx_std_20 const_reference at(size_type pos) const {
       __if_unlikely (pos >= _size) {
-        throw out_of_range("basic_string::at");
+        __throw_exception(out_of_range("basic_string::at"));
       }
 
       return _data[pos];
@@ -473,7 +473,7 @@ namespace std {
 
     __constexpr_cxx_std_20 reference at(size_type pos) {
       __if_unlikely (pos >= _size) {
-        throw out_of_range("basic_string::at");
+        __throw_exception(out_of_range("basic_string::at"));
       }
 
       return _data[pos];

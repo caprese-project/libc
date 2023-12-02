@@ -20,7 +20,7 @@ __weak void* operator new(std::__size_t size) __throw_cxx_std_03(std::bad_alloc)
     if (handler) {
       handler();
     } else {
-      throw std::bad_alloc();
+      __throw_exception(std::bad_alloc());
     }
   }
 
@@ -30,11 +30,15 @@ __weak void* operator new(std::__size_t size) __throw_cxx_std_03(std::bad_alloc)
 __weak void* operator new(std::__size_t size, const std::nothrow_t&) __noexcept {
   void* ptr = nullptr;
 
+#if __exception_enabled
   try {
+#endif // __exception_enabled
     ptr = ::operator new(size);
+#if __exception_enabled
   } catch (...) {
     // Do nothing.
   }
+#endif // __exception_enabled
 
   return ptr;
 }
@@ -61,7 +65,7 @@ __weak void* operator new(std::__size_t size, std::align_val_t alignment) {
     if (handler) {
       handler();
     } else {
-      throw std::bad_alloc();
+      __throw_exception(std::bad_alloc());
     }
   }
 
@@ -71,11 +75,15 @@ __weak void* operator new(std::__size_t size, std::align_val_t alignment) {
 __weak void* operator new(std::__size_t size, std::align_val_t alignment, const std::nothrow_t&) __noexcept {
   void* ptr = nullptr;
 
+#if __exception_enabled
   try {
+#endif // __exception_enabled
     ptr = ::operator new(size, alignment);
+#if __exception_enabled
   } catch (...) {
     // Do nothing.
   }
+#endif // __exception_enabled
 
   return ptr;
 }
@@ -89,11 +97,15 @@ __weak void* operator new[](std::__size_t size) __throw_cxx_std_03(std::bad_allo
 __weak void* operator new[](std::__size_t size, const std::nothrow_t&) __noexcept {
   void* ptr = nullptr;
 
+#if __exception_enabled
   try {
+#endif // __exception_enabled
     ptr = ::operator new[](size);
+#if __exception_enabled
   } catch (...) {
     // Do nothing.
   }
+#endif // __exception_enabled
 
   return ptr;
 }
@@ -111,11 +123,15 @@ __weak void* operator new[](std::__size_t size, std::align_val_t alignment) {
 __weak void* operator new[](std::__size_t size, std::align_val_t alignment, const std::nothrow_t&) __noexcept {
   void* ptr = nullptr;
 
+#if __exception_enabled
   try {
+#endif // __exception_enabled
     ptr = ::operator new[](size, alignment);
+#if __exception_enabled
   } catch (...) {
     // Do nothing.
   }
+#endif // __exception_enabled
 
   return ptr;
 }

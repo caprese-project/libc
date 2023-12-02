@@ -86,6 +86,26 @@
 #define __throw_cxx_std_03(...) throw(__VA_ARGS__)
 #endif // !__CXX_STD_11__
 
+// __exception_enabled
+
+#ifdef __GNUC__
+#ifdef __EXCEPTIONS
+#define __exception_enabled 1
+#else // ^^^ __EXCEPTIONS ^^^ / vvv !__EXCEPTIONS vvv
+#define __exception_enabled 0
+#endif // !__EXCEPTIONS
+#else  // ^^^ __GNUC__ ^^^ / vvv !__GNUC__ vvv
+#define __exception_enabled 0
+#endif // !__GNUC__
+
+// __throw_exception
+
+#if __exception_enabled
+#define __throw_exception(exception) throw(exception)
+#else // ^^^ __exception_enabled ^^^ / vvv !__exception_enabled vvv
+#define __throw_exception(exception)
+#endif // !__exception_enabled
+
 // __nodiscard
 
 #ifdef __CXX_STD_17__
@@ -220,6 +240,14 @@
 
 #define __throw(...)
 #define __throw_cxx_std_03(...)
+
+// __exception_enabled
+
+#define __exception_enabled 0
+
+// __throw_exception
+
+#define __throw_exception(exception)
 
 // __nodiscard
 
