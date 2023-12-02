@@ -1,6 +1,7 @@
+#include <internal/attribute.h>
 #include <stdint.h>
 
-int __ctzdi2(uint64_t value) {
+__weak int __ctzdi2(uint64_t value) {
   if (value == 0) return 64;
 
   int count = 0;
