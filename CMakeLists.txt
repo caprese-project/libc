@@ -114,9 +114,6 @@ target_link_libraries(
 add_library(caprese_libcxx_hosted INTERFACE)
 target_sources(
   caprese_libcxx_hosted INTERFACE
-  $<TARGET_OBJECTS:caprese_libcxx_bit>
-  $<TARGET_OBJECTS:caprese_libcxx_exception>
-  $<TARGET_OBJECTS:caprese_libcxx_new>
   $<TARGET_OBJECTS:caprese_libcxx_stdexcept>
 )
 target_link_libraries(
