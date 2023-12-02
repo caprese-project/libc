@@ -62,6 +62,42 @@
 #define __noexcept
 #endif // !__CXX_STD_14__
 
+// __throw
+
+#ifdef __CXX_STD_17__
+#define __throw(...)
+#else // ^^^ __CXX_STD_17__ ^^^ / vvv !__CXX_STD_17__ vvv
+#define __throw(...) throw(__VA_ARGS__)
+#endif // !__CXX_STD_17__
+
+// __throw_cxx_std_03
+
+#ifdef __CXX_STD_11__
+#define __throw_cxx_std_03(...)
+#else // ^^^ __CXX_STD_11__ ^^^ / vvv !__CXX_STD_11__ vvv
+#define __throw_cxx_std_03(...) throw(__VA_ARGS__)
+#endif // !__CXX_STD_11__
+
+// __nodiscard
+
+#ifdef __CXX_STD_17__
+#define __nodiscard [[nodiscard]]
+#else // ^^^ __CXX_STD_17__ ^^^ / vvv !__CXX_STD_17__ vvv
+#ifdef __GNUC__
+#define __nodiscard __attribute__((warn_unused_result))
+#else // ^^^ __GNUC__ ^^^ / vvv !__GNUC__ vvv
+#define __nodiscard
+#endif // !__GNUC__
+#endif // !__CXX_STD_17
+
+// __nodiscard_cxx_std_20
+
+#ifdef __CXX_STD_20__
+#define __nodiscard_cxx_std_20 [[nodiscard]]
+#else // ^^^ __CXX_STD_20__ ^^^ / vvv !__CXX_STD_20__ vvv
+#define __nodiscard_cxx_std_20
+#endif // !__CXX_STD_20__
+
 // __constexpr_cxx_std_14
 
 #ifdef __CXX_STD_14__
@@ -130,6 +166,23 @@
 // __noexcept
 
 #define __noexcept
+
+// __throw
+
+#define __throw(...)
+#define __throw_cxx_std_03(...)
+
+// __nodiscard
+
+#ifdef __GNUC__
+#define __nodiscard __attribute__((warn_unused_result))
+#else // ^^^ __GNUC__ ^^^ / vvv !__GNUC__ vvv
+#define __nodiscard
+#endif // !__GNUC__
+
+// __nodiscard_cxx_std_xx
+
+#define __nodiscard_cxx_std_20
 
 // __constexpr_cxx_std_xx
 

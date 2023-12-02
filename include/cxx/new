@@ -1,0 +1,11 @@
+#ifndef CAPRESE_LIBC_CXX_NEW_
+#define CAPRESE_LIBC_CXX_NEW_
+
+#include <internal/cxx/new/align_val.h>
+#include <internal/cxx/new/bad_alloc.h>
+#include <internal/cxx/new/destroying_delete.h>
+#include <internal/cxx/new/handler.h>
+#include <internal/cxx/new/nothrow.h>
+#include <internal/cxx/new/operator.h>
+
+#endif // CAPRESE_LIBC_CXX_NEW_
