@@ -3,6 +3,8 @@
 namespace __cxxabiv1 {
   __pointer_type_info::__pointer_type_info(const char* name, int flags, const type_info* type): __pbase_type_info(name, flags, type) { }
 
+  __pointer_type_info::~__pointer_type_info() { }
+
   bool __pointer_type_info::__is_pointer_p() const {
     return true;
   }

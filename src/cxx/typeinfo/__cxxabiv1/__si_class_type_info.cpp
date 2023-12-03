@@ -3,6 +3,8 @@
 namespace __cxxabiv1 {
   __si_class_type_info::__si_class_type_info(const char* name, const __class_type_info* base_type): __class_type_info(name), __base_type(base_type) { }
 
+  __si_class_type_info::~__si_class_type_info() { }
+
   bool __si_class_type_info::__do_dyncast(ptrdiff_t                src2dst,
                                           __sub_kind               access_path,
                                           const __class_type_info* dst_type,

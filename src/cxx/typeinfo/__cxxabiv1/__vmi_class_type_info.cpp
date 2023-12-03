@@ -3,6 +3,8 @@
 namespace __cxxabiv1 {
   __vmi_class_type_info::__vmi_class_type_info(const char* name, int flags): __class_type_info(name), __flags(flags), __base_count(0) { }
 
+  __vmi_class_type_info::~__vmi_class_type_info() { }
+
   bool __vmi_class_type_info::__do_dyncast(ptrdiff_t                src2dst,
                                            __sub_kind               access_path,
                                            const __class_type_info* dst_type,

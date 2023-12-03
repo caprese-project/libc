@@ -52,19 +52,19 @@ namespace __cxxabiv1 {
   class __fundamental_type_info: public type_info {
   public:
     explicit __fundamental_type_info(const char*);
-    virtual ~__fundamental_type_info() = default;
+    virtual ~__fundamental_type_info();
   };
 
   class __array_type_info: public type_info {
   public:
     explicit __array_type_info(const char*);
-    virtual ~__array_type_info() = default;
+    virtual ~__array_type_info();
   };
 
   class __function_type_info: public type_info {
   public:
     explicit __function_type_info(const char*);
-    virtual ~__function_type_info() = default;
+    virtual ~__function_type_info();
 
   protected:
     virtual bool __is_function_p() const;
@@ -73,7 +73,7 @@ namespace __cxxabiv1 {
   class __enum_type_info: public type_info {
   public:
     explicit __enum_type_info(const char*);
-    virtual ~__enum_type_info() = default;
+    virtual ~__enum_type_info();
   };
 
   class __pbase_type_info: public type_info {
@@ -92,7 +92,7 @@ namespace __cxxabiv1 {
     const type_info* __pointee;
 
     explicit __pbase_type_info(const char*, int, const type_info*);
-    virtual ~__pbase_type_info() = default;
+    virtual ~__pbase_type_info();
 
   protected:
     __pbase_type_info(const __pbase_type_info&)            = default;
@@ -105,7 +105,7 @@ namespace __cxxabiv1 {
   class __pointer_type_info: public __pbase_type_info {
   public:
     explicit __pointer_type_info(const char*, int, const type_info*);
-    virtual ~__pointer_type_info() = default;
+    virtual ~__pointer_type_info();
 
   protected:
     virtual bool __is_pointer_p() const;
@@ -117,7 +117,7 @@ namespace __cxxabiv1 {
     __class_type_info* __context;
 
     explicit __pointer_to_member_type_info(const char*, int, const type_info*, __class_type_info*);
-    virtual ~__pointer_to_member_type_info() = default;
+    virtual ~__pointer_to_member_type_info();
 
   protected:
     __pointer_to_member_type_info(const __pointer_to_member_type_info&)            = default;
@@ -179,7 +179,7 @@ namespace __cxxabiv1 {
     };
 
     explicit __class_type_info(const char*);
-    virtual ~__class_type_info() = default;
+    virtual ~__class_type_info();
 
   protected:
     virtual bool __do_upcast(const __class_type_info*, void**) const;
@@ -197,7 +197,7 @@ namespace __cxxabiv1 {
     const __class_type_info* __base_type;
 
     explicit __si_class_type_info(const char*, const __class_type_info*);
-    virtual ~__si_class_type_info() = default;
+    virtual ~__si_class_type_info();
 
   protected:
     __si_class_type_info(const __si_class_type_info&)            = default;
@@ -221,7 +221,7 @@ namespace __cxxabiv1 {
     __base_class_type_info __base_info[1];
 
     explicit __vmi_class_type_info(const char*, int);
-    virtual ~__vmi_class_type_info() = default;
+    virtual ~__vmi_class_type_info();
 
   protected:
     virtual bool       __do_dyncast(ptrdiff_t, __sub_kind, const __class_type_info*, const void*, const __class_type_info*, const void*, __dyncast_result& __restrict) const;

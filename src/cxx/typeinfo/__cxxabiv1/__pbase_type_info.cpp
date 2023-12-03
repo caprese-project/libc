@@ -9,6 +9,8 @@ namespace __cxxabiv1 {
 
   __pbase_type_info::__pbase_type_info(const char* name, int flags, const type_info* pointee): type_info(name), __flags(flags), __pointee(pointee) { }
 
+  __pbase_type_info::~__pbase_type_info() { }
+
   bool __pbase_type_info::__do_catch(const type_info* thr_type, void** thr_obj, unsigned int outer) const {
     if (*this == *thr_type) {
       return true;

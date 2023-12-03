@@ -38,7 +38,7 @@ namespace std {
     return false;
   }
 
-  bool type_info::__do_catch(const type_info*, void**, unsigned) const {
+  bool type_info::__do_catch(const type_info*, void**, unsigned int) const {
     return false;
   }
 
