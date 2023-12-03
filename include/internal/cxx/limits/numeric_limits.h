@@ -10,6 +10,7 @@ namespace {
 
   template<>
   class __numeric_limits<char> {
+  public:
     static __constexpr_cxx_std_11 char min() __noexcept {
       return CHAR_MIN;
     }
@@ -21,6 +22,7 @@ namespace {
 
   template<>
   class __numeric_limits<signed char> {
+  public:
     static __constexpr_cxx_std_11 signed char min() __noexcept {
       return SCHAR_MIN;
     }
@@ -32,6 +34,7 @@ namespace {
 
   template<>
   class __numeric_limits<unsigned char> {
+  public:
     static __constexpr_cxx_std_11 unsigned char min() __noexcept {
       return 0;
     }
@@ -43,6 +46,7 @@ namespace {
 
   template<>
   class __numeric_limits<short> {
+  public:
     static __constexpr_cxx_std_11 short min() __noexcept {
       return SHRT_MIN;
     }
@@ -54,6 +58,7 @@ namespace {
 
   template<>
   class __numeric_limits<unsigned short> {
+  public:
     static __constexpr_cxx_std_11 unsigned short min() __noexcept {
       return 0;
     }
@@ -65,6 +70,7 @@ namespace {
 
   template<>
   class __numeric_limits<int> {
+  public:
     static __constexpr_cxx_std_11 int min() __noexcept {
       return INT_MIN;
     }
@@ -76,6 +82,7 @@ namespace {
 
   template<>
   class __numeric_limits<unsigned int> {
+  public:
     static __constexpr_cxx_std_11 unsigned int min() __noexcept {
       return 0;
     }
@@ -87,6 +94,7 @@ namespace {
 
   template<>
   class __numeric_limits<long> {
+  public:
     static __constexpr_cxx_std_11 long min() __noexcept {
       return LONG_MIN;
     }
@@ -98,6 +106,7 @@ namespace {
 
   template<>
   class __numeric_limits<unsigned long> {
+  public:
     static __constexpr_cxx_std_11 unsigned long min() __noexcept {
       return 0;
     }
@@ -109,6 +118,7 @@ namespace {
 
   template<>
   class __numeric_limits<long long> {
+  public:
     static __constexpr_cxx_std_11 long long min() __noexcept {
       return LLONG_MIN;
     }
@@ -120,6 +130,7 @@ namespace {
 
   template<>
   class __numeric_limits<unsigned long long> {
+  public:
     static __constexpr_cxx_std_11 unsigned long long min() __noexcept {
       return 0;
     }
