@@ -1,36 +1,10 @@
 #ifndef CAPRESE_LIBC_CXX_TYPEINFO_
 #define CAPRESE_LIBC_CXX_TYPEINFO_
 
-#include <internal/attribute.h>
+#ifdef __GNUC__
 
-namespace __cxxabiv1 {
-  class __class_type_info;
-} // namespace __cxxabiv1
+#include <internal/cxx/typeinfo/__cxxabiv1.h>
 
-namespace std {
-  class type_info {
-    type_info(const type_info&)            = delete;
-    type_info& operator=(const type_info&) = delete;
-
-  protected:
-    const char* __name;
-
-    explicit type_info(const char* name);
-
-  public:
-    virtual ~type_info();
-
-    const char* name() const __noexcept;
-
-    bool before(const type_info& rhs) const __noexcept;
-
-    bool operator==(const type_info& rhs) const __noexcept;
-
-    virtual bool __is_pointer_p() const;
-    virtual bool __is_function_p() const;
-    virtual bool __do_catch(const type_info* __thr_type, void** __thr_obj, unsigned __outer) const;
-    virtual bool __do_upcast(const __cxxabiv1::__class_type_info* __target, void** __obj_ptr) const;
-  };
-} // namespace std
+#endif // __GNUC__
 
 #endif // CAPRESE_LIBC_CXX_TYPEINFO_

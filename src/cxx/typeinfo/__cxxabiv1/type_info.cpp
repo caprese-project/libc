@@ -1,5 +1,4 @@
-#include <internal/attribute.h>
-#include <typeinfo>
+#include <internal/cxx/typeinfo/__cxxabiv1.h>
 
 namespace std {
   type_info::type_info(const char* name): __name(name) {};
@@ -39,7 +38,7 @@ namespace std {
     return false;
   }
 
-  bool type_info::__do_upcast(const __cxxabiv1::__class_type_info*, void**) const {
+  bool type_info::__do_upcast(const ::__cxxabiv1::__class_type_info*, void**) const {
     return false;
   }
 } // namespace std
