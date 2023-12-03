@@ -103,6 +103,7 @@
 #if __exception_enabled
 #define __throw_exception(exception) throw(exception)
 #else // ^^^ __exception_enabled ^^^ / vvv !__exception_enabled vvv
+extern "C" __noreturn void abort();
 #define __throw_exception(exception) abort()
 #endif // !__exception_enabled
 
@@ -247,6 +248,7 @@
 
 // __throw_exception
 
+__noreturn void abort();
 #define __throw_exception(exception) abort()
 
 // __nodiscard
