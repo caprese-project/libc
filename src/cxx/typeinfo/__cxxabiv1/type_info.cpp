@@ -26,6 +26,10 @@ namespace std {
     }
   }
 
+  bool type_info::operator!=(const type_info& rhs) const __noexcept {
+    return !(*this == rhs);
+  }
+
   bool type_info::__is_pointer_p() const {
     return false;
   }

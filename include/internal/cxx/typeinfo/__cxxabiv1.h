@@ -37,6 +37,7 @@ namespace std {
     bool before(const type_info& rhs) const __noexcept;
 
     bool operator==(const type_info& rhs) const __noexcept;
+    bool operator!=(const type_info& rhs) const __noexcept;
 
     virtual bool __is_pointer_p() const;
     virtual bool __is_function_p() const;

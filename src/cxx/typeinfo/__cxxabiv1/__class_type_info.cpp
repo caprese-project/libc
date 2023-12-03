@@ -75,7 +75,7 @@ namespace __cxxabiv1 {
     return __not_contained;
   }
 
-  __class_type_info::__upcast_result::__upcast_result(int details): dst_ptr(NULL), part2dst(__unknown), src_details(details), base_type(NULL) { }
+  __class_type_info::__upcast_result::__upcast_result(int details): dst_ptr(nullptr), part2dst(__unknown), src_details(details), base_type(nullptr) { }
 
-  __class_type_info::__dyncast_result::__dyncast_result(int details): dst_ptr(NULL), whole2dst(__unknown), whole2src(__unknown), dst2src(__unknown), whole_details(details) { }
+  __class_type_info::__dyncast_result::__dyncast_result(int details): dst_ptr(nullptr), whole2dst(__unknown), whole2src(__unknown), dst2src(__unknown), whole_details(details) { }
 } // namespace __cxxabiv1

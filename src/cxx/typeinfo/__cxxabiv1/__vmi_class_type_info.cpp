@@ -31,7 +31,7 @@ namespace __cxxabiv1 {
       return false;
     }
 
-    const void* dst_cand = NULL;
+    const void* dst_cand = nullptr;
 
     if (src2dst >= 0) {
       dst_cand = adjust_pointer<void>(src_ptr, -src2dst);
@@ -134,11 +134,11 @@ namespace __cxxabiv1 {
               return false;
             }
           } else if (contained_p(__sub_kind(new_sub_kind & old_sub_kind))) {
-            result.dst_ptr = NULL;
+            result.dst_ptr = nullptr;
             result.dst2src = __contained_ambig;
             return true;
           } else {
-            result.dst_ptr = NULL;
+            result.dst_ptr = nullptr;
             result.dst2src = __not_contained;
             result_ambig   = true;
           }
@@ -243,7 +243,7 @@ namespace __cxxabiv1 {
             }
           }
         } else if (result.dst_ptr != result2.dst_ptr) {
-          result.dst_ptr  = NULL;
+          result.dst_ptr  = nullptr;
           result.part2dst = __contained_ambig;
           return true;
         } else if (result.dst_ptr) {
