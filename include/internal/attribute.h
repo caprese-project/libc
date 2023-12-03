@@ -103,7 +103,7 @@
 #if __exception_enabled
 #define __throw_exception(exception) throw(exception)
 #else // ^^^ __exception_enabled ^^^ / vvv !__exception_enabled vvv
-#define __throw_exception(exception)
+#define __throw_exception(exception) abort()
 #endif // !__exception_enabled
 
 // __nodiscard
@@ -247,7 +247,7 @@
 
 // __throw_exception
 
-#define __throw_exception(exception)
+#define __throw_exception(exception) abort()
 
 // __nodiscard
 

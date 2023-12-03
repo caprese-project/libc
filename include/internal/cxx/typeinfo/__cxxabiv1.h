@@ -269,6 +269,12 @@ namespace __cxxabiv1 {
 
     return adjust_pointer<void>(addr, offset);
   }
+
+  extern "C" {
+    __noreturn void __cxa_bad_cast();
+    __noreturn void __cxa_bad_typeid();
+    __noreturn void __cxa_throw_bad_array_new_length();
+  }
 } // namespace __cxxabiv1
 
 namespace std {

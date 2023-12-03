@@ -1,6 +1,8 @@
 #ifndef CAPRESE_LIBC_CXX_TYPEINFO_
 #define CAPRESE_LIBC_CXX_TYPEINFO_
 
+#include <internal/cxx/typeinfo/exception.h>
+
 #ifdef __GNUC__
 
 #include <internal/cxx/typeinfo/__cxxabiv1.h>
