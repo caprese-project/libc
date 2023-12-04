@@ -44,7 +44,7 @@ namespace __cxxabiv1 {
 
     bool result_ambig = false;
 
-    do {
+    while (true) {
       for (std::size_t i = __base_count; i--;) {
         __dyncast_result result2(result.whole_details);
         const void*      base        = obj_ptr;
@@ -153,9 +153,10 @@ namespace __cxxabiv1 {
 
       if (skipped && first_pass) {
         first_pass = false;
-        continue;
+      } else {
+        break;
       }
-    } while (false);
+    }
 
     return result_ambig;
   }
