@@ -61,7 +61,7 @@ namespace std {
     }
 
     template<typename U, typename Compare, typename Allocator>
-    constexpr __splay_tree_node* erase(U&& val, const Compare& compare, const Allocator& allocator) {
+    constexpr __splay_tree_node* erase(U&& val, const Compare& compare, Allocator& allocator) {
       __splay_tree_node* target = this;
 
       while (target != nullptr) {
@@ -113,7 +113,7 @@ namespace std {
     }
 
     template<typename U, typename Compare, typename Allocator>
-    constexpr __splay_tree_node* insert(U&& val, const Compare& compare, const Allocator& allocator) {
+    constexpr __splay_tree_node* insert(U&& val, const Compare& compare, Allocator& allocator) {
       __splay_tree_node* target = this;
 
       while (target != nullptr) {
@@ -144,7 +144,7 @@ namespace std {
     }
 
     template<typename Allocator>
-    constexpr void clear(const Allocator& allocator) {
+    constexpr void clear(Allocator& allocator) {
       if (left != nullptr) {
         left->clear(allocator);
         allocator_traits<Allocator>::destroy(allocator, left);
@@ -224,9 +224,8 @@ namespace std {
 
   template<typename T>
   class __splay_tree_node_iterator {
-    using node_type = __splay_tree_node<T>;
-
   public:
+    using __node_type       = __splay_tree_node<typename __remove_const<T>::type>;
     using difference_type   = __ptrdiff_t;
     using value_type        = T;
     using pointer           = value_type*;
@@ -234,18 +233,20 @@ namespace std {
     using iterator_category = bidirectional_iterator_tag;
 
   private:
-    node_type* _current;
+    __node_type* _current;
 
   public:
     constexpr __splay_tree_node_iterator(): _current(nullptr) { }
 
-    constexpr explicit __splay_tree_node_iterator(node_type* current): _current(current) { }
+    constexpr explicit __splay_tree_node_iterator(__node_type* current): _current(current) { }
 
-    constexpr __splay_tree_node_iterator(const __splay_tree_node_iterator& other) = default;
+    constexpr __splay_tree_node_iterator(const __splay_tree_node_iterator& other): _current(other._current) { }
 
     ~__splay_tree_node_iterator() = default;
 
-    constexpr __splay_tree_node_iterator& operator=(const __splay_tree_node_iterator& other) = default;
+    constexpr __splay_tree_node_iterator& operator=(const __splay_tree_node_iterator& other) {
+      _current = other._current;
+    }
 
     constexpr reference operator*() const {
       return _current->value;
@@ -262,7 +263,7 @@ namespace std {
           _current = _current->left;
         }
       } else {
-        node_type* parent = _current->parent;
+        __node_type* parent = _current->parent;
         while (parent != nullptr && _current == parent->right) {
           _current = parent;
           parent   = parent->parent;
@@ -285,7 +286,7 @@ namespace std {
           _current = _current->right;
         }
       } else {
-        node_type* parent = _current->parent;
+        __node_type* parent = _current->parent;
         while (parent != nullptr && _current == parent->left) {
           _current = parent;
           parent   = parent->parent;
@@ -321,24 +322,53 @@ namespace std {
   private:
     Compare             _compare;
     node_allocator_type _allocator;
-    node_type*          _root;
+    mutable node_type*  _root;
     __size_t            _size;
 
   public:
-    constexpr __splay_tree(const Compare& compare, const Allocator&): _compare(compare), _allocator(), _root(nullptr) { }
+    constexpr __splay_tree(const Compare& compare, const Allocator&): _compare(compare), _allocator(), _root(nullptr), _size(0) { }
 
-    constexpr __splay_tree(const __splay_tree& other): _compare(other._compare), _allocator(other._allocator), _root(nullptr) {
+    constexpr __splay_tree(const __splay_tree& other): _compare(other._compare), _allocator(other._allocator), _root(nullptr), _size(0) {
       for (auto&& elem : other) {
         insert(elem);
       }
     }
 
-    constexpr __splay_tree(__splay_tree&& other): _compare(std::move(other._compare)), _allocator(std::move(other._allocator)), _root(other._root) {
+    constexpr __splay_tree(__splay_tree&& other): _compare(std::move(other._compare)), _allocator(std::move(other._allocator)), _root(other._root), _size(other._size) {
       other._root = nullptr;
+      other._size = 0;
     }
 
     constexpr ~__splay_tree() {
       clear();
+    }
+
+    constexpr __splay_tree& operator=(const __splay_tree& other) {
+      if (this != &other) {
+        clear();
+
+        for (auto&& elem : other) {
+          insert(elem);
+        }
+      }
+
+      return *this;
+    }
+
+    constexpr __splay_tree& operator=(__splay_tree&& other) {
+      if (this != &other) {
+        clear();
+
+        _compare   = std::move(other._compare);
+        _allocator = std::move(other._allocator);
+        _root      = other._root;
+        _size      = other._size;
+
+        other._root = nullptr;
+        other._size = 0;
+      }
+
+      return *this;
     }
 
     constexpr __size_t size() const {
@@ -380,7 +410,7 @@ namespace std {
         return end();
       }
 
-      _root = _root->erase(std::forward<U>(val), _compare);
+      _root = _root->erase(std::forward<U>(val), _compare, _allocator);
       --_size;
 
       return iterator(_root);

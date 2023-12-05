@@ -20,7 +20,7 @@ namespace std {
 
     template<typename V, typename W>
     explicit __constexpr_cxx_std_14 pair(V&& first, W&& second): first(forward<V>(first)),
-                                                                 second(forward<V>(second)) { }
+                                                                 second(forward<W>(second)) { }
 
     template<typename V, typename W>
     explicit __constexpr_cxx_std_14 pair(const pair<V, W>& other): first(other.first),

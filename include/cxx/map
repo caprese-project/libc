@@ -213,16 +213,30 @@ namespace std {
       return _container.erase(*position);
     }
 
+    iterator erase(const_iterator position) {
+      return _container.erase(*position);
+    }
+
     size_type erase(const key_type& key) {
-      return _container.erase(key);
+      size_t old_size = size();
+      _container.erase(key);
+      return old_size - size();
     }
 
     mapped_type& operator[](const key_type& key) {
-      return _container.insert(key).first->second;
+      iterator iter = find(key);
+      if (iter != end()) {
+        return iter->second;
+      }
+      return _container.insert(value_type { key, mapped_type {} }).first->second;
     }
 
     mapped_type& operator[](key_type&& key) {
-      return _container.insert(move(key)).first->second;
+      iterator iter = find(key);
+      if (iter != end()) {
+        return iter->second;
+      }
+      return _container.insert(value_type { std::move(key), mapped_type {} }).first->second;
     }
 
     mapped_type& at(const key_type& key) {
@@ -249,7 +263,7 @@ namespace std {
       return coutains(key) ? 1 : 0;
     }
 
-    iterator find(const key_type& key) const {
+    iterator find(const key_type& key) {
       return _container.find(key);
     }
 
