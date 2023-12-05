@@ -3,10 +3,10 @@
 
 #include <internal/attribute.h>
 #include <internal/branch.h>
+#include <internal/cxx/new/operator.h>
 #include <internal/cxx/stddef.h>
 #include <internal/cxx/type_traits/constant.h>
 #include <internal/version.h>
-#include <new>
 
 namespace std {
   template<typename T>
