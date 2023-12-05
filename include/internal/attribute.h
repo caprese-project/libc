@@ -54,6 +54,14 @@
 #define __noexcept throw()
 #endif // !__CXX_STD_11__
 
+// __noexcept_cxx_std_11
+
+#ifdef __CXX_STD_11__
+#define __noexcept_cxx_std_11 noexcept
+#else // ^^^ __CXX_STD_11__ ^^^ / vvv !__CXX_STD_11__ vvv
+#define __noexcept_cxx_std_11
+#endif // !__CXX_STD_11__
+
 // __noexcept_cxx_std_14
 
 #ifdef __CXX_STD_14__
@@ -234,6 +242,7 @@ extern "C" __noreturn void abort();
 
 // __noexcept_cxx_std_xx
 
+#define __noexcept_cxx_std_11
 #define __noexcept_cxx_std_14
 #define __noexcept_cxx_std_17
 

@@ -1,0 +1,282 @@
+#ifndef CAPRESE_LIBC_CXX_MAP_
+#define CAPRESE_LIBC_CXX_MAP_
+
+#include <initializer_list>
+#include <internal/cxx/functional/compare.h>
+#include <internal/cxx/iterator/reverse_iterator.h>
+#include <internal/cxx/iterator/traits.h>
+#include <internal/cxx/memory/allocator.h>
+#include <internal/cxx/memory/allocator_traits.h>
+#include <internal/cxx/stddef.h>
+#include <internal/cxx/stdexcept/logic_error.h>
+#include <internal/cxx/stl_base/binary_tree.h>
+#include <internal/cxx/utility/pair.h>
+
+namespace std {
+  template<typename K, typename V, typename Compare = __less<K>, typename Allocator = allocator<pair<const K, V>>>
+  class map {
+  public:
+    using key_type    = K;
+    using value_type  = pair<const K, V>;
+    using mapped_type = V;
+    using key_compare = Compare;
+
+    struct value_compare {
+      using result_type          = bool;
+      using first_argument_type  = map::value_type;
+      using second_argument_type = map::value_type;
+
+      constexpr value_compare() = default;
+
+      constexpr bool operator()(const map::value_type& lhs, const map::value_type& rhs) const {
+        return comp(lhs.first, rhs.first);
+      }
+
+      constexpr bool operator()(const map::key_type& lhs, const map::value_type& rhs) const {
+        return comp(lhs, rhs.first);
+      }
+
+      constexpr bool operator()(const map::value_type& lhs, const map::key_type& rhs) const {
+        return comp(lhs.first, rhs);
+      }
+
+      constexpr bool operator()(const map::key_type& lhs, const map::key_type& rhs) const {
+        return comp(lhs, rhs);
+      }
+
+    protected:
+      map::key_compare comp;
+    };
+
+    using __container_type       = __binary_tree<value_type, value_compare, allocator_type>;
+    using allocator_type         = Allocator;
+    using reference              = value_type&;
+    using const_reference        = const value_type&;
+    using iterator               = typename __container_type::iterator;
+    using const_iterator         = typename __container_type::const_iterator;
+    using size_type              = __size_t;
+    using difference_type        = typename iterator_traits<iterator>::difference_type;
+    using pointer                = typename allocator_traits<allocator_type>::pointer;
+    using const_pointer          = typename allocator_traits<allocator_type>::const_pointer;
+    using reverse_iterator       = reverse_iterator<iterator>;
+    using const_reverse_iterator = reverse_iterator<const_iterator>;
+
+  private:
+    key_compare      _compare;
+    allocator_type   _allocator;
+    __container_type _container;
+
+  public:
+    map(): map(key_compare()) { }
+
+    explicit map(const key_compare& compare, const allocator_type& allocator = allocator_type()): _compare(compare), _allocator(allocator), _container(value_compare(), allocator) { }
+
+    explicit map(const allocator_type& allocator): map(key_compare(), allocator) { }
+
+    template<typename InputIterator>
+    map(InputIterator first, InputIterator last, const key_compare& compare = key_compare(), const allocator_type& allocator = allocator_type()): map(compare, allocator) {
+      insert(first, last);
+    }
+
+    template<typename InputIterator>
+    map(InputIterator first, InputIterator last, const allocator_type& allocator): map(first, last, key_compare(), allocator) { }
+
+    map(const map& other): _compare(other._compare), _allocator(other._allocator), _container(other._container) { }
+
+    map(const map& other, const allocator_type& allocator): _compare(other._comp), _allocator(allocator), _container(other._container) { }
+
+    map(map&& other) __noexcept: _compare(move(other._compare)), _allocator(move(other._allocator)), _container(move(other._container)) { }
+
+    map(map&& other, const allocator_type& allocator): _compare(move(other._compare)), _allocator(allocator), _container(move(other._container)) { }
+
+    map(initializer_list<value_type> init, const key_compare& compare = key_compare(), const allocator_type& allocator = allocator_type()): map(compare, allocator) {
+      insert(init.begin(), init.end());
+    }
+
+    map(initializer_list<value_type> init, const allocator_type& allocator): map(init, key_compare(), allocator) { }
+
+    ~map() = default;
+
+    map& operator=(const map& other) {
+      _compare   = other._compare;
+      _allocator = other._allocator;
+      _container = other._container;
+      return *this;
+    }
+
+    map& operator=(map&& other) __noexcept {
+      _compare   = move(other._compare);
+      _allocator = move(other._allocator);
+      _container = move(other._container);
+      return *this;
+    }
+
+    map& operator=(initializer_list<value_type> init) {
+      clear();
+      insert(init.begin(), init.end());
+      return *this;
+    }
+
+    allocator_type get_allocator() const __noexcept_cxx_std_11 {
+      return _allocator;
+    }
+
+    iterator begin() __noexcept_cxx_std_11 {
+      return _container.begin();
+    }
+
+    const_iterator begin() const __noexcept_cxx_std_11 {
+      return _container.begin();
+    }
+
+    iterator end() __noexcept_cxx_std_11 {
+      return _container.end();
+    }
+
+    const_iterator end() const __noexcept_cxx_std_11 {
+      return _container.end();
+    }
+
+    reverse_iterator rbegin() __noexcept_cxx_std_11 {
+      return reverse_iterator(end());
+    }
+
+    const_reverse_iterator rbegin() const __noexcept_cxx_std_11 {
+      return const_reverse_iterator(end());
+    }
+
+    reverse_iterator rend() __noexcept_cxx_std_11 {
+      return reverse_iterator(begin());
+    }
+
+    const_reverse_iterator rend() const __noexcept_cxx_std_11 {
+      return const_reverse_iterator(begin());
+    }
+
+    const_iterator cbegin() const __noexcept_cxx_std_11 {
+      return begin();
+    }
+
+    const_iterator cend() const __noexcept_cxx_std_11 {
+      return end();
+    }
+
+    const_reverse_iterator crbegin() const __noexcept_cxx_std_11 {
+      return rbegin();
+    }
+
+    const_reverse_iterator crend() const __noexcept_cxx_std_11 {
+      return rend();
+    }
+
+    __nodiscard_cxx_std_20 bool empty() const __noexcept_cxx_std_11 {
+      return size() == 0;
+    }
+
+    size_type size() const __noexcept_cxx_std_11 {
+      return _container.size();
+    }
+
+    size_type max_size() const __noexcept_cxx_std_11 {
+      return _container.max_size();
+    }
+
+    void clear() __noexcept_cxx_std_11 {
+      _container.clear();
+    }
+
+    pair<iterator, bool> insert(const value_type& value) {
+      return _container.insert(value);
+    }
+
+    template<typename P>
+    pair<iterator, bool> insert(P&& value) {
+      return _container.insert(forward<P>(value));
+    }
+
+    pair<iterator, bool> insert(value_type&& value) {
+      return _container.insert(move(value));
+    }
+
+    template<typename InputIterator>
+    void insert(InputIterator first, InputIterator last) {
+      for (; first != last; ++first) {
+        insert(*first);
+      }
+    }
+
+    void insert(initializer_list<value_type> init) {
+      insert(init.begin(), init.end());
+    }
+
+    iterator erase(iterator position) {
+      return _container.erase(*position);
+    }
+
+    size_type erase(const key_type& key) {
+      return _container.erase(key);
+    }
+
+    mapped_type& operator[](const key_type& key) {
+      return _container.insert(key).first->second;
+    }
+
+    mapped_type& operator[](key_type&& key) {
+      return _container.insert(move(key)).first->second;
+    }
+
+    mapped_type& at(const key_type& key) {
+      iterator iter = find(key);
+
+      if (iter == end()) {
+        __throw_exception(out_of_range("std::map key not found"));
+      }
+
+      return iter->second;
+    }
+
+    const mapped_type& at(const key_type& key) const {
+      const_iterator iter = find(key);
+
+      if (iter == end()) {
+        __throw_exception(out_of_range("std::map key not found"));
+      }
+
+      return iter->second;
+    }
+
+    size_type count(const key_type& key) const {
+      return coutains(key) ? 1 : 0;
+    }
+
+    bool contains(const key_type& key) const {
+      return find(key) != end();
+    }
+
+    iterator lower_bound(const key_type& key) {
+      return _container.lower_bound(key);
+    }
+
+    const_iterator lower_bound(const key_type& key) const {
+      return _container.lower_bound(key);
+    }
+
+    iterator upper_bound(const key_type& key) {
+      return _container.upper_bound(key);
+    }
+
+    const_iterator upper_bound(const key_type& key) const {
+      return _container.upper_bound(key);
+    }
+
+    key_compare key_comp() const {
+      return _compare;
+    }
+
+    value_compare value_comp() const {
+      return value_compare { _compare };
+    }
+  };
+} // namespace std
+
+#endif // CAPRESE_LIBC_CXX_MAP_
