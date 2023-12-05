@@ -49,7 +49,7 @@ namespace std {
     template<typename T, typename U>
     struct __rebind<T, U, __void_t<typename T::template rebind<U>::other>> {
       using type = typename T::template rebind<U>::other;
-    }
+    };
 
     template<typename Alloc, typename U>
     using __rebind_alloc = typename allocator_traits::template __rebind<Alloc, U>::type;

@@ -249,6 +249,14 @@ namespace std {
       return coutains(key) ? 1 : 0;
     }
 
+    iterator find(const key_type& key) const {
+      return _container.find(key);
+    }
+
+    const_iterator find(const key_type& key) const {
+      return _container.find(key);
+    }
+
     bool contains(const key_type& key) const {
       return find(key) != end();
     }
