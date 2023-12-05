@@ -48,8 +48,8 @@ namespace std {
       map::key_compare comp;
     };
 
-    using __container_type       = __binary_tree<value_type, value_compare, allocator_type>;
     using allocator_type         = Allocator;
+    using __container_type       = __binary_tree<value_type, value_compare, allocator_type>;
     using reference              = value_type&;
     using const_reference        = const value_type&;
     using iterator               = typename __container_type::iterator;
@@ -58,8 +58,8 @@ namespace std {
     using difference_type        = typename iterator_traits<iterator>::difference_type;
     using pointer                = typename allocator_traits<allocator_type>::pointer;
     using const_pointer          = typename allocator_traits<allocator_type>::const_pointer;
-    using reverse_iterator       = reverse_iterator<iterator>;
-    using const_reverse_iterator = reverse_iterator<const_iterator>;
+    using reverse_iterator       = std::reverse_iterator<iterator>;
+    using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
   private:
     key_compare      _compare;

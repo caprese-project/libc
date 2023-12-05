@@ -7,6 +7,9 @@
 #include <internal/cxx/string/char_traits.h>
 
 namespace std {
+  template<typename Char, typename Traits = char_traits<Char>, typename Allocator = allocator<Char>>
+  using basic_string = __basic_string<Char, Traits, Allocator>;
+
   using string  = basic_string<char>;
   using wstring = basic_string<wchar_t>;
 

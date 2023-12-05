@@ -7,6 +7,14 @@ namespace std {
   template<typename...>
   using __void_t = void;
 
+  template<typename Template, typename U>
+  struct __replace_first { };
+
+  template<template<typename, typename...> typename Template, typename U, typename T, typename... Tn>
+  struct __replace_first<Template<T, Tn...>, U> {
+    using type = Template<U, Tn...>;
+  };
+
   template<typename T, typename = void>
   struct __is_referenceable: public __false_type { };
 

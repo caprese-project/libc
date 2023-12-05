@@ -684,7 +684,7 @@ namespace std {
       return insert(p - begin(), __basic_string(first, last));
     }
 
-    __constexpr_cxx_std_20 iterator insert(const_iterator p, initializer_list<Char>) {
+    __constexpr_cxx_std_20 iterator insert(const_iterator p, initializer_list<Char> init_list) {
       assert(p >= begin() && p < end());
       return insert(p, init_list.begin(), init_list.end());
     }
@@ -730,7 +730,7 @@ namespace std {
     }
 
     __constexpr_cxx_std_20 int compare(const __basic_string& other) const __noexcept_cxx_std_11 {
-      int result = Traits::compare(data(), str.data(), min(size(), other.size()));
+      int result = Traits::compare(data(), other.data(), min(size(), other.size()));
       if (result != 0) {
         return result;
       } else {
@@ -756,11 +756,11 @@ namespace std {
       return compare(__basic_string(s));
     }
 
-    __constexpr_cxx_std_20 int compare(size_type pos1, size_type n1, const Char* s) const {
+    __constexpr_cxx_std_20 int compare(size_type pos, size_type n1, const Char* s) const {
       return __basic_string(*this, pos, n1).compare(__basic_string(s));
     }
 
-    __constexpr_cxx_std_20 int compare(size_type pos1, size_type n1, const Char* s, size_type n2) const {
+    __constexpr_cxx_std_20 int compare(size_type pos, size_type n1, const Char* s, size_type n2) const {
       return __basic_string(*this, pos, n1).compare(__basic_string(s, n2));
     }
   };
@@ -818,7 +818,7 @@ namespace std {
 
   template<typename Char, typename Traits, typename Allocator>
   __constexpr_cxx_std_20 __basic_string<Char, Traits, Allocator> operator+(const __basic_string<Char, Traits, Allocator>& lhs, const Char* rhs) {
-    __basic_string<charT, traits, Allocator> r = lhs;
+    __basic_string<Char, Traits, Allocator> r = lhs;
     r.append(rhs);
     return r;
   }
@@ -831,7 +831,7 @@ namespace std {
 
   template<typename Char, typename Traits, typename Allocator>
   __constexpr_cxx_std_20 __basic_string<Char, Traits, Allocator> operator+(const __basic_string<Char, Traits, Allocator>& lhs, Char rhs) {
-    __basic_string<charT, traits, Allocator> r = lhs;
+    __basic_string<Char, Traits, Allocator> r = lhs;
     r.push_back(rhs);
     return r;
   }

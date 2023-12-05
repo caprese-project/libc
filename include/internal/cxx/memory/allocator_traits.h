@@ -5,6 +5,7 @@
 #include <internal/cxx/memory/pointer_traits.h>
 #include <internal/cxx/type_traits/characteristic.h>
 #include <internal/cxx/type_traits/detection.h>
+#include <internal/cxx/type_traits/modify.h>
 #include <internal/cxx/type_traits/sign.h>
 #include <internal/cxx/utility/fwd.h>
 
@@ -42,11 +43,16 @@ namespace std {
     template<typename T>
     using __is_always_equal = typename T::is_always_equal;
 
-    template<typename T>
-    using __rebind_alloc = typename T::template rebind_alloc<typename T::value_type>;
+    template<typename T, typename U, typename = void>
+    struct __rebind: __replace_first<T, U> { };
 
-    template<typename T>
-    using __rebind_traits = allocator_traits<__rebind_alloc<T>>;
+    template<typename T, typename U>
+    struct __rebind<T, U, __void_t<typename T::template rebind<U>::other>> {
+      using type = typename T::template rebind<U>::other;
+    }
+
+    template<typename Alloc, typename U>
+    using __rebind_alloc = typename allocator_traits::template __rebind<Alloc, U>::type;
 
   public:
     using allocator_type                         = Allocator;
@@ -61,6 +67,12 @@ namespace std {
     using propagate_on_container_move_assignment = typename __detect_type<__propagate_on_container_move_assignment, __false_type, allocator_type>::type;
     using propagate_on_container_swap            = typename __detect_type<__propagate_on_container_swap, __false_type, allocator_type>::type;
     using is_always_equal                        = typename __detect_type<__is_always_equal, typename __is_empty_t<allocator_type>::type, allocator_type>::type;
+
+    template<typename T>
+    using rebind_alloc = __rebind_alloc<Allocator, T>;
+
+    template<typename T>
+    using rebind_traits = allocator_traits<rebind_alloc<T>>;
 
   private:
     template<typename Alloc>

@@ -377,7 +377,7 @@ namespace std {
     template<typename U>
     constexpr iterator erase(U&& val) {
       if (find(val) == end()) {
-        return;
+        return end();
       }
 
       _root = _root->erase(std::forward<U>(val), _compare);

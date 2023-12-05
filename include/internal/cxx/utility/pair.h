@@ -3,6 +3,7 @@
 
 #include <internal/attribute.h>
 #include <internal/cxx/utility/fwd.h>
+#include <internal/cxx/utility/swap.h>
 
 namespace std {
   template<typename T, typename U>
