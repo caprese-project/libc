@@ -507,7 +507,7 @@ namespace std {
 
       _root = _root->splay(val, _compare);
       if (_compare(val, _root->value)) {
-        return _root;
+        return Iterator(_root);
       }
 
       node_type* target = _root->right;
@@ -530,7 +530,7 @@ namespace std {
 
       _root = _root->splay(val, _compare);
       if (!_compare(_root->value, val)) {
-        return _root;
+        return Iterator(_root);
       }
 
       node_type* target = _root->right;
