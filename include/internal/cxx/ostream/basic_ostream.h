@@ -42,9 +42,10 @@ namespace std {
 
     friend class sentry;
 
-    using __ios_type      = __basic_ios<Char, Traits>;
-    using __iterator_type = ostreambuf_iterator<Char, Traits>;
-    using __num_put_type  = num_put<Char, __iterator_type>;
+    using __ios_type       = __basic_ios<Char, Traits>;
+    using __iterator_type  = ostreambuf_iterator<Char, Traits>;
+    using __num_put_type   = num_put<Char, __iterator_type>;
+    using __streambuf_type = typename __ios_type::__streambuf_type;
 
   private:
     __num_put_type _num_put;

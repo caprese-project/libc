@@ -69,9 +69,10 @@ namespace std {
 
     friend class sentry;
 
-    using __ios_type      = __basic_ios<Char, Traits>;
-    using __iterator_type = istreambuf_iterator<Char, Traits>;
-    using __num_get_type  = num_get<Char, __iterator_type>;
+    using __ios_type       = __basic_ios<Char, Traits>;
+    using __iterator_type  = istreambuf_iterator<Char, Traits>;
+    using __num_get_type   = num_get<Char, __iterator_type>;
+    using __streambuf_type = typename __ios_type::__streambuf_type;
 
   private:
     __num_get_type _num_get;
