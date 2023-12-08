@@ -6,6 +6,7 @@ target_sources(
   caprese_libcxx_stdexcept PRIVATE
   logic_error.cpp
   runtime_error.cpp
+  stdexcept_string.cpp
 )
 
 target_compile_options(

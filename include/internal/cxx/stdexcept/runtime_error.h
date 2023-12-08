@@ -2,16 +2,16 @@
 #define CAPRESE_LIBC_INTERNAL_CXX_STDEXCEPT_RUNTIME_ERROR_H_
 
 #include <internal/cxx/exception/exception.h>
-#include <string>
+#include <internal/cxx/stdexcept/stdexcept_string.h>
 
 namespace std {
   class runtime_error: public exception {
-    string _msg;
+    __stdexcept_string _msg;
 
   public:
     explicit runtime_error(const char* msg);
     explicit runtime_error(const string& msg);
-    virtual const char* what() const noexcept;
+    virtual const char* what() const __noexcept;
   };
 
   class range_error: public exception { };
