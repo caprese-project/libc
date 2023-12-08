@@ -47,7 +47,7 @@ namespace std {
     using __num_put_type  = num_put<Char, __iterator_type>;
 
   private:
-    __num_put_type num_put;
+    __num_put_type _num_put;
 
   protected:
     __basic_ostream(const __basic_ostream&) = delete;
@@ -242,7 +242,7 @@ namespace std {
         ios_base::iostate err = ios_base::goodbit;
 
         __try {
-          if (num_put.put(*this, *this, this->fill(), n).failed()) {
+          if (_num_put.put(*this, *this, this->fill(), n).failed()) {
             err |= ios_base::badbit;
           }
         }

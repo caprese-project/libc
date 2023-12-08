@@ -74,7 +74,7 @@ namespace std {
     using __num_get_type  = num_get<Char, __iterator_type>;
 
   private:
-    __num_get_type num_get;
+    __num_get_type _num_get;
     streamsize     _gcount;
 
   protected:
@@ -648,7 +648,7 @@ namespace std {
         ios_base::iostate err = ios_base::goodbit;
 
         __try {
-          num_get.get(*this, 0, *this, err, n);
+          _num_get.get(*this, 0, *this, err, n);
         }
         __catch (...) {
           // basic_istream::setstate may throw an exception.
@@ -672,7 +672,7 @@ namespace std {
 
         __try {
           long result;
-          num_get.get(*this, 0, *this, err, result);
+          _num_get.get(*this, 0, *this, err, result);
 
           if (result < __numeric_limits<T>::min()) {
             err |= ios_base::failbit;
