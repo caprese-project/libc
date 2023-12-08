@@ -1,5 +1,7 @@
 #include <internal/cxx/locale/ctype.h>
 #include <internal/cxx/locale/locale.h>
+#include <internal/cxx/locale/num_get.h>
+#include <internal/cxx/locale/num_put.h>
 
 namespace std {
   namespace {
@@ -63,9 +65,11 @@ namespace std {
     locale loc;
 
     __classic_locale() {
-      loc._facets_size = 1;
-      loc._facets      = new locale::facet*[1];
+      loc._facets_size = 3;
+      loc._facets      = new locale::facet*[loc._facets_size];
       loc._facets[0]   = new ctype<char>(ctype<char>::classic_table(), false, 1);
+      loc._facets[1]   = new num_get<char>(1);
+      loc._facets[2]   = new num_put<char>(1);
     }
   };
 

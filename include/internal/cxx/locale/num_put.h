@@ -11,7 +11,7 @@
 
 namespace std {
   template<typename Char, typename OutputIterator = ostreambuf_iterator<Char, char_traits<Char>>>
-  class num_put: locale::facet {
+  class num_put: public locale::facet {
   public:
     using char_type = Char;
     using iter_type = OutputIterator;
@@ -157,7 +157,7 @@ namespace std {
     }
 
   public:
-    explicit num_put(__size_t refs = 0): facet(refs) { }
+    explicit num_put(size_t refs = 0): locale::facet(refs) { }
 
     iter_type put(iter_type it, ios_base& ios, char_type fill, bool value) const {
       return do_put(it, ios, fill, value);
