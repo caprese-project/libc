@@ -4,13 +4,14 @@
 #include <internal/cxx/algorithm/seq.h>
 #include <internal/cxx/ios/manipulators.h>
 #include <internal/cxx/iterator/functions.h>
-#include <internal/cxx/iterator/ostreambuf_iterator.h>
+#include <internal/cxx/iterator/fwd.h>
 #include <internal/cxx/limits/numeric_limits.h>
 #include <internal/cxx/locale/locale.h>
 #include <internal/cxx/stddef.h>
+#include <internal/cxx/string/fwd.h>
 
 namespace std {
-  template<typename Char, typename OutputIterator = ostreambuf_iterator<Char>>
+  template<typename Char, typename OutputIterator = ostreambuf_iterator<Char, char_traits<Char>>>
   class num_put: locale::facet {
   public:
     using char_type = Char;

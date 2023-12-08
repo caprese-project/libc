@@ -1,6 +1,7 @@
 #ifndef CAPRESE_LIBC_INTERNAL_CXX_IOS_IOS_BASE_H_
 #define CAPRESE_LIBC_INTERNAL_CXX_IOS_IOS_BASE_H_
 
+#include <cstdint>
 #include <internal/cxx/ios/types.h>
 #include <internal/cxx/system_error/system_error.h>
 #include <internal/version.h>
@@ -164,22 +165,6 @@ namespace std {
 
     streamsize width() const;
     streamsize width(streamsize wide);
-
-    void register_callback(event_callback cb, int index);
-
-    fmtflags flags() const;
-    fmtflags flags(fmtflags flags);
-
-    fmtflags setf(fmtflags flags);
-    fmtflags setf(fmtflags flags, fmtflags mask);
-
-    fmtflags unsetf(fmtflags mask);
-
-    streamsize precision() const;
-    streamsize precision(streamsize precision);
-
-    streamsize width() const;
-    streamsize width(streamsize width);
 
     void register_callback(event_callback cb, int index);
   };

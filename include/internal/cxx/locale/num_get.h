@@ -1,13 +1,14 @@
 #ifndef CAPRESE_LIBC_INTERNAL_CXX_LOCALE_NUM_GET_H_
 #define CAPRESE_LIBC_INTERNAL_CXX_LOCALE_NUM_GET_H_
 
-#include <internal/cxx/iterator/istreambuf_iterator.h>
+#include <internal/cxx/iterator/fwd.h>
 #include <internal/cxx/limits/numeric_limits.h>
 #include <internal/cxx/locale/locale.h>
+#include <internal/cxx/string/fwd.h>
 #include <internal/cxx/type_traits/sign.h>
 
 namespace std {
-  template<typename Char, typename InputIterator = istreambuf_iterator<Char>>
+  template<typename Char, typename InputIterator = istreambuf_iterator<Char, char_traits<Char>>>
   class num_get: public locale::facet {
   public:
     using char_type = Char;

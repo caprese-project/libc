@@ -67,15 +67,14 @@ namespace std {
     ~__basic_ios() { }
 
     iostate rdstate() const {
-      return _ios_base_bits & _iostate_mask;
+      return _get_iostate();
     }
 
     void clear(iostate state = goodbit) {
-      _ios_base_bits &= ~_iostate_mask;
-      _ios_base_bits |= state;
+      _set_iostate(state);
 
       if (_rdbuf == nullptr) {
-        _ios_base_bits |= badbit;
+        _set_iostate(_get_iostate() | badbit);
       }
     }
 
@@ -140,8 +139,7 @@ namespace std {
 
     __basic_ios& copyfmt(const __basic_ios& rhs) {
       if (this != __addressof(rhs)) {
-        _ios_base_bits &= ~_fmtflags_mask;
-        _ios_base_bits |= rhs._ios_base_bits & _fmtflags_mask;
+        _set_fmtflags(rhs._get_fmtflags());
       }
 
       return *this;

@@ -105,7 +105,7 @@ namespace std {
   }
 
   bool ios_base::_is_hexfloat() const {
-    return (_get_fmtflags() & floatfield) == ios_base::fixed | ios_base::scientific;
+    return (_get_fmtflags() & floatfield) == (ios_base::fixed | ios_base::scientific);
   }
 
   bool ios_base::_is_defaultfloat() const {

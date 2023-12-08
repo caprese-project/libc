@@ -6,7 +6,7 @@
 #include <internal/cxx/type_traits/modify.h>
 
 namespace std {
-  template<class Category, class T, class Distance = ptrdiff_t, class Pointer = T*, class Reference = T&>
+  template<typename Category, typename T, typename Distance = ptrdiff_t, typename Pointer = T*, typename Reference = T&>
   struct iterator {
     using value_type        = T;
     using difference_type   = Distance;
@@ -15,7 +15,7 @@ namespace std {
     using iterator_category = Category;
   };
 
-  template<class I>
+  template<typename I>
   struct iterator_traits {
     using difference_type   = typename I::difference_type;
     using value_type        = typename I::value_type;
@@ -24,7 +24,7 @@ namespace std {
     using iterator_category = typename I::iterator_category;
   };
 
-  template<class T>
+  template<typename T>
   struct iterator_traits<T*> {
     using difference_type   = ptrdiff_t;
     using value_type        = typename __remove_cv<T>::type;
