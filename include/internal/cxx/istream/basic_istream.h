@@ -2,6 +2,7 @@
 #define CAPRESE_LIBC_INTERNAL_CXX_ISTREAM_BASIC_ISTREAM_H_
 
 #include <internal/cxx/fwd/iteratorfwd.h>
+#include <internal/cxx/fwd/localefwd.h>
 #include <internal/cxx/ios/basic_ios.h>
 #include <internal/cxx/type_traits/detection.h>
 #include <internal/cxx/type_traits/logic.h>

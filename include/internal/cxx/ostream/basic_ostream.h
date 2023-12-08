@@ -3,8 +3,8 @@
 
 #include <internal/attribute.h>
 #include <internal/cxx/fwd/iteratorfwd.h>
+#include <internal/cxx/fwd/localefwd.h>
 #include <internal/cxx/ios/basic_ios.h>
-#include <internal/cxx/locale/num_put.h>
 #include <internal/cxx/stddef.h>
 #include <internal/exception.h>
 
