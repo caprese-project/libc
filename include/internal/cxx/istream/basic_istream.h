@@ -74,6 +74,12 @@ namespace std {
     using __num_get_type   = num_get<Char, __iterator_type>;
     using __streambuf_type = typename __ios_type::__streambuf_type;
 
+    using char_type   = typename __ios_type::char_type;
+    using traits_type = typename __ios_type::traits_type;
+    using int_type    = typename __ios_type::int_type;
+    using pos_type    = typename __ios_type::pos_type;
+    using off_type    = typename __ios_type::off_type;
+
   private:
     __num_get_type _num_get;
     streamsize     _gcount;
