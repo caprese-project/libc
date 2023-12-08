@@ -1,10 +1,10 @@
 #ifndef CAPRESE_LIBC_INTERNAL_CXX_LOCALE_NUM_GET_H_
 #define CAPRESE_LIBC_INTERNAL_CXX_LOCALE_NUM_GET_H_
 
-#include <internal/cxx/iterator/fwd.h>
+#include <internal/cxx/fwd/iteratorfwd.h>
+#include <internal/cxx/fwd/stringfwd.h>
 #include <internal/cxx/limits/numeric_limits.h>
 #include <internal/cxx/locale/locale.h>
-#include <internal/cxx/string/fwd.h>
 #include <internal/cxx/type_traits/sign.h>
 
 namespace std {

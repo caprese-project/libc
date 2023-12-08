@@ -3,7 +3,7 @@
 
 #include <internal/attribute.h>
 #include <internal/cxx/iterator/traits.h>
-#include <internal/cxx/ostream/basic_ostream.h>
+#include <internal/cxx/fwd/iosfwd.h>
 #include <internal/cxx/streambuf/basic_streambuf.h>
 #include <internal/cxx/string/char_traits.h>
 

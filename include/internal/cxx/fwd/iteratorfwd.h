@@ -1,5 +1,5 @@
-#ifndef CAPRESE_LIBC_INTERNAL_CXX_ITERATOR_FWD_H_
-#define CAPRESE_LIBC_INTERNAL_CXX_ITERATOR_FWD_H_
+#ifndef CAPRESE_LIBC_INTERNAL_CXX_FWD_ITERATORFWD_H_
+#define CAPRESE_LIBC_INTERNAL_CXX_FWD_ITERATORFWD_H_
 
 namespace std {
   template<typename Category, typename T, typename Distance, typename Pointer, typename Reference>
@@ -21,4 +21,4 @@ namespace std {
   class ostreambuf_iterator;
 } // namespace std
 
-#endif // CAPRESE_LIBC_INTERNAL_CXX_ITERATOR_FWD_H_
+#endif // CAPRESE_LIBC_INTERNAL_CXX_FWD_ITERATORFWD_H_

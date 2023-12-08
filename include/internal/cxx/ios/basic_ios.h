@@ -2,9 +2,9 @@
 #define CAPRESE_LIBC_INTERNAL_CXX_IOS_BASIC_IOS_H_
 
 #include <internal/attribute.h>
+#include <internal/cxx/fwd/streambuffwd.h>
 #include <internal/cxx/ios/ios_base.h>
 #include <internal/cxx/memory/addressof.h>
-#include <internal/cxx/streambuf/basic_streambuf.h>
 
 namespace std {
   template<typename Char, typename Traits>

@@ -2,8 +2,8 @@
 #define CAPRESE_LIBC_INTERNAL_CXX_STDEXCEPT_STDEXCEPT_STRING_H_
 
 #include <internal/attribute.h>
+#include <internal/cxx/fwd/stringfwd.h>
 #include <internal/cxx/stddef.h>
-#include <internal/cxx/string/fwd.h>
 
 namespace std {
   class __stdexcept_string {

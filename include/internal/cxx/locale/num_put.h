@@ -2,13 +2,12 @@
 #define CAPRESE_LIBC_INTERNAL_CXX_LOCALE_NUM_PUT_H_
 
 #include <internal/cxx/algorithm/seq.h>
-#include <internal/cxx/ios/manipulators.h>
+#include <internal/cxx/fwd/iteratorfwd.h>
+#include <internal/cxx/fwd/stringfwd.h>
 #include <internal/cxx/iterator/functions.h>
-#include <internal/cxx/iterator/fwd.h>
 #include <internal/cxx/limits/numeric_limits.h>
 #include <internal/cxx/locale/locale.h>
 #include <internal/cxx/stddef.h>
-#include <internal/cxx/string/fwd.h>
 
 namespace std {
   template<typename Char, typename OutputIterator = ostreambuf_iterator<Char, char_traits<Char>>>
