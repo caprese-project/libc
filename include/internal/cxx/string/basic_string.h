@@ -7,8 +7,10 @@
 #include <internal/cxx/iterator/base.h>
 #include <internal/cxx/memory/allocator.h>
 #include <internal/cxx/memory/allocator_traits.h>
+#include <internal/cxx/stdexcept/logic_error.h>
 #include <internal/cxx/string/char_traits.h>
 #include <internal/cxx/utility/fwd.h>
+#include <internal/exception.h>
 #include <iterator>
 
 namespace std {
