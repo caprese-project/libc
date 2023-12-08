@@ -11,10 +11,15 @@ namespace std {
   template<typename Char, class Traits = char_traits<Char>>
   class ostreambuf_iterator: public iterator<output_iterator_tag, void, void, void, void> {
   public:
-    using char_type      = Char;
-    using traits_type    = Traits;
-    using streambuf_type = __basic_streambuf<char_type, traits_type>;
-    using ostream_type   = __basic_ostream<char_type, traits_type>;
+    using char_type         = Char;
+    using traits_type       = Traits;
+    using streambuf_type    = __basic_streambuf<char_type, traits_type>;
+    using ostream_type      = __basic_ostream<char_type, traits_type>;
+    using iterator_category = output_iterator_tag;
+    using value_type        = void;
+    using difference_type   = void;
+    using pointer           = void;
+    using reference         = void;
 
   private:
     streambuf_type* _streambuf;
