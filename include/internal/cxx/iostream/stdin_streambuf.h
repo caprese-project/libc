@@ -9,6 +9,14 @@
 namespace std {
   template<typename Char>
   class __stdin_streambuf: public __basic_streambuf<Char, char_traits<Char>> {
+  public:
+    using char_type   = typename __basic_streambuf<Char, char_traits<Char>>::char_type;
+    using traits_type = typename __basic_streambuf<Char, char_traits<Char>>::traits_type;
+    using int_type    = typename __basic_streambuf<Char, char_traits<Char>>::int_type;
+    using pos_type    = typename __basic_streambuf<Char, char_traits<Char>>::pos_type;
+    using off_type    = typename __basic_streambuf<Char, char_traits<Char>>::off_type;
+
+  private:
     FILE* fp;
 
   protected:
