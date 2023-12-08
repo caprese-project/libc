@@ -4,7 +4,7 @@
 #include <internal/cxx/stddef.h>
 #include <stddef.h>
 
-using nullptr_t = decltype(nullptr);
+using nullptr_t = std::__nullptr_t;
 
 namespace std {
   using ::max_align_t;

@@ -18,6 +18,8 @@ namespace {
     static __constexpr_cxx_std_11 char max() __noexcept {
       return CHAR_MAX;
     }
+
+    static __constexpr_cxx_std_11 bool is_signed = CHAR_MIN < 0;
   };
 
   template<>
@@ -30,6 +32,8 @@ namespace {
     static __constexpr_cxx_std_11 signed char max() __noexcept {
       return SCHAR_MAX;
     }
+
+    static __constexpr_cxx_std_11 bool is_signed = true;
   };
 
   template<>
@@ -42,6 +46,8 @@ namespace {
     static __constexpr_cxx_std_11 unsigned char max() __noexcept {
       return UCHAR_MAX;
     }
+
+    static __constexpr_cxx_std_11 bool is_signed = false;
   };
 
   template<>
@@ -54,6 +60,8 @@ namespace {
     static __constexpr_cxx_std_11 short max() __noexcept {
       return SHRT_MAX;
     }
+
+    static __constexpr_cxx_std_11 bool is_signed = true;
   };
 
   template<>
@@ -66,6 +74,8 @@ namespace {
     static __constexpr_cxx_std_11 unsigned short max() __noexcept {
       return USHRT_MAX;
     }
+
+    static __constexpr_cxx_std_11 bool is_signed = false;
   };
 
   template<>
@@ -78,6 +88,8 @@ namespace {
     static __constexpr_cxx_std_11 int max() __noexcept {
       return INT_MAX;
     }
+
+    static __constexpr_cxx_std_11 bool is_signed = true;
   };
 
   template<>
@@ -90,6 +102,8 @@ namespace {
     static __constexpr_cxx_std_11 unsigned int max() __noexcept {
       return UINT_MAX;
     }
+
+    static __constexpr_cxx_std_11 bool is_signed = false;
   };
 
   template<>
@@ -102,6 +116,8 @@ namespace {
     static __constexpr_cxx_std_11 long max() __noexcept {
       return LONG_MAX;
     }
+
+    static __constexpr_cxx_std_11 bool is_signed = true;
   };
 
   template<>
@@ -114,6 +130,8 @@ namespace {
     static __constexpr_cxx_std_11 unsigned long max() __noexcept {
       return ULONG_MAX;
     }
+
+    static __constexpr_cxx_std_11 bool is_signed = false;
   };
 
   template<>
@@ -126,6 +144,8 @@ namespace {
     static __constexpr_cxx_std_11 long long max() __noexcept {
       return LLONG_MAX;
     }
+
+    static __constexpr_cxx_std_11 bool is_signed = true;
   };
 
   template<>
@@ -138,6 +158,8 @@ namespace {
     static __constexpr_cxx_std_11 unsigned long long max() __noexcept {
       return ULLONG_MAX;
     }
+
+    static __constexpr_cxx_std_11 bool is_signed = false;
   };
 } // namespace
 

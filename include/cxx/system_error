@@ -1,0 +1,6 @@
+#ifndef CAPRESE_LIBC_CXX_SYSTEM_ERROR_
+#define CAPRESE_LIBC_CXX_SYSTEM_ERROR_
+
+namespace std {}
+
+#endif // CAPRESE_LIBC_CXX_SYSTEM_ERROR_

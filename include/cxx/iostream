@@ -1,0 +1,23 @@
+#ifndef CAPRESE_LIBC_CXX_IOSTREAM_
+#define CAPRESE_LIBC_CXX_IOSTREAM_
+
+#include <ios>
+#include <istream>
+#include <ostream>
+#include <streambuf>
+
+namespace std {
+  extern istream cin;
+  extern ostream cout;
+  extern ostream clog;
+  extern ostream cerr;
+
+  extern wistream wcin;
+  extern wostream wcout;
+  extern wostream wclog;
+  extern wostream wcerr;
+
+  static ios_base::Init __iostream_init;
+} // namespace std
+
+#endif // CAPRESE_LIBC_CXX_IOSTREAM_

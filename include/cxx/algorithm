@@ -2,22 +2,14 @@
 #define CAPRESE_LIBC_CXX_ALGORITHM_
 
 #include <internal/attribute.h>
-#include <internal/cxx/functional/compare.h>
 #include <internal/cxx/algorithm/minmax.h>
+#include <internal/cxx/algorithm/seq.h>
+#include <internal/cxx/functional/compare.h>
 #include <iterator>
 
 namespace std {
   template<typename T>
   using less = __less<T>;
-
-  template<typename InputIterator, typename Function>
-  __constexpr_cxx_std_14 Function for_each(InputIterator first, InputIterator last, Function f) {
-    while (first != last) {
-      f(*first);
-      ++first;
-    }
-    return f;
-  }
 
   template<typename ForwardIterator, typename T, typename Compare>
   __constexpr_cxx_std_20 ForwardIterator lower_bound(ForwardIterator first, ForwardIterator last, const T& value, Compare comp) {

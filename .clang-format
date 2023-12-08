@@ -41,6 +41,7 @@ ForEachMacros: []
 IfMacros:
   - __if_likely
   - __if_unlikely
+  - __catch
 IncludeBlocks: Regroup
 IndentAccessModifiers: false
 IndentCaseBlocks: false

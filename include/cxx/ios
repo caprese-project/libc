@@ -1,6 +1,18 @@
 #ifndef CAPRESE_LIBC_CXX_IOS_
 #define CAPRESE_LIBC_CXX_IOS_
 
+#include <internal/cxx/ios/basic_ios.h>
+#include <internal/cxx/ios/ios_base.h>
+#include <internal/cxx/ios/manipulators.h>
 #include <internal/cxx/ios/types.h>
+#include <internal/cxx/string/char_traits.h>
+
+namespace std {
+  template<typename Char, typename Traits = char_traits<Char>>
+  using basic_ios = __basic_ios<Char, Traits>;
+
+  using ios  = basic_ios<char>;
+  using wios = basic_ios<wchar_t>;
+} // namespace std
 
 #endif // CAPRESE_LIBC_CXX_IOS_

@@ -2,6 +2,7 @@
 #define CAPRESE_LIBC_CXX_ITERATOR_
 
 #include <internal/cxx/iterator/functions.h>
+#include <internal/cxx/iterator/ostreambuf_iterator.h>
 #include <internal/cxx/iterator/reverse_iterator.h>
 #include <internal/cxx/iterator/tags.h>
 #include <internal/cxx/iterator/traits.h>

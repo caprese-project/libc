@@ -106,15 +106,6 @@
 #define __exception_enabled 0
 #endif // !__GNUC__
 
-// __throw_exception
-
-#if __exception_enabled
-#define __throw_exception(exception) throw(exception)
-#else // ^^^ __exception_enabled ^^^ / vvv !__exception_enabled vvv
-extern "C" __noreturn void abort();
-#define __throw_exception(exception) abort()
-#endif // !__exception_enabled
-
 // __nodiscard
 
 #ifdef __CXX_STD_17__
@@ -147,6 +138,14 @@ extern "C" __noreturn void abort();
 #endif // !__GNUC__
 #endif // !__CXX_STD_14__
 
+// __deprecated_cxx_std_14
+
+#ifdef __CXX_STD_14__
+#define __deprecated_cxx_std_14 [[deprecated]]
+#else // ^^^ __CXX_STD_14__ ^^^ / vvv !__CXX_STD_14__ vvv
+#define __deprecated_cxx_std_14
+#endif // !__CXX_STD_17__
+
 // __deprecated_cxx_std_17
 
 #ifdef __CXX_STD_17__
@@ -162,6 +161,14 @@ extern "C" __noreturn void abort();
 #else // ^^^ __CXX_STD_20__ ^^^ / vvv !__CXX_STD_20__ vvv
 #define __deprecated_cxx_std_20
 #endif // !__CXX_STD_20__
+
+// __constexpr
+
+#ifdef __CXX_STD_11__
+#define __constexpr constexpr
+#else // ^^^ __CXX_STD_11__ ^^^ / vvv !__CXX_STD_11__ vvv
+#define __constexpr
+#endif // !__CXX_STD_11__
 
 // __constexpr_cxx_std_11
 
@@ -255,11 +262,6 @@ extern "C" __noreturn void abort();
 
 #define __exception_enabled 0
 
-// __throw_exception
-
-__noreturn void abort();
-#define __throw_exception(exception) abort()
-
 // __nodiscard
 
 #ifdef __GNUC__
@@ -282,6 +284,7 @@ __noreturn void abort();
 
 // __deprecated_cxx_std_xx
 
+#define __deprecated_cxx_std_14
 #define __deprecated_cxx_std_17
 #define __deprecated_cxx_std_20
 

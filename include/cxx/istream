@@ -1,0 +1,23 @@
+#ifndef CAPRESE_LIBC_CXX_ISTREAM_
+#define CAPRESE_LIBC_CXX_ISTREAM_
+
+#include <internal/cxx/istream/basic_iostream.h>
+#include <internal/cxx/istream/basic_istream.h>
+#include <internal/cxx/istream/manipulators.h>
+#include <internal/cxx/string/char_traits.h>
+
+namespace std {
+  template<typename Char, typename Traits = char_traits<Char>>
+  using basic_istream = __basic_istream<Char, Traits>;
+
+  template<typename Char, typename Traits = char_traits<Char>>
+  using basic_iostream = __basic_iostream<Char, Traits>;
+
+  using istream  = basic_istream<char>;
+  using wistream = basic_istream<wchar_t>;
+
+  using iostream  = basic_iostream<char>;
+  using wiostream = basic_iostream<wchar_t>;
+} // namespace std
+
+#endif // CAPRESE_LIBC_CXX_ISTREAM_
