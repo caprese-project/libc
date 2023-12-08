@@ -68,7 +68,7 @@ namespace std {
       return pf(*this);
     }
 
-    __basic_ostream& operator<<(__basic_ios& (*pf)(__basic_ios&)) {
+    __basic_ostream& operator<<(__ios_type& (*pf)(__ios_type&)) {
       pf(*this);
       return *this;
     }
