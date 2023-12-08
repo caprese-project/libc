@@ -52,7 +52,7 @@ namespace std {
         ::ungetc(ch, fp);
       }
 
-      return trais_type::to_int_type(static_cast<char_type>(ch));
+      return traits_type::to_int_type(static_cast<char_type>(ch));
     }
   };
 } // namespace std

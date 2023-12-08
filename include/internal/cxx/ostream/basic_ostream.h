@@ -2,8 +2,8 @@
 #define CAPRESE_LIBC_INTERNAL_CXX_OSTREAM_BASIC_OSTREAM_H_
 
 #include <internal/attribute.h>
+#include <internal/cxx/fwd/iteratorfwd.h>
 #include <internal/cxx/ios/basic_ios.h>
-#include <internal/cxx/iterator/ostreambuf_iterator.h>
 #include <internal/cxx/locale/num_put.h>
 #include <internal/cxx/stddef.h>
 #include <internal/exception.h>
