@@ -20,8 +20,6 @@ extern "C" {
   int tolower(int ch);
   int toupper(int ch);
 
-#ifndef __OPTIMIZE_SIZE__
-
 #define __CTYPE_UPPER_CHAR  (1 << 0) // upper char (A-Z)
 #define __CTYPE_LOWER_CHAR  (1 << 1) // lower char (a-z)
 #define __CTYPE_NUMBER_CHAR (1 << 2) // number (0-9)
@@ -31,6 +29,7 @@ extern "C" {
 #define __CTYPE_HEX_CHAR    (1 << 6) // hex-digit (a-f | A-F)
 #define __CTYPE_BLANK_CHAR  (1 << 7) // blank (' ' | '\t')
 
+#ifndef __OPTIMIZE_SIZE__
   extern const unsigned char __ctype_table[256];
 #endif // !__OPTIMIZE_SIZE__
 

@@ -1,8 +1,6 @@
 #include <ctype.h>
 #include <internal/attribute.h>
 
-#ifndef __OPTIMIZE_SIZE__
-
 // clang-format off
 __weak const unsigned char __ctype_table[256] = {
   ['\0']   = __CTYPE_CTRL_CHAR,
@@ -263,5 +261,3 @@ __weak const unsigned char __ctype_table[256] = {
   [0xff]   = 0,
 };
 // clang-format on
-
-#endif // __OPTIMIZE_SIZE__

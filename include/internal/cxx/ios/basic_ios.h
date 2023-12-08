@@ -2,8 +2,11 @@
 #define CAPRESE_LIBC_INTERNAL_CXX_IOS_BASIC_IOS_H_
 
 #include <internal/attribute.h>
+#include <internal/cxx/fwd/localefwd.h>
 #include <internal/cxx/fwd/streambuffwd.h>
 #include <internal/cxx/ios/ios_base.h>
+#include <internal/cxx/locale/ctype.h>
+#include <internal/cxx/locale/facet.h>
 #include <internal/cxx/memory/addressof.h>
 
 namespace std {
@@ -22,10 +25,16 @@ namespace std {
 
     using __streambuf_type = __basic_streambuf<char_type, traits_type>;
     using __ostream_type   = __basic_ostream<char_type, traits_type>;
+    using __num_get_type   = num_get<Char, __iterator_type>;
+    using __num_put_type   = num_put<Char, __iterator_type>;
+    using __ctype_type     = ctype<Char>;
 
   protected:
     __streambuf_type* _rdbuf;
     __ostream_type*   _tie;
+    __num_get_type*   _num_get;
+    __num_put_type*   _num_put;
+    __ctype_type*     _ctype;
     iostate           _exceptions;
     char_type         _fillch;
 
@@ -36,7 +45,12 @@ namespace std {
       _rdbuf      = buf;
       _tie        = nullptr;
       _exceptions = goodbit;
-      _fillch     = widen(' ');
+
+      _num_get = __addressof(use_facet<__num_get_type>(locale::classic()));
+      _num_put = __addressof(use_facet<__num_put_type>(locale::classic()));
+      _ctype   = __addressof(use_facet<__ctype_type>(locale::classic()));
+
+      _fillch = widen(' ');
 
       ios_base::_init();
 
@@ -156,8 +170,7 @@ namespace std {
     }
 
     char_type widen(char ch) const {
-      // TODO: support wchar_t
-      return ch;
+      return _ctype->widen(ch);
     }
   };
 } // namespace std

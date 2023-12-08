@@ -3,8 +3,8 @@
 
 #include <internal/attribute.h>
 #include <internal/cxx/fwd/iteratorfwd.h>
-#include <internal/cxx/fwd/localefwd.h>
 #include <internal/cxx/ios/basic_ios.h>
+#include <internal/cxx/locale/num_put.h>
 #include <internal/cxx/stddef.h>
 #include <internal/exception.h>
 
@@ -44,7 +44,6 @@ namespace std {
 
     using __ios_type       = __basic_ios<Char, Traits>;
     using __iterator_type  = ostreambuf_iterator<Char, Traits>;
-    using __num_put_type   = num_put<Char, __iterator_type>;
     using __streambuf_type = typename __ios_type::__streambuf_type;
 
     using char_type   = typename __ios_type::char_type;
@@ -52,9 +51,6 @@ namespace std {
     using int_type    = typename __ios_type::int_type;
     using pos_type    = typename __ios_type::pos_type;
     using off_type    = typename __ios_type::off_type;
-
-  private:
-    __num_put_type _num_put;
 
   protected:
     __basic_ostream(const __basic_ostream&) = delete;
@@ -89,7 +85,7 @@ namespace std {
     }
 
     __basic_ostream& operator<<(signed short n) {
-      if (_is_oct() || _is_hex()) {
+      if (__ios_type::_is_oct() || __ios_type::_is_hex()) {
         return insert<long>(static_cast<unsigned short>(n));
       } else {
         return insert<long>(n);
@@ -101,7 +97,7 @@ namespace std {
     }
 
     __basic_ostream& operator<<(signed int n) {
-      if (_is_oct() || _is_hex()) {
+      if (__ios_type::_is_oct() || __ios_type::_is_hex()) {
         return insert<long>(static_cast<unsigned int>(n));
       } else {
         return insert<long>(n);
@@ -143,8 +139,8 @@ namespace std {
         ios_base::iostate err = ios_base::goodbit;
 
         __try {
-          if (traits_type::eq_int_type(this->rdbuf()->sputc(ch), traits_type::eof())) {
-            setstate(ios_base::badbit);
+          if (traits_type::eq_int_type(__ios_type::rdbuf()->sputc(ch), traits_type::eof())) {
+            __ios_type::setstate(ios_base::badbit);
           }
         }
         __catch (...) {
@@ -153,7 +149,7 @@ namespace std {
         }
 
         if (err != ios_base::goodbit) {
-          setstate(err);
+          __ios_type::setstate(err);
         }
       }
 
@@ -167,8 +163,8 @@ namespace std {
         ios_base::iostate err = ios_base::goodbit;
 
         __try {
-          if (this->rdbuf()->sputn(str, n) != n) {
-            setstate(ios_base::badbit);
+          if (__ios_type::rdbuf()->sputn(str, n) != n) {
+            __ios_type::setstate(ios_base::badbit);
           }
         }
         __catch (...) {
@@ -177,7 +173,7 @@ namespace std {
         }
 
         if (err != ios_base::goodbit) {
-          setstate(err);
+          __ios_type::setstate(err);
         }
       }
 
@@ -198,7 +194,7 @@ namespace std {
       }
 
       if (err != ios_base::goodbit) {
-        setstate(err);
+        __ios_type::setstate(err);
       }
     }
 
@@ -206,7 +202,7 @@ namespace std {
       pos_type result = pos_type(-1);
 
       __try {
-        if (!fail()) {
+        if (!__ios_type::fail()) {
           result = this->rdbuf()->pubseekoff(0, ios_base::cur, ios_base::out);
         }
       }
@@ -222,8 +218,8 @@ namespace std {
       ios_base::iostate err = ios_base::goodbit;
 
       __try {
-        if (!fail()) {
-          if (this->rdbuf()->pubseekpos(pos, ios_base::out) == pos_type(-1)) {
+        if (!__ios_type::fail()) {
+          if (__ios_type::rdbuf()->pubseekpos(pos, ios_base::out) == pos_type(-1)) {
             err |= ios_base::failbit;
           }
         }
@@ -234,7 +230,7 @@ namespace std {
       }
 
       if (err != ios_base::goodbit) {
-        setstate(err);
+        __ios_type::setstate(err);
       }
 
       return *this;
@@ -259,7 +255,7 @@ namespace std {
         }
 
         if (err != ios_base::goodbit) {
-          setstate(err);
+          __ios_type::setstate(err);
         }
       }
 

@@ -47,6 +47,7 @@ add_subdirectory(src/cxx/bit)
 add_subdirectory(src/cxx/exception)
 add_subdirectory(src/cxx/ios)
 add_subdirectory(src/cxx/iostream)
+add_subdirectory(src/cxx/locale)
 add_subdirectory(src/cxx/new)
 add_subdirectory(src/cxx/stdexcept)
 add_subdirectory(src/cxx/typeinfo)
@@ -120,6 +121,7 @@ target_sources(
   caprese_libcxx_hosted INTERFACE
   $<TARGET_OBJECTS:caprese_libcxx_ios>
   $<TARGET_OBJECTS:caprese_libcxx_iostream>
+  $<TARGET_OBJECTS:caprese_libcxx_locale>
   $<TARGET_OBJECTS:caprese_libcxx_stdexcept>
 )
 target_link_libraries(

@@ -6,9 +6,9 @@
 namespace std {
   template<typename Char, typename Traits>
   __basic_istream<Char, Traits>& ws(__basic_istream<Char, Traits>& is) {
-    decltype(is)::int_type          eof = Traits::eof();
-    decltype(is)::__streambuf_type* buf = is.rdbuf();
-    decltype(is)::int_type          ch  = buf->sgetc();
+    typename decltype(is)::int_type          eof = Traits::eof();
+    typename decltype(is)::__streambuf_type* buf = is.rdbuf();
+    typename decltype(is)::int_type          ch  = buf->sgetc();
 
     while (!Traits::eq_int_type(ch, eof)) {
       // TODO: use ctype_type

@@ -7,17 +7,14 @@
 namespace std {
   class locale {
   public:
-    class id {
-      friend class locale;
-
-    public:
-      id()                     = default;
-      id(const id&)            = delete;
-      id& operator=(const id&) = delete;
-    };
-
     class facet {
       friend class locale;
+
+      template<typename Facet>
+      friend bool has_facet(const locale&) __noexcept;
+
+      template<typename Facet>
+      friend const Facet& use_facet(const locale&);
 
     private:
       __size_t refs;
@@ -30,7 +27,26 @@ namespace std {
       facet& operator=(const facet&) = delete;
     };
 
+    class id {
+      friend class locale;
+
+      template<typename Facet>
+      friend bool has_facet(const locale&) __noexcept;
+
+      template<typename Facet>
+      friend const Facet& use_facet(const locale&);
+
+      __size_t _val;
+
+    public:
+      id();
+      id(const id&)            = delete;
+      id& operator=(const id&) = delete;
+    };
+
     friend class facet;
+
+    friend struct __classic_locale;
 
     template<typename Facet>
     friend bool has_facet(const locale&) __noexcept;
@@ -40,6 +56,7 @@ namespace std {
 
     using category = int;
 
+  public:
     static constexpr category none     = 0x000;
     static constexpr category collate  = 0x010;
     static constexpr category ctype    = 0x020;
@@ -48,6 +65,12 @@ namespace std {
     static constexpr category time     = 0x100;
     static constexpr category messages = 0x200;
     static constexpr category all      = collate | ctype | monetary | numeric | time | messages;
+
+    static const locale& classic();
+
+  protected:
+    facet**  _facets;
+    __size_t _facets_size;
 
   public:
     locale() __noexcept;
