@@ -23,17 +23,17 @@ namespace std {
     using reference         = char_type;
 
   private:
-    streambuf_type* _streambuf;
-    int_type        _current;
+    mutable streambuf_type* _streambuf;
+    mutable int_type        _current;
 
   public:
-    __constexpr istreambuf_iterator(): _streambuf(nullptr), _current(traits_type::eof()) __noexcept { }
+    __constexpr istreambuf_iterator() __noexcept: _streambuf(nullptr), _current(traits_type::eof()) { }
 
     istreambuf_iterator(const istreambuf_iterator&) __noexcept = default;
 
-    istreambuf_iterator(istream_type& is): _streambuf(is.rdbuf()), _current(traits_type::eof()) __noexcept { }
+    istreambuf_iterator(istream_type& is) __noexcept: _streambuf(is.rdbuf()), _current(traits_type::eof()) { }
 
-    istreambuf_iterator(streambuf_type* buf): _streambuf(buf), _current(traits_type::eof()) __noexcept { }
+    istreambuf_iterator(streambuf_type* buf) __noexcept: _streambuf(buf), _current(traits_type::eof()) { }
 
     ~istreambuf_iterator() = default;
 

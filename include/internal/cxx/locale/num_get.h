@@ -1,8 +1,11 @@
 #ifndef CAPRESE_LIBC_INTERNAL_CXX_LOCALE_NUM_GET_H_
 #define CAPRESE_LIBC_INTERNAL_CXX_LOCALE_NUM_GET_H_
 
+#include <internal/cxx/fwd/iosfwd.h>
 #include <internal/cxx/fwd/iteratorfwd.h>
 #include <internal/cxx/fwd/stringfwd.h>
+#include <internal/cxx/ios/ios_base.h>
+#include <internal/cxx/iterator/istreambuf_iterator.h>
 #include <internal/cxx/limits/numeric_limits.h>
 #include <internal/cxx/locale/locale.h>
 #include <internal/cxx/type_traits/sign.h>
@@ -270,7 +273,7 @@ namespace std {
     }
 
   public:
-    explicit num_get(size_t refs = 0): locale::facet(refs) { }
+    explicit num_get(__size_t refs = 0): locale::facet(refs) { }
 
     iter_type get(iter_type it, iter_type end, ios_base& ios, ios_base::iostate& err, bool& value) const {
       return do_get(it, end, ios, err, value);

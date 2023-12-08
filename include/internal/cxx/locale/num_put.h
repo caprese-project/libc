@@ -2,9 +2,11 @@
 #define CAPRESE_LIBC_INTERNAL_CXX_LOCALE_NUM_PUT_H_
 
 #include <internal/cxx/algorithm/seq.h>
+#include <internal/cxx/fwd/iosfwd.h>
 #include <internal/cxx/fwd/iteratorfwd.h>
 #include <internal/cxx/fwd/stringfwd.h>
 #include <internal/cxx/iterator/functions.h>
+#include <internal/cxx/iterator/ostreambuf_iterator.h>
 #include <internal/cxx/limits/numeric_limits.h>
 #include <internal/cxx/locale/locale.h>
 #include <internal/cxx/stddef.h>
@@ -23,7 +25,7 @@ namespace std {
     virtual ~num_put() { }
 
     template<typename T>
-    streamsize itoa(char_type* buf, T value, ios_base& ios) {
+    streamsize itoa(char_type* buf, T value, ios_base& ios) const {
       __constexpr const char* digits = "0123456789abcdef";
 
       char_type* ptr = buf;
@@ -49,10 +51,11 @@ namespace std {
 
     template<typename T>
     iter_type put_int(iter_type it, ios_base& ios, char_type fill, T value) const {
-      char_type buf[32];
+      char_type  _buf[32];
+      char_type* buf = _buf;
 
       streamsize size = itoa(buf, value, ios);
-      buf += std::size(buf) - size;
+      buf += std::size(_buf) - size;
 
       if (ios._is_dec()) {
         if (value >= 0) {

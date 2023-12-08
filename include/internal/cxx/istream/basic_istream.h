@@ -1,6 +1,7 @@
 #ifndef CAPRESE_LIBC_INTERNAL_CXX_ISTREAM_BASIC_ISTREAM_H_
 #define CAPRESE_LIBC_INTERNAL_CXX_ISTREAM_BASIC_ISTREAM_H_
 
+#include <internal/cxx/algorithm/minmax.h>
 #include <internal/cxx/fwd/iteratorfwd.h>
 #include <internal/cxx/ios/basic_ios.h>
 #include <internal/cxx/limits/numeric_limits.h>
