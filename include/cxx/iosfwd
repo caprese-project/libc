@@ -2,6 +2,11 @@
 #define CAPRESE_LIBC_CXX_IOSFWD_
 
 #include <cwchar>
+#include <internal/cxx/fwd/iosfwd.h>
+#include <internal/cxx/fwd/istreamfwd.h>
+#include <internal/cxx/fwd/memoryfwd.h>
+#include <internal/cxx/fwd/ostreamfwd.h>
+#include <internal/cxx/fwd/streambuffwd.h>
 #include <internal/cxx/ios/fpos.h>
 #include <internal/cxx/ios/types.h>
 

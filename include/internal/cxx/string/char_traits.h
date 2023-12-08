@@ -1,6 +1,7 @@
 #ifndef CAPRESE_LIBC_INTERNAL_CXX_STRING_CHAR_TRAITS_H_
 #define CAPRESE_LIBC_INTERNAL_CXX_STRING_CHAR_TRAITS_H_
 
+#include <compare>
 #include <cstddef>
 #include <cstdint>
 #include <internal/attribute.h>

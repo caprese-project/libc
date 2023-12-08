@@ -11,7 +11,7 @@ namespace std {
   class __basic_string;
 
   template<typename Char, typename Traits = char_traits<Char>, typename Allocator = allocator<Char>>
-  using basic_string = __basic_string;
+  using basic_string = __basic_string<Char, Traits, Allocator>;
 
   using string  = basic_string<char>;
   using wstring = basic_string<wchar_t>;
