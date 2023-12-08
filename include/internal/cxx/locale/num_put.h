@@ -183,6 +183,9 @@ namespace std {
       return do_put(it, ios, fill, value);
     }
   };
+
+  template<typename Char, typename OutputIterator>
+  locale::id num_put<Char, OutputIterator>::id;
 } // namespace std
 
 #endif // CAPRESE_LIBC_INTERNAL_CXX_LOCALE_NUM_PUT_H_

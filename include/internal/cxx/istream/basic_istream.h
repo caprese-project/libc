@@ -656,7 +656,7 @@ namespace std {
         ios_base::iostate err = ios_base::goodbit;
 
         __try {
-          _num_get.get(*this, 0, *this, err, n);
+          __ios_type::_num_get.get(*this, 0, *this, err, n);
         }
         __catch (...) {
           // basic_istream::setstate may throw an exception.
@@ -680,7 +680,7 @@ namespace std {
 
         __try {
           long result;
-          _num_get.get(*this, 0, *this, err, result);
+          __ios_type::_num_get.get(*this, 0, *this, err, result);
 
           if (result < __numeric_limits<T>::min()) {
             err |= ios_base::failbit;

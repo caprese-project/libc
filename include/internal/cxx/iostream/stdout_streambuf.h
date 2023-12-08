@@ -31,7 +31,7 @@ namespace std {
     }
 
     virtual streamsize xsputn(const char_type* str, streamsize n) {
-      return ::fwrite(str, sizeof(char_type) * n, fp);
+      return ::fwrite(str, sizeof(char_type), n, fp);
     }
 
     virtual int sync() {

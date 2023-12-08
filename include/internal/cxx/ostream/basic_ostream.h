@@ -196,6 +196,8 @@ namespace std {
       if (err != ios_base::goodbit) {
         __ios_type::setstate(err);
       }
+
+      return *this;
     }
 
     pos_type tellp() {
@@ -245,7 +247,7 @@ namespace std {
         ios_base::iostate err = ios_base::goodbit;
 
         __try {
-          if (_num_put.put(*this, *this, this->fill(), n).failed()) {
+          if (__ios_type::_num_put.put(*this, *this, this->fill(), n).failed()) {
             err |= ios_base::badbit;
           }
         }

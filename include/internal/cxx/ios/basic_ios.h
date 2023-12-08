@@ -2,6 +2,7 @@
 #define CAPRESE_LIBC_INTERNAL_CXX_IOS_BASIC_IOS_H_
 
 #include <internal/attribute.h>
+#include <internal/cxx/fwd/iteratorfwd.h>
 #include <internal/cxx/fwd/localefwd.h>
 #include <internal/cxx/fwd/streambuffwd.h>
 #include <internal/cxx/ios/ios_base.h>
@@ -25,18 +26,18 @@ namespace std {
 
     using __streambuf_type = __basic_streambuf<char_type, traits_type>;
     using __ostream_type   = __basic_ostream<char_type, traits_type>;
-    using __num_get_type   = num_get<Char, __iterator_type>;
-    using __num_put_type   = num_put<Char, __iterator_type>;
+    using __num_get_type   = num_get<Char, istreambuf_iterator<char_type, traits_type>>;
+    using __num_put_type   = num_put<Char, ostreambuf_iterator<char_type, traits_type>>;
     using __ctype_type     = ctype<Char>;
 
   protected:
-    __streambuf_type* _rdbuf;
-    __ostream_type*   _tie;
-    __num_get_type*   _num_get;
-    __num_put_type*   _num_put;
-    __ctype_type*     _ctype;
-    iostate           _exceptions;
-    char_type         _fillch;
+    __streambuf_type*     _rdbuf;
+    __ostream_type*       _tie;
+    const __num_get_type* _num_get;
+    const __num_put_type* _num_put;
+    const __ctype_type*   _ctype;
+    iostate               _exceptions;
+    char_type             _fillch;
 
   protected:
     __basic_ios() { }

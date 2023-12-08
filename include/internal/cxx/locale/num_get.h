@@ -304,6 +304,9 @@ namespace std {
       return do_get(it, end, ios, err, value);
     }
   };
+
+  template<typename Char, typename InputIterator>
+  locale::id num_get<Char, InputIterator>::id;
 } // namespace std
 
 #endif // CAPRESE_LIBC_INTERNAL_CXX_LOCALE_NUM_GET_H_

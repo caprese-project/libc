@@ -6,6 +6,10 @@ namespace std {
     __size_t last_locale_id = 0;
   } // namespace
 
+  locale::facet::facet(__size_t refs): refs(refs) { }
+
+  locale::facet::~facet() __noexcept { }
+
   locale::id::id(): _val(0) {
     ++last_locale_id;
     _val = last_locale_id;
@@ -19,7 +23,7 @@ namespace std {
 
       for (__size_t i = 0; i < other._facets_size; i++) {
         _facets[i] = other._facets[i];
-        _facets[i].refs++;
+        _facets[i]->refs++;
       }
     }
   }
@@ -33,7 +37,7 @@ namespace std {
 
       for (__size_t i = 0; i < other._facets_size; i++) {
         _facets[i] = other._facets[i];
-        _facets[i].refs++;
+        _facets[i]->refs++;
       }
     }
 
@@ -43,10 +47,10 @@ namespace std {
   locale::~locale() {
     if (_facets) {
       for (__size_t i = 0; i < _facets_size; i++) {
-        if (_facets[i].refs == 0) {
+        if (_facets[i]->refs == 0) {
           delete _facets[i];
         } else {
-          _facets[i].refs--;
+          _facets[i]->refs--;
         }
       }
 

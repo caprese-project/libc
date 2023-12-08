@@ -23,7 +23,7 @@ namespace std {
 
   template<typename Facet>
   const Facet& use_facet(const locale& loc) {
-    if (!has_facet(loc)) {
+    if (!has_facet<Facet>(loc)) {
       __throw_exception(bad_cast());
     }
 

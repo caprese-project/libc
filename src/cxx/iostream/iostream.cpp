@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <internal/cxx/iostream/stdin_streambuf.h>
 #include <internal/cxx/iostream/stdout_streambuf.h>
+#include <internal/cxx/new/operator.h>
 #include <istream>
 #include <ostream>
 

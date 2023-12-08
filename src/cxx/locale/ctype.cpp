@@ -3,7 +3,9 @@
 #include <internal/cxx/locale/ctype.h>
 
 namespace std {
-  ctype<char>::ctype(const mask* table, bool del, __size_t refs): locale::facet(refs), _table(table), _del(del) { }
+  locale::id ctype<char>::id;
+
+  ctype<char>::ctype(const mask* table, bool del, __size_t refs): locale::facet(refs), _del(del), _table(table) { }
 
   ctype<char>::~ctype() {
     if (_del) {
@@ -17,7 +19,7 @@ namespace std {
   }
 
   char ctype<char>::do_toupper(char ch) const {
-    if (table()[ch] & lower) {
+    if (table()[static_cast<__size_t>(ch)] & lower) {
       return ch - 'a' + 'A';
     } else {
       return ch;
@@ -34,7 +36,7 @@ namespace std {
   }
 
   char ctype<char>::do_tolower(char ch) const {
-    if (table()[ch] & upper) {
+    if (table()[static_cast<__size_t>(ch)] & upper) {
       return ch - 'A' + 'a';
     } else {
       return ch;
@@ -88,12 +90,12 @@ namespace std {
   }
 
   bool ctype<char>::is(mask m, char ch) const {
-    return table()[ch] & m;
+    return table()[static_cast<__size_t>(ch)] & m;
   }
 
   const char* ctype<char>::is(const char* low, const char* high, mask* vec) const {
     while (low != high) {
-      *vec = table()[*low];
+      *vec = table()[static_cast<__size_t>(*low)];
       ++low;
       ++vec;
     }
@@ -103,7 +105,7 @@ namespace std {
 
   const char* ctype<char>::scan_is(mask m, const char* beg, const char* end) const {
     while (beg != end) {
-      if (table()[*beg] & m) {
+      if (table()[static_cast<__size_t>(*beg)] & m) {
         return beg;
       }
       ++beg;
@@ -114,7 +116,7 @@ namespace std {
 
   const char* ctype<char>::scan_not(mask m, const char* beg, const char* end) const {
     while (beg != end) {
-      if (!(table()[*beg] & m)) {
+      if (!(table()[static_cast<__size_t>(*beg)] & m)) {
         return beg;
       }
       ++beg;

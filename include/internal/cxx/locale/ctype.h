@@ -127,6 +127,9 @@ namespace std {
     explicit ctype(__size_t refs = 0): __ctype_helper<Char>(refs) { }
   };
 
+  template<typename Char>
+  locale::id ctype<Char>::id;
+
   template<>
   class ctype<char>: public locale::facet, public ctype_base {
   public:
