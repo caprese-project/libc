@@ -2,6 +2,7 @@
 #include <internal/cxx/new/bad_alloc.h>
 #include <internal/cxx/typeinfo/__cxxabiv1.h>
 #include <internal/cxx/typeinfo/exception.h>
+#include <internal/exception.h>
 
 namespace __cxxabiv1 {
   extern "C" {

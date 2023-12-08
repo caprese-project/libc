@@ -11,6 +11,7 @@
 #include <internal/cxx/stdexcept/logic_error.h>
 #include <internal/cxx/stl_base/binary_tree.h>
 #include <internal/cxx/utility/pair.h>
+#include <internal/exception.h>
 
 namespace std {
   template<typename K, typename V, typename Compare = __less<K>, typename Allocator = allocator<pair<const K, V>>>
