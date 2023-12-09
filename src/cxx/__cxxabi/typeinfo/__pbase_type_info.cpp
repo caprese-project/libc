@@ -1,4 +1,4 @@
-#include <internal/cxx/typeinfo/__cxxabiv1.h>
+#include <internal/cxx/__cxxabi/typeinfo.h>
 #include <typeinfo>
 
 namespace __cxxabiv1 {

@@ -1,4 +1,4 @@
-#include <internal/cxx/typeinfo/__cxxabiv1.h>
+#include <internal/cxx/__cxxabi/typeinfo.h>
 
 namespace __cxxabiv1 {
   __si_class_type_info::__si_class_type_info(const char* name, const __class_type_info* base_type): __class_type_info(name), __base_type(base_type) { }

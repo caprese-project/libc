@@ -43,6 +43,7 @@ add_subdirectory(src/uchar)
 add_subdirectory(src/wchar)
 add_subdirectory(src/wctype)
 
+add_subdirectory(src/cxx/__cxxabi)
 add_subdirectory(src/cxx/bit)
 add_subdirectory(src/cxx/exception)
 add_subdirectory(src/cxx/ios)
@@ -110,6 +111,7 @@ target_link_libraries(
 add_library(caprese_libcxx_freestanding INTERFACE)
 target_link_libraries(
   caprese_libcxx_freestanding INTERFACE
+  $<TARGET_OBJECTS:caprese_libcxx_cxxabi>
   $<TARGET_OBJECTS:caprese_libcxx_bit>
   $<TARGET_OBJECTS:caprese_libcxx_exception>
   $<TARGET_OBJECTS:caprese_libcxx_new>

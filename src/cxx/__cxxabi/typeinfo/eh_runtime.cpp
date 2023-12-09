@@ -1,6 +1,6 @@
 #include <internal/attribute.h>
 #include <internal/cxx/new/bad_alloc.h>
-#include <internal/cxx/typeinfo/__cxxabiv1.h>
+#include <internal/cxx/__cxxabi/typeinfo.h>
 #include <internal/cxx/typeinfo/exception.h>
 #include <internal/exception.h>
 

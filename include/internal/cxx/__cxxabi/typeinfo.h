@@ -1,5 +1,5 @@
-#ifndef CAPRESE_LIBC_INTERNAL_CXX_TYPEINFO___CXXABIV1_H_
-#define CAPRESE_LIBC_INTERNAL_CXX_TYPEINFO___CXXABIV1_H_
+#ifndef CAPRESE_LIBC_INTERNAL_CXX___CXXABI_TYPEINFO_H_
+#define CAPRESE_LIBC_INTERNAL_CXX___CXXABI_TYPEINFO_H_
 
 #include <cstddef>
 #include <cstdint>
@@ -270,6 +270,12 @@ namespace __cxxabiv1 {
     return adjust_pointer<void>(addr, offset);
   }
 
+  struct vtable_prefix {
+    ptrdiff_t                whole_object;
+    const __class_type_info* whole_type;
+    const void*              origin;
+  };
+
   extern "C" {
     __noreturn void __cxa_bad_cast();
     __noreturn void __cxa_bad_typeid();
@@ -277,8 +283,4 @@ namespace __cxxabiv1 {
   }
 } // namespace __cxxabiv1
 
-namespace std {
-  using ::__cxxabiv1::type_info;
-} // namespace std
-
-#endif // CAPRESE_LIBC_INTERNAL_CXX_TYPEINFO___CXXABIV1_H_
+#endif // CAPRESE_LIBC_INTERNAL_CXX___CXXABI_TYPEINFO_H_

@@ -1,4 +1,4 @@
-#include <internal/cxx/typeinfo/__cxxabiv1.h>
+#include <internal/cxx/__cxxabi/typeinfo.h>
 
 namespace std {
   type_info::type_info(const char* name): __name(name) {};

@@ -1,4 +1,4 @@
-#include <internal/cxx/typeinfo/__cxxabiv1.h>
+#include <internal/cxx/__cxxabi/typeinfo.h>
 
 namespace __cxxabiv1 {
   __vmi_class_type_info::__vmi_class_type_info(const char* name, int flags): __class_type_info(name), __flags(flags), __base_count(0) { }

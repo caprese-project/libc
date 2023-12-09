@@ -1,4 +1,4 @@
-#include <internal/cxx/typeinfo/__cxxabiv1.h>
+#include <internal/cxx/__cxxabi/typeinfo.h>
 
 namespace __cxxabiv1 {
   __pointer_type_info::__pointer_type_info(const char* name, int flags, const type_info* type): __pbase_type_info(name, flags, type) { }
