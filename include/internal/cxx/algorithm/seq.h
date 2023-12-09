@@ -4,6 +4,20 @@
 #include <internal/attribute.h>
 
 namespace std {
+  template<typename InputIterator1, typename InputIterator2>
+  __constexpr_cxx_std_20 bool equal(InputIterator1 first, InputIterator1 last, InputIterator2 first2) {
+    while (first != last) {
+      if (!(*first == *first2)) {
+        return false;
+      }
+
+      ++first;
+      ++first2;
+    }
+
+    return true;
+  }
+
   template<typename InputIterator, typename Function>
   __constexpr_cxx_std_14 Function for_each(InputIterator first, InputIterator last, Function f) {
     while (first != last) {
