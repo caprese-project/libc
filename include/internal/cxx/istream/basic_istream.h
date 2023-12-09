@@ -46,7 +46,7 @@ namespace std {
               auto ch = is.rdbuf()->sgetc();
 
               while (!traits_type::eq_int_type(ch, traits_type::eof())) {
-                if (!is._ctype.is(ctype_base::space, traits_type::to_char_type(ch))) {
+                if (!is._ctype->is(ctype_base::space, traits_type::to_char_type(ch))) {
                   break;
                 }
 
@@ -595,7 +595,7 @@ namespace std {
     }
 
     __basic_istream& seekg(pos_type pos) {
-      clear(__ios_type::rdstate() & ~ios_base::eofbit);
+      __ios_type::clear(__ios_type::rdstate() & ~ios_base::eofbit);
 
       sentry sentry(*this, true);
       if (sentry) {
@@ -618,6 +618,8 @@ namespace std {
           __ios_type::setstate(err);
         }
       }
+
+      return *this;
     }
 
     __basic_istream& seekg(off_type off, ios_base::seekdir dir) {
