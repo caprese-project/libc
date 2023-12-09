@@ -165,6 +165,13 @@ namespace std {
   template<typename T>
   using add_rvalue_reference = __add_rvalue_reference<T>;
 
+#ifdef __CXX_STD_20__
+
+  template<typename T>
+  using remove_cvref = __remove_cvref<T>;
+
+#endif // __CXX_STD_20__
+
   template<bool Cond, typename T = void>
   using enable_if = __enable_if<Cond, T>;
 
@@ -218,6 +225,13 @@ namespace std {
 
   template<typename T>
   using add_rvalue_reference_t = typename add_rvalue_reference<T>::type;
+
+#ifdef __CXX_STD_20__
+
+  template<typename T>
+  using remove_cvref_t = typename remove_cvref<T>::type;
+
+#endif // __CXX_STD_20__
 
   template<bool Cond, typename T = void>
   using enable_if_t = typename enable_if<Cond, T>::type;

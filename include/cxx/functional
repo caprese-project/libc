@@ -1,0 +1,7 @@
+#ifndef CAPRESE_LIBC_CXX_FUNCTIONAL_
+#define CAPRESE_LIBC_CXX_FUNCTIONAL_
+
+#include <internal/cxx/functional/compare.h>
+#include <internal/cxx/functional/ref.h>
+
+#endif // CAPRESE_LIBC_CXX_FUNCTIONAL_

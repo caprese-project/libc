@@ -116,6 +116,11 @@ namespace std {
 
   template<typename T>
   struct __add_rvalue_reference: public __add_rvalue_reference_helper<T> { };
+
+  template<typename T>
+  struct __remove_cvref {
+    using type = typename __remove_cv<typename __remove_reference<T>::type>::type;
+  };
 } // namespace std
 
 #endif // CAPRESE_INTERNAL_CXX_TYPE_TRAITS_MODIFY_H_
