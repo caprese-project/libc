@@ -4,6 +4,9 @@ add_library(caprese_libcxx_cxxabi OBJECT)
 
 target_sources(
   caprese_libcxx_cxxabi PRIVATE
+  guard/abort.cpp
+  guard/acquire.cpp
+  guard/release.cpp
   typeinfo/__array_type_info.cpp
   typeinfo/__base_class_type_info.cpp
   typeinfo/__class_type_info.cpp
