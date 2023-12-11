@@ -6,25 +6,35 @@
 #include <internal/cxx/type_traits/detection.h>
 #include <internal/cxx/type_traits/logic.h>
 #include <internal/cxx/type_traits/modify.h>
+#include <internal/cxx/type_traits/type.h>
 #include <internal/cxx/type_traits/type_relation.h>
 #include <internal/cxx/utility/fwd.h>
 
 namespace std {
   template<typename T>
   class reference_wrapper {
-    T* _ptr;
-
   public:
     using type = T;
 
-  public:
-    template<typename U>
-    __constexpr_cxx_std_20 reference_wrapper(__enable_if<__disjunction<__is_rvalue_reference<U>, __is_same_t<typename __remove_cv<U>::type, reference_wrapper<T>>>::value, U>&& ref) __noexcept
-        : _ptr(__addressof(std::forward<U>(ref))) {};
+  private:
+    type* _ptr;
 
-    __constexpr_cxx_std_20 reference_wrapper(const reference_wrapper& other) __noexcept            = default;
-    ~reference_wrapper() __noexcept                                                                = default;
-    __constexpr_cxx_std_20 reference_wrapper& operator=(const reference_wrapper& other) __noexcept = default;
+  public:
+    template<typename U,
+             typename = typename __enable_if<!__is_rvalue_reference<U>::value>::type,
+             typename = typename __enable_if<!__is_same_t<typename __remove_cvref<U>::type, reference_wrapper<T>>::value>::type>
+    __constexpr_cxx_std_20 reference_wrapper(U&& ref) __noexcept: _ptr(__addressof(std::forward<U>(ref))) {};
+
+    __constexpr_cxx_std_20 reference_wrapper(const reference_wrapper& other) __noexcept: _ptr(other._ptr) { }
+
+    __constexpr_cxx_std_20 reference_wrapper& operator=(const reference_wrapper& other) __noexcept {
+      if (this != &other) {
+        _ptr = other._ptr;
+      }
+      return *this;
+    }
+
+    ~reference_wrapper() __noexcept = default;
 
     __constexpr_cxx_std_20 operator T&() const __noexcept {
       return get();

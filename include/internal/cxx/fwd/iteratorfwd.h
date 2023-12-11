@@ -8,9 +8,6 @@ namespace std {
   template<typename I>
   struct iterator_traits;
 
-  template<typename Iterator, typename Container>
-  class __iterator_base;
-
   template<typename I>
   class reverse_iterator;
 

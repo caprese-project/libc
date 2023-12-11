@@ -47,8 +47,8 @@ namespace std {
     }
 
     void _pbump(char_type* buf, char_type* end, off_type off) {
-      setp(buf, end);
-      pbump(off);
+      this->setp(buf, end);
+      this->pbump(off);
     }
 
     void _sync(char_type* buf, __size_type in, __size_type out) {
@@ -63,24 +63,24 @@ namespace std {
       }
 
       if (_mode & ios_base::in) {
-        setg(buf, buf + in, get_end);
+        this->setg(buf, buf + in, get_end);
       }
 
       if (_mode & ios_base::out) {
-        _pbump(buf, put_end, out);
+        this->_pbump(buf, put_end, out);
         if ((_mode & ios_base::in) == 0) {
-          setg(get_end, get_end, get_end);
+          this->setg(get_end, get_end, get_end);
         }
       }
     }
 
     void _update_egptr() {
-      char_type* _pptr = pptr();
-      if (_pptr != nullptr && egptr() != nullptr) {
+      char_type* _pptr = this->pptr();
+      if (_pptr != nullptr && this->egptr() != nullptr) {
         if (_mode & ios_base::in) {
-          setg(eback(), gptr(), _pptr);
+          this->setg(this->eback(), this->gptr(), _pptr);
         } else {
-          setg(_pptr, _pptr, _pptr);
+          this->setg(_pptr, _pptr, _pptr);
         }
       }
     }
@@ -90,9 +90,9 @@ namespace std {
       int_type result;
 
       if (_mode & ios_base::in) {
-        _update_egptr();
-        if (gptr() < egptr()) {
-          result = traits_type::to_int_type(*gptr());
+        this->_update_egptr();
+        if (this->gptr() < this->egptr()) {
+          result = traits_type::to_int_type(*this->gptr());
         } else {
           result = traits_type::eof();
         }
@@ -106,16 +106,16 @@ namespace std {
     virtual int_type pbackfail(int_type ch = traits_type::eof()) {
       int_type result;
 
-      if (eback() < gptr()) {
+      if (this->eback() < this->gptr()) {
         if (traits_type::eq_int_type(ch, traits_type::eof())) {
-          gbump(-1);
+          this->gbump(-1);
           result = traits_type::not_eof(ch);
         } else {
-          bool eq = traits_type::eq(traits_type::to_char_type(ch), gptr()[-1]);
+          bool eq = traits_type::eq(traits_type::to_char_type(ch), this->gptr()[-1]);
           if (eq || (_mode & ios_base::out)) {
-            gbump(-1);
+            this->gbump(-1);
             if (!eq) {
-              *gptr() = traits_type::to_char_type(ch);
+              *this->gptr() = traits_type::to_char_type(ch);
             }
             result = ch;
           }
@@ -136,29 +136,29 @@ namespace std {
         } else {
           __size_type capacity = _buf.capacity();
           char_type*  data     = _buf.data();
-          if (epptr() - pbase() < capacity) {
-            _pbump(data, data + capacity, pptr() - ppbase());
+          if (__size_type(this->epptr() - this->pbase()) < capacity) {
+            this->_pbump(data, data + capacity, this->pptr() - this->ppbase());
             if (_mode & ios_base::in) {
-              setg(data, data + (gptr() - eback()), data + (egptr() - eback()) + 1);
+              this->setg(data, data + (this->gptr() - this->eback()), data + (this->egptr() - this->eback()) + 1);
             }
-            *pptr() = traits_type::to_char_type(ch);
-            pbump(1);
+            *this->pptr() = traits_type::to_char_type(ch);
+            this->pbump(1);
             result = ch;
-          } else if (pptr() < epptr()) {
+          } else if (this->pptr() < this->epptr()) {
             __string_type tmpbuf(_buf.get_allocator());
             tmpbuf.reserve(std::max<__size_type>(2 * capacity, 512));
-            if (pbase() != nullptr) {
-              tmpbuf.append(pbase(), epptr() - pbase());
+            if (this->pbase() != nullptr) {
+              tmpbuf.append(this->pbase(), this->epptr() - this->pbase());
             }
             tmpbuf.push_back(traits_type::to_char_type(ch));
             _buf.swap(tmpbuf);
-            _sync(_buf.data(), gptr() - eback(), pptr() - pbase());
+            this->_sync(_buf.data(), this->gptr() - this->eback(), this->pptr() - this->pbase());
             result = ch;
           } else if (_buf.max_size() == capacity) {
             result = traits_type::eof();
           } else {
-            *pptr() = traits_type::to_char_type(ch);
-            result  = ch;
+            *this->pptr() = traits_type::to_char_type(ch);
+            result        = ch;
           }
         }
       } else {
@@ -171,7 +171,7 @@ namespace std {
     virtual __streambuf_type* setbuf(char_type* str, streamsize n) {
       if (str != nullptr && n >= 0) {
         _buf.clear();
-        _sync(str, n, 0);
+        this->_sync(str, n, 0);
       }
       return this;
     }
@@ -185,10 +185,10 @@ namespace std {
       in        = in & !(_mode & ios_base::out);
       out       = out & !(_mode & ios_base::in);
 
-      char_type* beg = in ? eback() : pbase();
+      char_type* beg = in ? this->eback() : this->pbase();
 
       if ((beg != nullptr || off != 0) && (in || out || both)) {
-        _update_egptr();
+        this->_update_egptr();
 
         off_type offin;
         off_type offout;
@@ -197,25 +197,26 @@ namespace std {
           case ios_base::beg:
             offin  = off;
             offout = off;
+            break;
           case ios_base::cur:
-            offin  = off + gptr() - beg;
-            offout = off + pptr() - beg;
+            offin  = off + this->gptr() - beg;
+            offout = off + this->pptr() - beg;
             break;
           case ios_base::end:
-            offin  = off + egptr() - beg;
+            offin  = off + this->egptr() - beg;
             offout = offin;
             break;
           default:
             return result;
         }
 
-        if ((in || both) && offin >= 0 && egptr() - beg >= offin) {
-          setg(eback(), eback() + offin, egptr());
+        if ((in || both) && offin >= 0 && this->egptr() - beg >= offin) {
+          this->setg(this->eback(), this->eback() + offin, this->egptr());
           result = (pos_type)offin;
         }
 
-        if ((out || both) && offout >= 0 && egptr() - beg >= offout) {
-          _pbump(pbase(), epptr(), offout);
+        if ((out || both) && offout >= 0 && this->egptr() - beg >= offout) {
+          this->_pbump(this->pbase(), this->epptr(), offout);
           result = (pos_type)offout;
         }
       }
@@ -229,18 +230,18 @@ namespace std {
       bool in  = _mode & mode & ios_base::in;
       bool out = _mode & mode & ios_base::out;
 
-      char_type* beg = in ? eback() : pbase();
+      char_type* beg = in ? this->eback() : this->pbase();
 
-      if ((beg != nullptr || sp != 0) && (in || out)) {
-        _update_egptr();
+      if ((beg != nullptr || sp) && (in || out)) {
+        this->_update_egptr();
 
         off_type pos = sp;
-        if (pos >= 0 && pos <= egptr() - beg) {
+        if (pos >= 0 && pos <= this->egptr() - beg) {
           if (in) {
-            setg(eback(), eback() + pos, egptr());
+            this->setg(this->eback(), this->eback() + pos, this->egptr());
           }
           if (out) {
-            _pbump(pbase(), epptr(), pos);
+            this->_pbump(this->pbase(), this->epptr(), pos);
           }
           result = sp;
         }
@@ -253,11 +254,11 @@ namespace std {
     __basic_stringbuf(): __basic_stringbuf(ios_base::in | ios_base::out) { }
 
     explicit __basic_stringbuf(ios_base::openmode mode): _mode(mode) {
-      _init();
+      this->_init();
     }
 
-    explicit __basic_stringbuf(const __string_type& str, ios_base::openmode mode = ios_base::in | ios_base::out): _mode(mode) {
-      _init();
+    explicit __basic_stringbuf(const __string_type& str, ios_base::openmode mode = ios_base::in | ios_base::out): _buf(str), _mode(mode) {
+      this->_init();
     }
 
     __basic_stringbuf(__basic_stringbuf&& other): _mode(other._mode), _buf(std::move(other._buf)) { }
@@ -287,7 +288,7 @@ namespace std {
     }
 
     __string_type str() const {
-      if (_mode & ios_base::openmode::out) {
+      if (_mode & ios_base::out) {
         return __string_type(this->pbase(), this->epptr());
       } else {
         return __string_type(this->eback(), this->egptr());

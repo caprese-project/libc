@@ -1,9 +1,27 @@
 #ifndef CAPRESE_INTERNAL_CXX_TYPE_TRAITS_SIGN_H_
 #define CAPRESE_INTERNAL_CXX_TYPE_TRAITS_SIGN_H_
 
+#include <internal/cxx/type_traits/detection.h>
+#include <internal/cxx/type_traits/logic.h>
 #include <internal/cxx/type_traits/type.h>
 
 namespace std {
+  template<typename T>
+  struct __is_signed: public __false_type {};
+
+  template<typename T, typename = typename __enable_if<__is_arithmetic<T>::value>::type>
+  struct __is_signed {
+    static constexpr bool value = T(-1) < T(0);
+  };
+
+  template<typename T>
+  struct __is_unsigned: public __false_type {};
+
+  template<typename T, typename = typename __enable_if<__is_arithmetic<T>::value>::type>
+  struct __is_unsigned {
+    static constexpr bool value = T(0) < T(-1);
+  };
+
   template<typename T>
   struct __make_signed;
 

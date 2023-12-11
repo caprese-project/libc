@@ -123,11 +123,40 @@ namespace std {
   template<typename T>
   using is_abstract = __is_abstract_t<T>;
 
+#ifdef __CXX_STD_14__
+
   template<typename T>
   using is_final = __is_final_t<T>;
 
+#endif // __CXX_STD_14__
+
+#ifdef __CXX_STD_17__
+
   template<typename T>
   using is_aggregate = __is_aggregate_t<T>;
+
+#endif // __CXX_STD_17__
+
+  template<typename T>
+  using is_bounded_array = __is_bounded_array<T>;
+
+  template<typename T>
+  using is_signed = __is_signed<T>;
+
+  template<typename T>
+  using is_unsigned = __is_unsigned<T>;
+
+  template<typename T, typename... Args>
+  using is_constructible = __is_constructible_t<T, Args...>;
+
+  template<typename T>
+  using is_default_constructible = __is_default_constructible<T>;
+
+  template<typename T>
+  using is_copy_constructible = __is_copy_constructible<T>;
+
+  template<typename T>
+  using is_move_constructible = __is_move_constructible<T>;
 
   template<typename T, typename U>
   using is_same = __is_same_t<T, U>;
@@ -345,6 +374,27 @@ namespace std {
 
   template<typename T>
   inline constexpr bool is_aggregate_v = is_aggregate<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_bounded_array_v = is_bounded_array<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_signed_v = is_signed<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_unsigned_v = is_unsigned<T>::value;
+
+  template<typename T, typename... Args>
+  inline constexpr bool is_constructible_v = is_constructible<T, Args...>::value;
+
+  template<typename T>
+  inline constexpr bool is_default_constructible_v = is_default_constructible<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_copy_constructible_v = is_copy_constructible<T>::value;
+
+  template<typename T>
+  inline constexpr bool is_move_constructible_v = is_move_constructible<T>::value;
 
   template<typename T, typename U>
   inline constexpr bool is_same_v = is_same<T, U>::value;

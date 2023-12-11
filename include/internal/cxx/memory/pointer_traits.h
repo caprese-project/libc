@@ -27,6 +27,10 @@ namespace std {
 
     template<typename U>
     using rebind = typename __detect_type<__rebind, __ill_formed, pointer, U>::type;
+
+    static __constexpr_cxx_std_20 auto pointer_to(element_type& ref) -> decltype(pointer::pointer_to(ref)) {
+      return pointer::pointer_to(ref);
+    }
   };
 
   template<typename T>

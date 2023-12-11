@@ -2,6 +2,8 @@
 #define CAPRESE_LIBC_INTERNAL_CXX_UTILITY_PAIR_H_
 
 #include <internal/attribute.h>
+#include <internal/cxx/type_traits/detection.h>
+#include <internal/cxx/type_traits/type.h>
 #include <internal/cxx/utility/fwd.h>
 #include <internal/cxx/utility/swap.h>
 
@@ -11,22 +13,26 @@ namespace std {
     T first;
     U second;
 
-    explicit __constexpr_cxx_std_11 pair(): first {}, second {} { }
+    template<typename = typename __enable_if<__is_default_constructible<V>::value>::type, typename = typename __enable_if<__is_default_constructible<W>::value>::type>
+    explicit __constexpr_cxx_std_11 pair(): first {},
+                                            second {} { }
 
     pair(const pair&) = default;
     pair(pair&&)      = default;
 
-    explicit __constexpr_cxx_std_14 pair(const T& first, const U& second): first(first), second(second) { }
+    template<typename = typename __enable_if<__is_copy_constructible<V>::value>::type, typename = typename __enable_if<__is_copy_constructible<W>::value>::type>
+    explicit __constexpr_cxx_std_14 pair(const T& first, const U& second): first(first),
+                                                                           second(second) { }
 
-    template<typename V, typename W>
+    template<typename V, typename W, typename = typename __enable_if<__is_constructible_t<T, V&&>::value>::type, typename = typename __enable_if<__is_constructible_t<U, W&&>::value>::type>
     explicit __constexpr_cxx_std_14 pair(V&& first, W&& second): first(forward<V>(first)),
                                                                  second(forward<W>(second)) { }
 
-    template<typename V, typename W>
+    template<typename V, typename W, typename = typename __enable_if<__is_constructible_t<T, const V&>::value>::type, typename = typename __enable_if<__is_constructible_t<U, const W&>::value>::type>
     explicit __constexpr_cxx_std_14 pair(const pair<V, W>& other): first(other.first),
                                                                    second(other.second) { }
 
-    template<typename V, typename W>
+    template<typename V, typename W, typename = typename __enable_if<__is_constructible_t<T, V&&>::value>::type, typename = typename __enable_if<__is_constructible_t<U, W&&>::value>::type>
     explicit __constexpr_cxx_std_14 pair(pair<V, W>&& other): first(move(other.first)),
                                                               second(move(other.second)) { }
 

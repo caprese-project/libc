@@ -117,7 +117,7 @@ namespace std {
   struct __is_rvalue_reference_helper<T&&>: public __true_type { };
 
   template<typename T>
-  struct __is_rvalue_reference: public __is_rvalue_reference<typename __remove_cv<T>::type> {};
+  struct __is_rvalue_reference: public __is_rvalue_reference_helper<typename __remove_cv<T>::type> {};
 
   template<typename T>
   struct __is_function: public __bool_constant<!__is_const<const T>::value> {};

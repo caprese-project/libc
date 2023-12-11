@@ -25,13 +25,13 @@ namespace std {
 
   public:
     explicit __basic_istringstream(ios_base::openmode mode): __istream_type(), _buf(mode | ios_base::in) {
-      init(&_buf);
+      this->init(&_buf);
     }
 
     __basic_istringstream(): __basic_istringstream(ios_base::in) { }
 
     explicit __basic_istringstream(const __string_type& str, ios_base::openmode mode = ios_base::in): __istream_type(), _buf(str, mode | ios_base::in) {
-      init(&_buf);
+      this->init(&_buf);
     }
 
     __basic_istringstream(__basic_istringstream&& other): __istream_type(move(other)), _buf(move(other._buf)) {
@@ -47,7 +47,7 @@ namespace std {
     __basic_istringstream(const __basic_istringstream&)            = delete;
     __basic_istringstream& operator=(const __basic_istringstream&) = delete;
 
-    ~basic_istringstream() { }
+    ~__basic_istringstream() { }
 
     void swap(__basic_istringstream& other) {
       __istream_type::swap(other);
@@ -60,10 +60,6 @@ namespace std {
 
     __string_type str() const {
       return _buf.str();
-    }
-
-    __string_type str() && {
-      return move(_buf).str();
     }
   };
 } // namespace std

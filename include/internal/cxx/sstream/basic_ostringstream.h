@@ -47,7 +47,7 @@ namespace std {
     __basic_ostringstream(const __basic_ostringstream&)            = delete;
     __basic_ostringstream& operator=(const __basic_ostringstream&) = delete;
 
-    ~basic_ostringstream() { }
+    ~__basic_ostringstream() { }
 
     void swap(__basic_ostringstream& other) {
       __ostream_type::swap(other);
@@ -60,10 +60,6 @@ namespace std {
 
     __string_type str() const {
       return _buf.str();
-    }
-
-    __string_type str() && {
-      return move(_buf).str();
     }
   };
 } // namespace std

@@ -125,6 +125,16 @@ namespace std {
 #endif // !__CXX_STD_20__
     }
 
+    template<typename Alloc>
+    static constexpr auto __max_size(Alloc& allocator) -> decltype(allocator.max_size()) {
+      return allocator.max_size();
+    }
+
+    template<typename Alloc>
+    static constexpr size_type __max_size(Alloc&) {
+      return __numeric_limits<size_type>::max() / sizeof(value_type);
+    }
+
   public:
     __nodiscard_cxx_std_20 static __constexpr_cxx_std_20 pointer allocate(allocator_type& allocator, size_type n) {
       return allocator.allocate(n);
@@ -139,7 +149,7 @@ namespace std {
     }
 
     static __constexpr_cxx_std_20 size_type max_size(const allocator_type& allocator) __noexcept {
-      return allocator.max_size();
+      return __max_size(allocator);
     }
 
     template<typename T, typename... Args>

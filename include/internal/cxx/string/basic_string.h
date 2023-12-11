@@ -4,9 +4,10 @@
 #include <cassert>
 #include <internal/attribute.h>
 #include <internal/cxx/algorithm/minmax.h>
-#include <internal/cxx/iterator/base.h>
+#include <internal/cxx/iterator/tags.h>
 #include <internal/cxx/memory/allocator.h>
 #include <internal/cxx/memory/allocator_traits.h>
+#include <internal/cxx/memory/pointer_traits.h>
 #include <internal/cxx/stdexcept/logic_error.h>
 #include <internal/cxx/string/char_traits.h>
 #include <internal/cxx/utility/fwd.h>
@@ -17,8 +18,8 @@ namespace std {
   template<typename Char, typename Traits = char_traits<Char>, typename Allocator = allocator<Char>>
   class __basic_string {
   public:
-    using Traits_type     = Traits;
-    using value_type      = typename Traits_type::char_type;
+    using traits_type     = Traits;
+    using value_type      = typename traits_type::char_type;
     using allocator_type  = Allocator;
     using size_type       = typename allocator_traits<Allocator>::size_type;
     using difference_type = typename allocator_traits<Allocator>::difference_type;
@@ -27,9 +28,223 @@ namespace std {
     using pointer         = typename allocator_traits<Allocator>::pointer;
     using const_pointer   = typename allocator_traits<Allocator>::const_pointer;
 
-    struct iterator: public __iterator_base<pointer, __basic_string> { };
+    class iterator {
+    public:
+      using iterator_category = random_access_iterator_tag;
+      using value_type        = __basic_string::value_type;
+      using difference_type   = __basic_string::difference_type;
+      using pointer           = __basic_string::pointer;
+      using reference         = __basic_string::reference;
 
-    struct const_iterator: public __iterator_base<const_pointer, __basic_string> { };
+      friend class __basic_string::const_iterator;
+
+    private:
+      pointer _ptr;
+
+    public:
+      __constexpr_cxx_std_20 iterator() __noexcept: _ptr() { }
+
+      __constexpr_cxx_std_20 iterator(pointer ptr) __noexcept: _ptr(ptr) { }
+
+      __constexpr_cxx_std_20 reference operator*() const __noexcept {
+        return *_ptr;
+      }
+
+      __constexpr_cxx_std_20 pointer operator->() const __noexcept {
+        return pointer_traits<pointer>::pointer_to(**this);
+      }
+
+      __constexpr_cxx_std_20 iterator& operator++() __noexcept {
+        ++_ptr;
+        return *this;
+      }
+
+      __constexpr_cxx_std_20 iterator operator++(int) __noexcept {
+        iterator tmp = *this;
+        ++*this;
+        return tmp;
+      }
+
+      __constexpr_cxx_std_20 iterator& operator--() __noexcept {
+        --_ptr;
+        return *this;
+      }
+
+      __constexpr_cxx_std_20 iterator operator--(int) __noexcept {
+        iterator tmp = *this;
+        --*this;
+        return tmp;
+      }
+
+      __constexpr_cxx_std_20 iterator& operator+=(difference_type n) __noexcept {
+        _ptr += n;
+        return *this;
+      }
+
+      __constexpr_cxx_std_20 iterator operator+(difference_type n) const __noexcept {
+        iterator tmp = *this;
+        tmp += n;
+        return tmp;
+      }
+
+      __constexpr_cxx_std_20 iterator& operator-=(difference_type n) __noexcept {
+        return *this += -n;
+      }
+
+      __constexpr_cxx_std_20 iterator operator-(difference_type n) const __noexcept {
+        iterator tmp = *this;
+        tmp -= n;
+        return tmp;
+      }
+
+      __constexpr_cxx_std_20 difference_type operator-(const iterator& other) const __noexcept {
+        return _ptr - other._ptr;
+      }
+
+      __constexpr_cxx_std_20 reference operator[](difference_type n) const __noexcept {
+        return *(*this + n);
+      }
+
+      __constexpr_cxx_std_20 bool operator==(const iterator& other) const __noexcept {
+        return _ptr == other._ptr;
+      }
+
+#if __CXX_STD_20__
+      __constexpr_cxx_std_20 auto operator<=>(const iterator& other) const __noexcept {
+        return _ptr <=> other._ptr;
+      }
+#else  // ^^^ __CXX_STD_20__ ^^^ / vvv !__CXX_STD_20__ vvv
+      bool operator!=(const iterator& other) const __noexcept {
+        return !(*this == other);
+      }
+
+      bool operator<(const iterator& other) const __noexcept {
+        return _ptr < other._ptr;
+      }
+
+      bool operator>(const iterator& other) const __noexcept {
+        return other < *this;
+      }
+
+      bool operator<=(const iterator& other) const __noexcept {
+        return !(other < *this);
+      }
+
+      bool operator>=(const iterator& other) const __noexcept {
+        return !(*this < other);
+      }
+#endif // !__CXX_STD_20__
+    };
+
+    class const_iterator {
+    public:
+      using iterator_category = random_access_iterator_tag;
+      using value_type        = __basic_string::value_type;
+      using difference_type   = __basic_string::difference_type;
+      using pointer           = __basic_string::const_pointer;
+      using reference         = __basic_string::const_reference;
+
+      friend class __basic_string::iterator;
+
+    private:
+      pointer _ptr;
+
+    public:
+      __constexpr_cxx_std_20 const_iterator() __noexcept: _ptr() { }
+
+      __constexpr_cxx_std_20 const_iterator(pointer ptr) __noexcept: _ptr(ptr) { }
+
+      __constexpr_cxx_std_20 const_iterator(const iterator& other) __noexcept: _ptr(other._ptr) { }
+
+      __constexpr_cxx_std_20 reference operator*() const __noexcept {
+        return *_ptr;
+      }
+
+      __constexpr_cxx_std_20 pointer operator->() const __noexcept {
+        return pointer_traits<pointer>::pointer_to(**this);
+      }
+
+      __constexpr_cxx_std_20 const_iterator& operator++() __noexcept {
+        ++_ptr;
+        return *this;
+      }
+
+      __constexpr_cxx_std_20 const_iterator operator++(int) __noexcept {
+        const_iterator tmp = *this;
+        ++*this;
+        return tmp;
+      }
+
+      __constexpr_cxx_std_20 const_iterator& operator--() __noexcept {
+        --_ptr;
+        return *this;
+      }
+
+      __constexpr_cxx_std_20 const_iterator operator--(int) __noexcept {
+        const_iterator tmp = *this;
+        --*this;
+        return tmp;
+      }
+
+      __constexpr_cxx_std_20 const_iterator& operator+=(difference_type n) __noexcept {
+        _ptr += n;
+        return *this;
+      }
+
+      __constexpr_cxx_std_20 const_iterator operator+(difference_type n) const __noexcept {
+        const_iterator tmp = *this;
+        tmp += n;
+        return tmp;
+      }
+
+      __constexpr_cxx_std_20 const_iterator& operator-=(difference_type n) __noexcept {
+        return *this += -n;
+      }
+
+      __constexpr_cxx_std_20 const_iterator operator-(difference_type n) const __noexcept {
+        const_iterator tmp = *this;
+        tmp -= n;
+        return tmp;
+      }
+
+      __constexpr_cxx_std_20 difference_type operator-(const const_iterator& other) const __noexcept {
+        return _ptr - other._ptr;
+      }
+
+      __constexpr_cxx_std_20 reference operator[](difference_type n) const __noexcept {
+        return *(*this + n);
+      }
+
+      __constexpr_cxx_std_20 bool operator==(const const_iterator& other) const __noexcept {
+        return _ptr == other._ptr;
+      }
+
+#if __CXX_STD_20__
+      __constexpr_cxx_std_20 auto operator<=>(const const_iterator& other) const __noexcept {
+        return _ptr <=> other._ptr;
+      }
+#else  // ^^^ __CXX_STD_20__ ^^^ / vvv !__CXX_STD_20__ vvv
+      bool operator!=(const const_iterator& other) const __noexcept {
+        return !(*this == other);
+      }
+
+      bool operator<(const const_iterator& other) const __noexcept {
+        return _ptr < other._ptr;
+      }
+
+      bool operator>(const const_iterator& other) const __noexcept {
+        return other < *this;
+      }
+
+      bool operator<=(const const_iterator& other) const __noexcept {
+        return !(other < *this);
+      }
+
+      bool operator>=(const const_iterator& other) const __noexcept {
+        return !(*this < other);
+      }
+#endif // !__CXX_STD_20__
+    };
 
     using reverse_iterator       = ::std::reverse_iterator<iterator>;
     using const_reverse_iterator = ::std::reverse_iterator<const_iterator>;
@@ -348,7 +563,7 @@ namespace std {
 #endif // __CXX_STD_23__
 
     __constexpr_cxx_std_20 iterator begin() __noexcept {
-      return iterator(_data);
+      return iterator(data());
     }
 
     __constexpr_cxx_std_20 const_iterator begin() const __noexcept {
@@ -356,7 +571,7 @@ namespace std {
     }
 
     __constexpr_cxx_std_20 iterator end() __noexcept {
-      return iterator(_data + _size);
+      return iterator(data() + _size);
     }
 
     __constexpr_cxx_std_20 const_iterator end() const __noexcept {
@@ -364,11 +579,11 @@ namespace std {
     }
 
     __constexpr_cxx_std_20 const_iterator cbegin() const __noexcept {
-      return const_iterator(_data);
+      return const_iterator(data());
     }
 
     __constexpr_cxx_std_20 const_iterator cend() const __noexcept {
-      return const_iterator(_data + _size);
+      return const_iterator(data() + _size);
     }
 
     __constexpr_cxx_std_20 reverse_iterator rbegin() __noexcept {
@@ -404,7 +619,7 @@ namespace std {
     }
 
     __constexpr_cxx_std_20 size_type max_size() const __noexcept {
-      return allocator_traits<allocator_type>::max_size();
+      return allocator_traits<allocator_type>::max_size(_allocator);
     }
 
     __constexpr_cxx_std_20 void resize(size_type n) {
@@ -418,7 +633,7 @@ namespace std {
         }
 
         for (size_type i = _size; i < n; ++i) {
-          _data[i] = ch;
+          data()[i] = ch;
         }
       }
 
@@ -458,12 +673,12 @@ namespace std {
 
     __constexpr_cxx_std_20 const_reference operator[](size_type pos) const {
       assert(pos < _size);
-      return _data[pos];
+      return data()[pos];
     };
 
     __constexpr_cxx_std_20 reference operator[](size_type pos) {
       assert(pos < _size);
-      return _data[pos];
+      return data()[pos];
     };
 
     __constexpr_cxx_std_20 const_reference at(size_type pos) const {
@@ -471,7 +686,7 @@ namespace std {
         __throw_exception(out_of_range("__basic_string::at"));
       }
 
-      return _data[pos];
+      return data()[pos];
     };
 
     __constexpr_cxx_std_20 reference at(size_type pos) {
@@ -479,27 +694,27 @@ namespace std {
         __throw_exception(out_of_range("__basic_string::at"));
       }
 
-      return _data[pos];
+      return data()[pos];
     };
 
     __constexpr_cxx_std_20 const_reference front() const {
       assert(_size > 0);
-      return _data[0];
+      return data()[0];
     }
 
     __constexpr_cxx_std_20 reference front() {
       assert(_size > 0);
-      return _data[0];
+      return data()[0];
     }
 
     __constexpr_cxx_std_20 const_reference back() const {
       assert(_size > 0);
-      return _data[_size - 1];
+      return data()[_size - 1];
     }
 
     __constexpr_cxx_std_20 reference back() {
       assert(_size > 0);
-      return _data[_size - 1];
+      return data()[_size - 1];
     }
 
     __constexpr_cxx_std_20 __basic_string& operator+=(const __basic_string& str) {
@@ -541,7 +756,7 @@ namespace std {
       }
 
       for (size_type i = 0; i < n; ++i) {
-        _data[_size + i] = str._data[pos + i];
+        data()[_size + i] = str.data()[pos + i];
       }
 
       _size += n;
@@ -555,7 +770,7 @@ namespace std {
       }
 
       for (size_type i = 0; i < n; ++i) {
-        _data[_size + i] = str[i];
+        data()[_size + i] = str[i];
       }
 
       _size += n;
@@ -574,7 +789,7 @@ namespace std {
       }
 
       for (size_type j = 0; j < i; ++j) {
-        _data[_size + j] = str[j];
+        data()[_size + j] = str[j];
       }
 
       _size += i;
@@ -588,7 +803,7 @@ namespace std {
       }
 
       for (size_type i = 0; i < n; ++i) {
-        _data[_size + i] = ch;
+        data()[_size + i] = ch;
       }
 
       _size += n;
@@ -608,7 +823,7 @@ namespace std {
       }
 
       for (size_type i = 0; i < n; ++i) {
-        _data[_size + i] = *first;
+        data()[_size + i] = *first;
         ++first;
       }
 
@@ -622,13 +837,21 @@ namespace std {
     }
 
     template<typename StringView>
-    __constexpr_cxx_std_20 __basic_string& append(const StringView& view) { }
+    __constexpr_cxx_std_20 __basic_string& append(const StringView& view) {
+      (void)view;
+      return *this;
+    }
 
     template<typename StringView>
-    __constexpr_cxx_std_20 __basic_string& append(const StringView& view, size_type pos, size_type n = npos) { }
+    __constexpr_cxx_std_20 __basic_string& append(const StringView& view, size_type pos, size_type n = npos) {
+      (void)view;
+      (void)pos;
+      (void)n;
+      return *this;
+    }
 
     __constexpr_cxx_std_20 __basic_string& push_back(value_type ch) {
-      append(static_cast<size_type>(1), ch);
+      return append(static_cast<size_type>(1), ch);
     }
 
     __constexpr_cxx_std_20 __basic_string& insert(size_type pos, const __basic_string& str) {
@@ -650,11 +873,11 @@ namespace std {
       }
 
       for (size_type i = _size; i > pos; --i) {
-        _data[i + n - 1] = _data[i - 1];
+        data()[i + n - 1] = data()[i - 1];
       }
 
       for (size_type i = 0; i < n; ++i) {
-        _data[pos + i] = s[i];
+        data()[pos + i] = s[i];
       }
 
       _size += n;
@@ -663,7 +886,7 @@ namespace std {
     }
 
     __constexpr_cxx_std_20 __basic_string& insert(size_type pos, const Char* s) {
-      return insert(pos, s, Traits::length(s));
+      return insert(pos, s, traits_type::length(s));
     }
 
     __constexpr_cxx_std_20 __basic_string& insert(size_type pos, size_type n, Char c) {
@@ -699,23 +922,33 @@ namespace std {
       }
 
       for (size_type i = pos; i < _size - n; ++i) {
-        _data[i] = _data[i + n];
+        data()[i] = data()[i + n];
       }
 
       _size -= n;
+
+      data()[_size] = value_type();
 
       return *this;
     }
 
     __constexpr_cxx_std_20 iterator erase(const_iterator pos) {
       assert(pos >= begin() && pos < end());
-      return erase(pos - begin(), 1);
+
+      auto offset = pos - begin();
+      erase(offset, 1);
+
+      return begin() + offset;
     }
 
     __constexpr_cxx_std_20 iterator erase(const_iterator first, const_iterator last) {
       assert(first >= begin() && first < end());
       assert(last >= begin() && last < end());
-      return erase(first - begin(), last - first);
+
+      auto offset = first - begin();
+      erase(offset, last - first);
+
+      return begin() + offset;
     }
 
     __constexpr_cxx_std_20 void pop_back() {
@@ -723,16 +956,86 @@ namespace std {
       erase(_size - 1, 1);
     }
 
+    __constexpr_cxx_std_20 void swap(__basic_string& other) {
+      if (this == &other) {
+        return;
+      }
+
+      if (_size >= _threshold && other._size >= _threshold) {
+        pointer tmp_data = _data;
+        _data            = other._data;
+        other._data      = tmp_data;
+      } else if (_size >= _threshold && other._size < _threshold) {
+        for (size_type i = 0; i < _threshold; ++i) {
+          value_type tmp       = _short_data[i];
+          _short_data[i]       = other._short_data[i];
+          other._short_data[i] = tmp;
+        }
+
+        pointer tmp_data = _data;
+        _data            = other._data;
+        other._data      = tmp_data;
+      } else if (_size < _threshold && other._size >= _threshold) {
+        for (size_type i = 0; i < _threshold; ++i) {
+          value_type tmp       = _short_data[i];
+          _short_data[i]       = other._short_data[i];
+          other._short_data[i] = tmp;
+        }
+
+        pointer tmp_data = _data;
+        _data            = other._data;
+        other._data      = tmp_data;
+      } else {
+        for (size_type i = 0; i < _threshold; ++i) {
+          value_type tmp       = _short_data[i];
+          _short_data[i]       = other._short_data[i];
+          other._short_data[i] = tmp;
+        }
+      }
+
+      size_type tmp_size = _size;
+      _size              = other._size;
+      other._size        = tmp_size;
+
+      size_type tmp_capacity = _capacity;
+      _capacity              = other._capacity;
+      other._capacity        = tmp_capacity;
+
+      allocator_type tmp_allocator = _allocator;
+      _allocator                   = other._allocator;
+      other._allocator             = tmp_allocator;
+    }
+
     __constexpr_cxx_std_20 const_pointer c_str() const __noexcept {
-      return _data;
+      if (_size >= _threshold) {
+        return _data;
+      } else {
+        return _short_data;
+      }
+    }
+
+    __constexpr_cxx_std_20 const_pointer data() const __noexcept {
+      if (_size >= _threshold) {
+        return _data;
+      } else {
+        return _short_data;
+      }
     }
 
     __constexpr_cxx_std_20 pointer data() __noexcept {
-      return _data;
+      if (_size >= _threshold) {
+        return _data;
+      } else {
+        return _short_data;
+      }
+    }
+
+    __constexpr_cxx_std_20 allocator_type get_allocator() const __noexcept_cxx_std_11 {
+      return _allocator;
     }
 
     __constexpr_cxx_std_20 int compare(const __basic_string& other) const __noexcept_cxx_std_11 {
-      int result = Traits::compare(data(), other.data(), min(size(), other.size()));
+      int result = traits_type::compare(data(), other.data(), min(size(), other.size()));
       if (result != 0) {
         return result;
       } else {
@@ -766,6 +1069,18 @@ namespace std {
       return __basic_string(*this, pos, n1).compare(__basic_string(s, n2));
     }
   };
+
+  template<typename Char, typename Traits, typename Allocator>
+  __constexpr_cxx_std_20 typename __basic_string<Char, Traits, Allocator>::iterator operator+(typename __basic_string<Char, Traits, Allocator>::iterator::difference_type lhs,
+                                                                                              typename __basic_string<Char, Traits, Allocator>::iterator                  rhs) __noexcept {
+    return rhs += lhs;
+  }
+
+  template<typename Char, typename Traits, typename Allocator>
+  __constexpr_cxx_std_20 typename __basic_string<Char, Traits, Allocator>::const_iterator operator+(typename __basic_string<Char, Traits, Allocator>::const_iterator::difference_type lhs,
+                                                                                                    typename __basic_string<Char, Traits, Allocator>::const_iterator                  rhs) __noexcept {
+    return rhs += lhs;
+  }
 
   template<typename Char, typename Traits, typename Allocator>
   __constexpr_cxx_std_20 __basic_string<Char, Traits, Allocator> operator+(const __basic_string<Char, Traits, Allocator>& lhs, const __basic_string<Char, Traits, Allocator>& rhs) {
