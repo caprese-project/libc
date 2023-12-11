@@ -4,6 +4,7 @@
 #include <internal/cxx/limits/numeric_limits.h>
 #include <internal/cxx/memory/pointer_traits.h>
 #include <internal/cxx/memory/uninit.h>
+#include <internal/cxx/new/operator.h>
 #include <internal/cxx/type_traits/characteristic.h>
 #include <internal/cxx/type_traits/detection.h>
 #include <internal/cxx/type_traits/modify.h>

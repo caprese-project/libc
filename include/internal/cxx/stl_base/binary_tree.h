@@ -18,7 +18,7 @@ namespace std {
     __splay_tree_node* right;
     __splay_tree_node* parent;
 
-    constexpr void set_left(__splay_tree_node* child) {
+    __constexpr_cxx_std_14 void set_left(__splay_tree_node* child) {
       if (child != nullptr) {
         left          = child;
         child->parent = this;
@@ -27,7 +27,7 @@ namespace std {
       }
     }
 
-    constexpr void set_right(__splay_tree_node* child) {
+    __constexpr_cxx_std_14 void set_right(__splay_tree_node* child) {
       if (child != nullptr) {
         right         = child;
         child->parent = this;
@@ -36,7 +36,7 @@ namespace std {
       }
     }
 
-    constexpr __splay_tree_node* rotate_left() {
+    __constexpr_cxx_std_14 __splay_tree_node* rotate_left() {
       __splay_tree_node* right = this->right;
       this->right              = right->left;
       right->left              = this;
@@ -48,7 +48,7 @@ namespace std {
       return right;
     }
 
-    constexpr __splay_tree_node* rotate_right() {
+    __constexpr_cxx_std_14 __splay_tree_node* rotate_right() {
       __splay_tree_node* left = this->left;
       this->left              = left->right;
       left->right             = this;
@@ -61,7 +61,7 @@ namespace std {
     }
 
     template<typename U, typename Compare, typename Allocator>
-    constexpr __splay_tree_node* erase(U&& val, const Compare& compare, Allocator& allocator) {
+    __constexpr_cxx_std_14 __splay_tree_node* erase(U&& val, const Compare& compare, Allocator& allocator) {
       __splay_tree_node* target = this;
 
       while (target != nullptr) {
@@ -113,7 +113,7 @@ namespace std {
     }
 
     template<typename U, typename Compare, typename Allocator>
-    constexpr __splay_tree_node* insert(U&& val, const Compare& compare, Allocator& allocator) {
+    __constexpr_cxx_std_14 __splay_tree_node* insert(U&& val, const Compare& compare, Allocator& allocator) {
       __splay_tree_node* target = this;
 
       while (target != nullptr) {
@@ -144,7 +144,7 @@ namespace std {
     }
 
     template<typename Allocator>
-    constexpr void clear(Allocator& allocator) {
+    __constexpr_cxx_std_14 void clear(Allocator& allocator) {
       if (left != nullptr) {
         left->clear(allocator);
         allocator_traits<Allocator>::destroy(allocator, left);
@@ -162,7 +162,7 @@ namespace std {
     }
 
     template<typename U, typename Compare>
-    constexpr __splay_tree_node* splay(U&& val, const Compare& compare) {
+    __constexpr_cxx_std_14 __splay_tree_node* splay(U&& val, const Compare& compare) {
       __splay_tree_node* target = this;
 
       if (compare(val, target->value)) {
@@ -236,27 +236,27 @@ namespace std {
     __node_type* _current;
 
   public:
-    constexpr __splay_tree_node_iterator(): _current(nullptr) { }
+    __constexpr_cxx_std_11 __splay_tree_node_iterator(): _current(nullptr) { }
 
-    constexpr explicit __splay_tree_node_iterator(__node_type* current): _current(current) { }
+    __constexpr_cxx_std_11 explicit __splay_tree_node_iterator(__node_type* current): _current(current) { }
 
-    constexpr __splay_tree_node_iterator(const __splay_tree_node_iterator& other): _current(other._current) { }
+    __constexpr_cxx_std_11 __splay_tree_node_iterator(const __splay_tree_node_iterator& other): _current(other._current) { }
 
     ~__splay_tree_node_iterator() = default;
 
-    constexpr __splay_tree_node_iterator& operator=(const __splay_tree_node_iterator& other) {
+    __constexpr_cxx_std_14 __splay_tree_node_iterator& operator=(const __splay_tree_node_iterator& other) {
       _current = other._current;
     }
 
-    constexpr reference operator*() const {
+    __constexpr_cxx_std_11 reference operator*() const {
       return _current->value;
     }
 
-    constexpr pointer operator->() const {
+    __constexpr_cxx_std_11 pointer operator->() const {
       return __addressof(_current->value);
     }
 
-    constexpr __splay_tree_node_iterator& operator++() {
+    __constexpr_cxx_std_14 __splay_tree_node_iterator& operator++() {
       if (_current->right != nullptr) {
         _current = _current->right;
         while (_current->left != nullptr) {
@@ -273,13 +273,13 @@ namespace std {
       return *this;
     }
 
-    constexpr __splay_tree_node_iterator operator++([[maybe_unused]] int) {
+    __constexpr_cxx_std_14 __splay_tree_node_iterator operator++([[maybe_unused]] int) {
       __splay_tree_node_iterator tmp = *this;
       ++(*this);
       return tmp;
     }
 
-    constexpr __splay_tree_node_iterator& operator--() {
+    __constexpr_cxx_std_14 __splay_tree_node_iterator& operator--() {
       if (_current->left != nullptr) {
         _current = _current->left;
         while (_current->right != nullptr) {
@@ -296,17 +296,17 @@ namespace std {
       return *this;
     }
 
-    constexpr __splay_tree_node_iterator operator--([[maybe_unused]] int) {
+    __constexpr_cxx_std_14 __splay_tree_node_iterator operator--([[maybe_unused]] int) {
       __splay_tree_node_iterator tmp = *this;
       --(*this);
       return tmp;
     }
 
-    friend constexpr bool operator==(const __splay_tree_node_iterator& lhs, const __splay_tree_node_iterator& rhs) {
+    friend __constexpr_cxx_std_11 bool operator==(const __splay_tree_node_iterator& lhs, const __splay_tree_node_iterator& rhs) {
       return lhs._current == rhs._current;
     }
 
-    friend constexpr bool operator!=(const __splay_tree_node_iterator& lhs, const __splay_tree_node_iterator& rhs) {
+    friend __constexpr_cxx_std_11 bool operator!=(const __splay_tree_node_iterator& lhs, const __splay_tree_node_iterator& rhs) {
       return lhs._current != rhs._current;
     }
   };
@@ -326,24 +326,24 @@ namespace std {
     __size_t            _size;
 
   public:
-    constexpr __splay_tree(const Compare& compare, const Allocator&): _compare(compare), _allocator(), _root(nullptr), _size(0) { }
+    __constexpr_cxx_std_11 __splay_tree(const Compare& compare, const Allocator&): _compare(compare), _allocator(), _root(nullptr), _size(0) { }
 
-    constexpr __splay_tree(const __splay_tree& other): _compare(other._compare), _allocator(other._allocator), _root(nullptr), _size(0) {
+    __constexpr_cxx_std_14 __splay_tree(const __splay_tree& other): _compare(other._compare), _allocator(other._allocator), _root(nullptr), _size(0) {
       for (auto&& elem : other) {
         insert(elem);
       }
     }
 
-    constexpr __splay_tree(__splay_tree&& other): _compare(std::move(other._compare)), _allocator(std::move(other._allocator)), _root(other._root), _size(other._size) {
+    __constexpr_cxx_std_14 __splay_tree(__splay_tree&& other): _compare(std::move(other._compare)), _allocator(std::move(other._allocator)), _root(other._root), _size(other._size) {
       other._root = nullptr;
       other._size = 0;
     }
 
-    constexpr ~__splay_tree() {
+    __constexpr_cxx_std_20 ~__splay_tree() {
       clear();
     }
 
-    constexpr __splay_tree& operator=(const __splay_tree& other) {
+    __constexpr_cxx_std_14 __splay_tree& operator=(const __splay_tree& other) {
       if (this != &other) {
         clear();
 
@@ -355,7 +355,7 @@ namespace std {
       return *this;
     }
 
-    constexpr __splay_tree& operator=(__splay_tree&& other) {
+    __constexpr_cxx_std_14 __splay_tree& operator=(__splay_tree&& other) {
       if (this != &other) {
         clear();
 
@@ -371,31 +371,31 @@ namespace std {
       return *this;
     }
 
-    constexpr __size_t size() const {
+    __constexpr_cxx_std_11 __size_t size() const {
       return _size;
     }
 
-    constexpr __size_t max_size() const {
+    __constexpr_cxx_std_11 __size_t max_size() const {
       return allocator_traits<node_allocator_type>::max_size(_allocator);
     }
 
-    constexpr iterator begin() {
+    __constexpr_cxx_std_14 iterator begin() {
       return _begin<iterator>();
     }
 
-    constexpr const_iterator begin() const {
+    __constexpr_cxx_std_14 const_iterator begin() const {
       return _begin<const_iterator>();
     }
 
-    constexpr iterator end() {
+    __constexpr_cxx_std_14 iterator end() {
       return _end<iterator>();
     }
 
-    constexpr const_iterator end() const {
+    __constexpr_cxx_std_14 const_iterator end() const {
       return _end<const_iterator>();
     }
 
-    constexpr void clear() {
+    __constexpr_cxx_std_14 void clear() {
       if (_root != nullptr) {
         _root->clear(_allocator);
       }
@@ -405,7 +405,7 @@ namespace std {
     }
 
     template<typename U>
-    constexpr iterator erase(U&& val) {
+    __constexpr_cxx_std_14 iterator erase(U&& val) {
       if (find(val) == end()) {
         return end();
       }
@@ -417,7 +417,7 @@ namespace std {
     }
 
     template<typename U>
-    constexpr pair<iterator, bool> insert(U&& val) {
+    __constexpr_cxx_std_14 pair<iterator, bool> insert(U&& val) {
       iterator iter = find(val);
       if (iter != end()) {
         return pair<iterator, bool>(iter, false);
@@ -436,38 +436,38 @@ namespace std {
     }
 
     template<typename U>
-    constexpr iterator find(U&& val) {
+    __constexpr_cxx_std_14 iterator find(U&& val) {
       return _find<iterator>(forward<U>(val));
     }
 
     template<typename U>
-    constexpr const_iterator find(U&& val) const {
+    __constexpr_cxx_std_14 const_iterator find(U&& val) const {
       return _find<const_iterator>(forward<U>(val));
     }
 
     template<typename U>
-    constexpr iterator lower_bound(U&& val) {
+    __constexpr_cxx_std_14 iterator lower_bound(U&& val) {
       return _lower_bound<iterator>(forward<U>(val));
     }
 
     template<typename U>
-    constexpr const_iterator lower_bound(U&& val) const {
+    __constexpr_cxx_std_14 const_iterator lower_bound(U&& val) const {
       return _lower_bound<const_iterator>(forward<U>(val));
     }
 
     template<typename U>
-    constexpr iterator upper_bound(U&& val) {
+    __constexpr_cxx_std_14 iterator upper_bound(U&& val) {
       return _upper_bound<iterator>(forward<U>(val));
     }
 
     template<typename U>
-    constexpr const_iterator upper_bound(U&& val) const {
+    __constexpr_cxx_std_14 const_iterator upper_bound(U&& val) const {
       return _upper_bound<const_iterator>(forward<U>(val));
     }
 
   private:
     template<typename Iterator>
-    constexpr Iterator _begin() const {
+    __constexpr_cxx_std_14 Iterator _begin() const {
       if (_root == nullptr) {
         return _end<Iterator>();
       }
@@ -481,12 +481,12 @@ namespace std {
     }
 
     template<typename Iterator>
-    constexpr Iterator _end() const {
+    __constexpr_cxx_std_14 Iterator _end() const {
       return Iterator(nullptr);
     }
 
     template<typename Iterator, typename U>
-    constexpr Iterator _find(U&& val) const {
+    __constexpr_cxx_std_14 Iterator _find(U&& val) const {
       if (_root == nullptr) {
         return _end<Iterator>();
       }
@@ -500,7 +500,7 @@ namespace std {
     }
 
     template<typename Iterator, typename U>
-    constexpr Iterator _lower_bound(U&& val) const {
+    __constexpr_cxx_std_14 Iterator _lower_bound(U&& val) const {
       if (_root == nullptr) {
         return _end<Iterator>();
       }
@@ -523,7 +523,7 @@ namespace std {
     }
 
     template<typename Iterator, typename U>
-    constexpr Iterator _upper_bound(U&& val) const {
+    __constexpr_cxx_std_14 Iterator _upper_bound(U&& val) const {
       if (_root == nullptr) {
         return _end<Iterator>();
       }
