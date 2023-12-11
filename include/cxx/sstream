@@ -1,0 +1,35 @@
+#ifndef CAPRESE_LIBC_CXX_SSTREAM_
+#define CAPRESE_LIBC_CXX_SSTREAM_
+
+#include <internal/cxx/fwd/memoryfwd.h>
+#include <internal/cxx/fwd/stringfwd.h>
+#include <internal/cxx/sstream/basic_istringstream.h>
+#include <internal/cxx/sstream/basic_ostringstream.h>
+#include <internal/cxx/sstream/basic_stringbuf.h>
+#include <internal/cxx/sstream/basic_stringstream.h>
+
+namespace std {
+  template<typename Char, typename Traits = char_traits<Char>, typename Allocator = allocator<Char>>
+  using basic_stringbuf = __basic_stringbuf<Char, Traits, Allocator>;
+
+  template<typename Char, typename Traits = char_traits<Char>, typename Allocator = allocator<Char>>
+  using basic_istringstream = __basic_istringstream<Char, Traits, Allocator>;
+
+  template<typename Char, typename Traits = char_traits<Char>, typename Allocator = allocator<Char>>
+  using basic_ostringstream = __basic_ostringstream<Char, Traits, Allocator>;
+
+  template<typename Char, typename Traits = char_traits<Char>, typename Allocator = allocator<Char>>
+  using basic_stringstream = __basic_stringstream<Char, Traits, Allocator>;
+
+  using stringbuf     = basic_stringbuf<char>;
+  using istringstream = basic_istringstream<char>;
+  using ostringstream = basic_ostringstream<char>;
+  using stringstream  = basic_stringstream<char>;
+
+  using wstringbuf     = basic_stringbuf<wchar_t>;
+  using wistringstream = basic_istringstream<wchar_t>;
+  using wostringstream = basic_ostringstream<wchar_t>;
+  using wstringstream  = basic_stringstream<wchar_t>;
+} // namespace std
+
+#endif // CAPRESE_LIBC_CXX_SSTREAM_
