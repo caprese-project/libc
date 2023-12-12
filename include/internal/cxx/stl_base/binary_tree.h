@@ -99,7 +99,7 @@ namespace std {
     __constexpr_cxx_std_14 __splay_tree_node* erase(U&& val, const Compare& compare, Allocator& allocator) {
       __splay_tree_node* target = this;
 
-      while (target != nullptr) {
+      do {
         if (compare(val, target->value)) {
           target = target->left;
         } else if (compare(target->value, val)) {
@@ -107,7 +107,7 @@ namespace std {
         } else {
           break;
         }
-      }
+      } while (target != nullptr);
 
       if (target == nullptr) {
         return nullptr;
@@ -148,13 +148,14 @@ namespace std {
     }
 
     template<typename U, typename Compare, typename Allocator>
-    __constexpr_cxx_std_14 void insert(U&& val, const Compare& compare, Allocator& allocator) {
+    __constexpr_cxx_std_14 __splay_tree_node* insert(U&& val, const Compare& compare, Allocator& allocator) {
       __splay_tree_node* target = this;
 
-      while (target != nullptr) {
+      do {
         if (compare(val, target->value)) {
           if (target->left == nullptr) {
             target->left = create(allocator, nullptr, nullptr, target, std::forward<U>(val));
+            target       = target->left;
             break;
           } else {
             target = target->left;
@@ -162,6 +163,7 @@ namespace std {
         } else if (compare(target->value, val)) {
           if (target->right == nullptr) {
             target->right = create(allocator, nullptr, nullptr, target, std::forward<U>(val));
+            target        = target->right;
             break;
           } else {
             target = target->right;
@@ -169,7 +171,9 @@ namespace std {
         } else {
           break;
         }
-      }
+      } while (target != nullptr);
+
+      return target;
     }
 
     template<typename U, typename Compare>
@@ -504,15 +508,17 @@ namespace std {
         return pair<iterator, bool>(iter, false);
       }
 
+      node_type* pos;
+
       if (_root == nullptr) {
-        _root = node_type::create(_allocator, nullptr, nullptr, nullptr, std::forward<U>(val));
+        pos = _root = node_type::create(_allocator, nullptr, nullptr, nullptr, std::forward<U>(val));
       } else {
-        _root->insert(std::forward<U>(val), _compare, _allocator);
+        pos = _root->insert(std::forward<U>(val), _compare, _allocator);
       }
 
       ++_size;
 
-      return pair<iterator, bool>(iterator(_root), true);
+      return pair<iterator, bool>(iterator(pos), true);
     }
 
     template<typename Iterator, typename U>
