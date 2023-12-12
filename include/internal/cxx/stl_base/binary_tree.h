@@ -144,7 +144,7 @@ namespace std {
     }
 
     template<typename U, typename Compare, typename Allocator>
-    __constexpr_cxx_std_14 __splay_tree_node* insert(U&& val, const Compare& compare, Allocator& allocator) {
+    __constexpr_cxx_std_14 void insert(U&& val, const Compare& compare, Allocator& allocator) {
       __splay_tree_node* target = this;
 
       while (target != nullptr) {
@@ -168,8 +168,6 @@ namespace std {
           break;
         }
       }
-
-      return target;
     }
 
     template<typename U, typename Compare>
@@ -507,7 +505,7 @@ namespace std {
       if (_root == nullptr) {
         _root = node_type::create(_allocator, nullptr, nullptr, nullptr, std::forward<U>(val));
       } else {
-        _root = _root->insert(std::forward<U>(val), _compare, _allocator);
+        _root->insert(std::forward<U>(val), _compare, _allocator);
       }
 
       ++_size;
