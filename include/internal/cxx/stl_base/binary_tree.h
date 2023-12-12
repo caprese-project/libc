@@ -54,9 +54,11 @@ namespace std {
       this->right              = right->left;
       right->left              = this;
 
-      right->parent       = this->parent;
-      this->parent        = right;
-      this->right->parent = this;
+      right->parent = this->parent;
+      this->parent  = right;
+      if (this->right != nullptr) {
+        this->right->parent = this;
+      }
 
       return right;
     }
@@ -66,9 +68,11 @@ namespace std {
       this->left              = left->right;
       left->right             = this;
 
-      left->parent       = this->parent;
-      this->parent       = left;
-      this->left->parent = this;
+      left->parent = this->parent;
+      this->parent = left;
+      if (this->left != nullptr) {
+        this->left->parent = this;
+      }
 
       return left;
     }
