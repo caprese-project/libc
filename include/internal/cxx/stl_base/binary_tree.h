@@ -155,7 +155,6 @@ namespace std {
         if (compare(val, target->value)) {
           if (target->left == nullptr) {
             target->left = create(allocator, nullptr, nullptr, target, std::forward<U>(val));
-            target       = target->left;
             break;
           } else {
             target = target->left;
@@ -163,7 +162,6 @@ namespace std {
         } else if (compare(target->value, val)) {
           if (target->right == nullptr) {
             target->right = create(allocator, nullptr, nullptr, target, std::forward<U>(val));
-            target        = target->right;
             break;
           } else {
             target = target->right;
