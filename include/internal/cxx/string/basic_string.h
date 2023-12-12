@@ -109,7 +109,7 @@ namespace std {
         return _ptr == other._ptr;
       }
 
-#if __CXX_STD_20__
+#ifdef __CXX_STD_20__
       __constexpr_cxx_std_20 auto operator<=>(const iterator& other) const __noexcept {
         return _ptr <=> other._ptr;
       }
@@ -219,7 +219,7 @@ namespace std {
         return _ptr == other._ptr;
       }
 
-#if __CXX_STD_20__
+#ifdef __CXX_STD_20__
       __constexpr_cxx_std_20 auto operator<=>(const const_iterator& other) const __noexcept {
         return _ptr <=> other._ptr;
       }

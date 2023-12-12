@@ -40,8 +40,31 @@ namespace std {
       map::key_compare comp;
     };
 
+    struct __compare {
+      constexpr __compare() = default;
+
+      constexpr bool operator()(const value_type& lhs, const value_type& rhs) const {
+        return comp(lhs.first, rhs.first);
+      }
+
+      constexpr bool operator()(const value_type& lhs, const key_type& rhs) const {
+        return comp(lhs.first, rhs);
+      }
+
+      constexpr bool operator()(const key_type& lhs, const value_type& rhs) const {
+        return comp(lhs, rhs.first);
+      }
+
+      constexpr bool operator()(const key_type& lhs, const key_type& rhs) const {
+        return comp(lhs, rhs);
+      }
+
+    protected:
+      map::key_compare comp;
+    };
+
     using allocator_type         = Allocator;
-    using __container_type       = __binary_tree<value_type, value_compare, allocator_type>;
+    using __container_type       = __binary_tree<value_type, __compare, allocator_type>;
     using reference              = value_type&;
     using const_reference        = const value_type&;
     using iterator               = typename __container_type::iterator;
@@ -61,7 +84,7 @@ namespace std {
   public:
     map(): map(key_compare()) { }
 
-    explicit map(const key_compare& compare, const allocator_type& allocator = allocator_type()): _compare(compare), _allocator(allocator), _container(value_compare(), allocator) { }
+    explicit map(const key_compare& compare, const allocator_type& allocator = allocator_type()): _compare(compare), _allocator(allocator), _container(__compare(), allocator) { }
 
     explicit map(const allocator_type& allocator): map(key_compare(), allocator) { }
 
@@ -182,7 +205,7 @@ namespace std {
     }
 
     template<typename P>
-    auto insert(P&& value) -> typename __enable_if<__is_constructible_t<value_type, P>::value, pair<iterator, bool>>::type {
+    typename __enable_if<__is_constructible_t<value_type, P>::value, pair<iterator, bool>>::type insert(P&& value) {
       return _container.emplace(forward<P>(value));
     }
 

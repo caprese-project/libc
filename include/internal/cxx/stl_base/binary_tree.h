@@ -18,6 +18,12 @@ namespace std {
     __splay_tree_node* right;
     __splay_tree_node* parent;
 
+#ifndef __CXX_STD_20__
+    __splay_tree_node(const T& value, __splay_tree_node* left, __splay_tree_node* right, __splay_tree_node* parent): value(value), left(left), right(right), parent(parent) { }
+
+    __splay_tree_node(T&& value, __splay_tree_node* left, __splay_tree_node* right, __splay_tree_node* parent): value(std::move(value)), left(left), right(right), parent(parent) { }
+#endif // __CXX_STD_20__
+
     template<typename Allocator, typename... Args>
     static __constexpr_cxx_std_14 __splay_tree_node* create(Allocator& allocator, __splay_tree_node* left, __splay_tree_node* right, __splay_tree_node* parent, Args&&... args) {
       __splay_tree_node* node = allocator_traits<Allocator>::allocate(allocator, 1);
@@ -499,9 +505,9 @@ namespace std {
       }
 
       if (_root == nullptr) {
-        _root = node_type::create(_allocator, nullptr, nullptr, nullptr, std::forward<T>(val));
+        _root = node_type::create(_allocator, nullptr, nullptr, nullptr, std::forward<U>(val));
       } else {
-        _root = _root->insert(std::forward<T>(val), _compare, _allocator);
+        _root = _root->insert(std::forward<U>(val), _compare, _allocator);
       }
 
       ++_size;
