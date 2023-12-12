@@ -10,6 +10,9 @@
 #include <internal/cxx/stddef.h>
 #include <internal/cxx/stdexcept/logic_error.h>
 #include <internal/cxx/stl_base/binary_tree.h>
+#include <internal/cxx/type_traits/characteristic.h>
+#include <internal/cxx/type_traits/logic.h>
+#include <internal/cxx/type_traits/type_relation.h>
 #include <internal/cxx/utility/pair.h>
 #include <internal/exception.h>
 
@@ -29,20 +32,8 @@ namespace std {
 
       constexpr value_compare() = default;
 
-      constexpr bool operator()(const map::value_type& lhs, const map::value_type& rhs) const {
+      constexpr result_type operator()(const value_type& lhs, const value_type& rhs) const {
         return comp(lhs.first, rhs.first);
-      }
-
-      constexpr bool operator()(const map::key_type& lhs, const map::value_type& rhs) const {
-        return comp(lhs, rhs.first);
-      }
-
-      constexpr bool operator()(const map::value_type& lhs, const map::key_type& rhs) const {
-        return comp(lhs.first, rhs);
-      }
-
-      constexpr bool operator()(const map::key_type& lhs, const map::key_type& rhs) const {
-        return comp(lhs, rhs);
       }
 
     protected:
@@ -191,12 +182,12 @@ namespace std {
     }
 
     template<typename P>
-    pair<iterator, bool> insert(P&& value) {
-      return _container.insert(forward<P>(value));
+    auto insert(P&& value) -> typename __enable_if<__is_constructible_t<value_type, P>::value, pair<iterator, bool>>::type {
+      return _container.emplace(forward<P>(value));
     }
 
     pair<iterator, bool> insert(value_type&& value) {
-      return _container.insert(move(value));
+      return _container.emplace(move(value));
     }
 
     template<typename InputIterator>

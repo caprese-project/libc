@@ -32,7 +32,7 @@ namespace std {
   };
 
   template<typename From, typename To>
-  struct __is_convertible: public __is_convertible_helper<From, To> {};
+  struct __is_convertible: public __is_convertible_helper<From, To>::type {};
 } // namespace std
 
 #endif // CAPRESE_LIBC_INTERNAL_CXX_TYPE_TRAITS_TYPE_RELATION_H_

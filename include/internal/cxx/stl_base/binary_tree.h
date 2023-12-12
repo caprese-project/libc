@@ -18,6 +18,13 @@ namespace std {
     __splay_tree_node* right;
     __splay_tree_node* parent;
 
+    template<typename Allocator, typename... Args>
+    static __constexpr_cxx_std_14 __splay_tree_node* create(Allocator& allocator, __splay_tree_node* left, __splay_tree_node* right, __splay_tree_node* parent, Args&&... args) {
+      __splay_tree_node* node = allocator_traits<Allocator>::allocate(allocator, 1);
+      allocator_traits<Allocator>::construct(allocator, node, T(std::forward<Args>(args)...), left, right, parent);
+      return node;
+    }
+
     __constexpr_cxx_std_14 void set_left(__splay_tree_node* child) {
       if (child != nullptr) {
         left          = child;
@@ -58,6 +65,24 @@ namespace std {
       this->left->parent = this;
 
       return left;
+    }
+
+    template<typename Allocator>
+    __constexpr_cxx_std_14 void clear(Allocator& allocator) {
+      if (left != nullptr) {
+        left->clear(allocator);
+        allocator_traits<Allocator>::destroy(allocator, left);
+        allocator_traits<Allocator>::deallocate(allocator, left, 1);
+      }
+
+      if (right != nullptr) {
+        right->clear(allocator);
+        allocator_traits<Allocator>::destroy(allocator, right);
+        allocator_traits<Allocator>::deallocate(allocator, right, 1);
+      }
+
+      allocator_traits<Allocator>::destroy(allocator, this);
+      allocator_traits<Allocator>::deallocate(allocator, this, 1);
     }
 
     template<typename U, typename Compare, typename Allocator>
@@ -119,18 +144,16 @@ namespace std {
       while (target != nullptr) {
         if (compare(val, target->value)) {
           if (target->left == nullptr) {
-            target->left = allocator_traits<Allocator>::allocate(allocator, 1);
-            allocator_traits<Allocator>::construct(allocator, target->left, std::forward<U>(val), nullptr, nullptr, target);
-            target = target->left;
+            target->left = create(allocator, nullptr, nullptr, target, std::forward<U>(val));
+            target       = target->left;
             break;
           } else {
             target = target->left;
           }
         } else if (compare(target->value, val)) {
           if (target->right == nullptr) {
-            target->right = allocator_traits<Allocator>::allocate(allocator, 1);
-            allocator_traits<Allocator>::construct(allocator, target->right, std::forward<U>(val), nullptr, nullptr, target);
-            target = target->right;
+            target->right = create(allocator, nullptr, nullptr, target, std::forward<U>(val));
+            target        = target->right;
             break;
           } else {
             target = target->right;
@@ -141,24 +164,6 @@ namespace std {
       }
 
       return target;
-    }
-
-    template<typename Allocator>
-    __constexpr_cxx_std_14 void clear(Allocator& allocator) {
-      if (left != nullptr) {
-        left->clear(allocator);
-        allocator_traits<Allocator>::destroy(allocator, left);
-        allocator_traits<Allocator>::deallocate(allocator, left, 1);
-      }
-
-      if (right != nullptr) {
-        right->clear(allocator);
-        allocator_traits<Allocator>::destroy(allocator, right);
-        allocator_traits<Allocator>::deallocate(allocator, right, 1);
-      }
-
-      allocator_traits<Allocator>::destroy(allocator, this);
-      allocator_traits<Allocator>::deallocate(allocator, this, 1);
     }
 
     template<typename U, typename Compare>
@@ -172,12 +177,12 @@ namespace std {
 
         if (compare(val, target->left->value)) {
           if (target->left->left != nullptr) {
-            target->left->left = target->left->left->splay(val, compare);
+            target->left->left = target->left->left->splay(std::forward<U>(val), compare);
           }
           target = target->rotate_right();
         } else if (compare(target->left->value, val)) {
           if (target->left->right != nullptr) {
-            target->left->right = target->left->right->splay(val, compare);
+            target->left->right = target->left->right->splay(std::forward<U>(val), compare);
             if (target->left->right != nullptr) {
               target->left = target->left->rotate_left();
             }
@@ -196,14 +201,14 @@ namespace std {
 
         if (compare(val, target->right->value)) {
           if (target->right->left != nullptr) {
-            target->right->left = target->right->left->splay(val, compare);
+            target->right->left = target->right->left->splay(std::forward<U>(val), compare);
             if (target->right->left != nullptr) {
               target->right = target->right->rotate_right();
             }
           }
         } else if (compare(target->right->value, val)) {
           if (target->right->right != nullptr) {
-            target->right->right = target->right->right->splay(val, compare);
+            target->right->right = target->right->right->splay(std::forward<U>(val), compare);
           }
           target = target->rotate_left();
         }
@@ -416,20 +421,21 @@ namespace std {
       return iterator(_root);
     }
 
-    template<typename U>
-    __constexpr_cxx_std_14 pair<iterator, bool> insert(U&& val) {
-      iterator iter = find(val);
-      if (iter != end()) {
-        return pair<iterator, bool>(iter, false);
+    __constexpr_cxx_std_14 pair<iterator, bool> insert(const T& val) {
+      return _insert(val);
+    }
+
+    __constexpr_cxx_std_14 pair<iterator, bool> insert(T&& val) {
+      return _insert(std::move(val));
+    }
+
+    template<typename... Args>
+    __constexpr_cxx_std_14 pair<iterator, bool> emplace(Args&&... args) {
+      if (_root != nullptr) {
+        return _insert(T(std::forward<Args>(args)...));
       }
 
-      if (_root == nullptr) {
-        _root = allocator_traits<node_allocator_type>::allocate(_allocator, 1);
-        allocator_traits<node_allocator_type>::construct(_allocator, _root, std::forward<U>(val), nullptr, nullptr, nullptr);
-      } else {
-        _root = _root->insert(std::forward<U>(val), _compare, _allocator);
-      }
-
+      _root = node_type::create(_allocator, nullptr, nullptr, nullptr, std::forward<Args>(args)...);
       ++_size;
 
       return pair<iterator, bool>(iterator(_root), true);
@@ -483,6 +489,24 @@ namespace std {
     template<typename Iterator>
     __constexpr_cxx_std_14 Iterator _end() const {
       return Iterator(nullptr);
+    }
+
+    template<typename U>
+    __constexpr_cxx_std_14 pair<iterator, bool> _insert(U&& val) {
+      iterator iter = find(val);
+      if (iter != end()) {
+        return pair<iterator, bool>(iter, false);
+      }
+
+      if (_root == nullptr) {
+        _root = node_type::create(_allocator, nullptr, nullptr, nullptr, std::forward<T>(val));
+      } else {
+        _root = _root->insert(std::forward<T>(val), _compare, _allocator);
+      }
+
+      ++_size;
+
+      return pair<iterator, bool>(iterator(_root), true);
     }
 
     template<typename Iterator, typename U>

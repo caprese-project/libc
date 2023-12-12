@@ -53,6 +53,8 @@ namespace std {
     using off_type    = typename __ios_type::off_type;
 
   protected:
+    __basic_ostream() { }
+
     __basic_ostream(const __basic_ostream&) = delete;
 
     __basic_ostream(__basic_ostream&& other) {

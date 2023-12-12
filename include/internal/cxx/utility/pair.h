@@ -13,15 +13,15 @@ namespace std {
     T first;
     U second;
 
-    template<typename = typename __enable_if<__is_default_constructible<V>::value>::type, typename = typename __enable_if<__is_default_constructible<W>::value>::type>
+    template<typename V = T, typename W = U, typename = typename __enable_if<__is_default_constructible<V>::value>::type, typename = typename __enable_if<__is_default_constructible<W>::value>::type>
     explicit __constexpr_cxx_std_11 pair(): first {},
                                             second {} { }
 
     pair(const pair&) = default;
     pair(pair&&)      = default;
 
-    template<typename = typename __enable_if<__is_copy_constructible<V>::value>::type, typename = typename __enable_if<__is_copy_constructible<W>::value>::type>
-    explicit __constexpr_cxx_std_14 pair(const T& first, const U& second): first(first),
+    template<typename V = T, typename W = U, typename = typename __enable_if<__is_copy_constructible<V>::value>::type, typename = typename __enable_if<__is_copy_constructible<W>::value>::type>
+    explicit __constexpr_cxx_std_14 pair(const V& first, const W& second): first(first),
                                                                            second(second) { }
 
     template<typename V, typename W, typename = typename __enable_if<__is_constructible_t<T, V&&>::value>::type, typename = typename __enable_if<__is_constructible_t<U, W&&>::value>::type>
@@ -103,6 +103,11 @@ namespace std {
   __constexpr_cxx_std_20 void swap(pair<T, U>& lhs, pair<T, U>& rhs) __noexcept {
     lhs.swap(rhs);
   }
+
+#if __cpp_deduction_guides
+  template<typename T, typename U>
+  pair(T, U) -> pair<T, U>;
+#endif // __cpp_deduction_guides
 } // namespace std
 
 #endif // CAPRESE_LIBC_INTERNAL_CXX_UTILITY_PAIR_H_

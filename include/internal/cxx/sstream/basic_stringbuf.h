@@ -137,7 +137,7 @@ namespace std {
           __size_type capacity = _buf.capacity();
           char_type*  data     = _buf.data();
           if (__size_type(this->epptr() - this->pbase()) < capacity) {
-            this->_pbump(data, data + capacity, this->pptr() - this->ppbase());
+            this->_pbump(data, data + capacity, this->pptr() - this->pbase());
             if (_mode & ios_base::in) {
               this->setg(data, data + (this->gptr() - this->eback()), data + (this->egptr() - this->eback()) + 1);
             }

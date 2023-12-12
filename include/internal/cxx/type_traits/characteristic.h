@@ -1,9 +1,9 @@
 #ifndef CAPRESE_LIBC_INTERNAL_CXX_TYPE_TRAITS_CHARACTERISTIC_H_
 #define CAPRESE_LIBC_INTERNAL_CXX_TYPE_TRAITS_CHARACTERISTIC_H_
 
+#include <internal/cxx/stddef.h>
 #include <internal/cxx/type_traits/constant.h>
 #include <internal/cxx/type_traits/modify.h>
-#include <internal/cxx/type_traits/type.h>
 
 namespace std {
   template<typename>
@@ -55,7 +55,7 @@ namespace std {
   template<typename T>
   struct __is_bounded_array: public __false_type { };
 
-  template<typename T, size_t N>
+  template<typename T, __size_t N>
   struct __is_bounded_array<T[N]>: public __true_type { };
 
   template<typename T, typename... Args>

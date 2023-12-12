@@ -16,8 +16,8 @@ namespace std {
     using pos_type       = typename traits_type::pos_type;
     using off_type       = typename traits_type::off_type;
 
-    using __string_type    = __basic_string<char_type, traits_type, allocator_type>;
     using __stringbuf_type = __basic_stringbuf<char_type, traits_type, allocator_type>;
+    using __string_type    = typename __stringbuf_type::__string_type;
     using __ostream_type   = __basic_ostream<char_type, traits_type>;
 
   private:

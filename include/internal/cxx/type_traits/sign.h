@@ -6,21 +6,21 @@
 #include <internal/cxx/type_traits/type.h>
 
 namespace std {
-  template<typename T>
-  struct __is_signed: public __false_type {};
-
   template<typename T, typename = typename __enable_if<__is_arithmetic<T>::value>::type>
   struct __is_signed {
     static constexpr bool value = T(-1) < T(0);
   };
 
   template<typename T>
-  struct __is_unsigned: public __false_type {};
+  struct __is_signed<T>: public __false_type {};
 
   template<typename T, typename = typename __enable_if<__is_arithmetic<T>::value>::type>
   struct __is_unsigned {
     static constexpr bool value = T(0) < T(-1);
   };
+
+  template<typename T>
+  struct __is_unsigned<T>: public __false_type {};
 
   template<typename T>
   struct __make_signed;

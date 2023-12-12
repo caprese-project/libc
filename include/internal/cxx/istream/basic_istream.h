@@ -87,6 +87,8 @@ namespace std {
     streamsize _gcount;
 
   protected:
+    __basic_istream(): _gcount(0) { }
+
     __basic_istream(const __basic_istream&) = delete;
 
     __basic_istream(__basic_istream&& other): _gcount(other._gcount) {
