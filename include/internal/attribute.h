@@ -78,6 +78,22 @@
 #define __noexcept_cxx_std_17
 #endif // !__CXX_STD_17__
 
+// __noexcept_if
+
+#ifdef __CXX_STD_11__
+#define __noexcept_if(...) noexcept(__VA_ARGS__)
+#else // ^^^ __CXX_STD_11__ ^^^ / vvv !__CXX_STD_11__ vvv
+#define __noexcept_if(...)
+#endif // !__CXX_STD_11__
+
+// __noexcept_if_cxx_std_17
+
+#ifdef __CXX_STD_17__
+#define __noexcept_if_cxx_std_17(...) noexcept(__VA_ARGS__)
+#else // ^^^ __CXX_STD_17__ ^^^ / vvv !__CXX_STD_17__ vvv
+#define __noexcept_if_cxx_std_17(...)
+#endif // !__CXX_STD_17__
+
 // __throw
 
 #ifdef __CXX_STD_17__
@@ -252,6 +268,14 @@
 #define __noexcept_cxx_std_11
 #define __noexcept_cxx_std_14
 #define __noexcept_cxx_std_17
+
+// __noexcept_if
+
+#define __noexcept_if(...)
+
+// __noexcept_if_cxx_std_xx
+
+#define __noexcept_if_cxx_std_17(...)
 
 // __throw
 

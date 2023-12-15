@@ -2,6 +2,7 @@
 #define CAPRESE_LIBC_INTERNAL_CXX_ALGORITHM_SEQ_H_
 
 #include <internal/attribute.h>
+#include <internal/cxx/utility/fwd.h>
 
 namespace std {
   template<typename InputIterator1, typename InputIterator2>
@@ -28,6 +29,17 @@ namespace std {
     return f;
   }
 
+  template<class InputIterator, class OutputIterator>
+  __constexpr_cxx_std_20 OutputIterator copy(InputIterator first, InputIterator last, OutputIterator result) {
+    while (first != last) {
+      *result = *first;
+      ++result;
+      ++first;
+    }
+
+    return result;
+  }
+
   template<typename InputIterator, typename Size, typename OutputIterator>
   __constexpr_cxx_std_20 OutputIterator copy_n(InputIterator first, Size n, OutputIterator result) {
     if (n > 0) {
@@ -42,6 +54,28 @@ namespace std {
     return result;
   }
 
+  template<typename InputIterator, typename OutputIterator>
+  __constexpr_cxx_std_20 OutputIterator move(InputIterator first, InputIterator last, OutputIterator result) {
+    while (first != last) {
+      *result = move(*first);
+      ++result;
+      ++first;
+    }
+
+    return result;
+  }
+
+  template<typename BidirectionalIterator1, typename BidirectionalIterator2>
+  __constexpr_cxx_std_20 BidirectionalIterator2 move_backward(BidirectionalIterator1 first, BidirectionalIterator1 last, BidirectionalIterator2 result) {
+    while (first != last) {
+      --last;
+      --result;
+      *result = move(*last);
+    }
+
+    return result;
+  }
+
   template<typename OutputIterator, typename Size, typename T>
   __constexpr_cxx_std_20 OutputIterator fill_n(OutputIterator first, Size n, const T& value) {
     for (Size i = 0; i < n; ++i) {
@@ -50,6 +84,36 @@ namespace std {
     }
 
     return first;
+  }
+
+  template<typename ForwardIterator, typename T>
+  __constexpr_cxx_std_20 ForwardIterator remove(ForwardIterator first, ForwardIterator last, const T& value) {
+    ForwardIterator result = first;
+    while (first != last) {
+      if (!(*first == value)) {
+        *result = move(*first);
+        ++result;
+      }
+
+      ++first;
+    }
+
+    return result;
+  }
+
+  template<typename ForwardIterator, typename Predicate>
+  __constexpr_cxx_std_20 ForwardIterator remove_if(ForwardIterator first, ForwardIterator last, Predicate pred) {
+    ForwardIterator result = first;
+    while (first != last) {
+      if (!pred(*first)) {
+        *result = move(*first);
+        ++result;
+      }
+
+      ++first;
+    }
+
+    return result;
   }
 } // namespace std
 

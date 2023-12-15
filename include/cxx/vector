@@ -1,0 +1,65 @@
+#ifndef CAPRESE_LIBC_CXX_VECTOR_
+#define CAPRESE_LIBC_CXX_VECTOR_
+
+#include <internal/cxx/iterator/reverse_iterator.h>
+#include <internal/cxx/memory/allocator.h>
+#include <internal/cxx/stl_base/vec_storage.h>
+#include <internal/cxx/stl_base/vla.h>
+
+namespace std {
+  template<typename T, typename Allocator = allocator<T>>
+  class vector: public __vla<__vector_storage<T, Allocator>> {
+    using __base = __vla<__vector_storage<T, Allocator>>;
+
+  public:
+    using value_type             = typename __base::value_type;
+    using allocator_type         = typename __base::allocator_type;
+    using size_type              = typename __base::size_type;
+    using difference_type        = typename __base::difference_type;
+    using reference              = typename __base::reference;
+    using const_reference        = typename __base::const_reference;
+    using pointer                = typename __base::pointer;
+    using const_pointer          = typename __base::const_pointer;
+    using iterator               = typename __base::iterator;
+    using const_iterator         = typename __base::const_iterator;
+    using reverse_iterator       = reverse_iterator<iterator>;
+    using const_reverse_iterator = reverse_iterator<const_iterator>;
+
+  public:
+    using __base::__base;
+  };
+
+  template<typename T, typename Allocator>
+  __constexpr_cxx_std_20 void swap(vector<T, Allocator>& lhs, vector<T, Allocator>& rhs) __noexcept_if_cxx_std_17(noexcept(lhs.swap(rhs))) {
+    lhs.swap(rhs);
+  }
+
+#ifdef __CXX_STD_20__
+
+  template<typename T, typename Allocator, typename U>
+  constexpr typename vector<T, Allocator>::size_type erase(vector<T, Allocator>& vec, const U& value) {
+    auto it = remove(vec.begin(), vec.end(), value);
+    auto sz = static_cast<typename vector<T, Allocator>::size_type>(distance(it, vec.end()));
+    vec.erase(it, vec.end());
+    return sz;
+  }
+
+  template<typename T, typename Allocator, typename Predicate>
+  constexpr typename vector<T, Allocator>::size_type erase_if(vector<T, Allocator>& vec, Predicate pred) {
+    auto it = remove_if(vec.begin(), vec.end(), pred);
+    auto sz = static_cast<typename vector<T, Allocator>::size_type>(distance(it, vec.end()));
+    vec.erase(it, vec.end());
+    return sz;
+  }
+
+#endif // __CXX_STD_20__
+
+#if __cpp_deduction_guides
+
+  template<class InputIterator, class Allocator = allocator<typename iterator_traits<InputIterator>::value_type>>
+  vector(InputIterator, InputIterator, Allocator = Allocator()) -> vector<typename iterator_traits<InputIterator>::value_type, Allocator>;
+
+#endif // __cpp_deduction_guides
+} // namespace std
+
+#endif // CAPRESE_LIBC_CXX_VECTOR_
