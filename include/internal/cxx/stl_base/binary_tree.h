@@ -32,7 +32,19 @@ namespace std {
     }
 
     __constexpr_cxx_std_14 void set_left(__splay_tree_node* child) {
+      assert(this != child);
+
       if (child != nullptr) {
+        __splay_tree_node* old_parent = child->parent;
+        if (old_parent != nullptr) {
+          if (old_parent->left == child) {
+            old_parent->left = nullptr;
+          } else {
+            assert(old_parent->right == child);
+            old_parent->right = nullptr;
+          }
+        }
+
         left          = child;
         child->parent = this;
       } else {
@@ -41,7 +53,19 @@ namespace std {
     }
 
     __constexpr_cxx_std_14 void set_right(__splay_tree_node* child) {
+      assert(this != child);
+
       if (child != nullptr) {
+        __splay_tree_node* old_parent = child->parent;
+        if (old_parent != nullptr) {
+          if (old_parent->left == child) {
+            old_parent->left = nullptr;
+          } else {
+            assert(old_parent->right == child);
+            old_parent->right = nullptr;
+          }
+        }
+
         right         = child;
         child->parent = this;
       } else {
@@ -139,6 +163,8 @@ namespace std {
           assert(target->parent->right == target);
           target->parent->set_right(post_target);
         }
+      } else {
+        post_target->parent = nullptr;
       }
 
       allocator_traits<Allocator>::destroy(allocator, target);
