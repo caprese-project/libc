@@ -10,11 +10,11 @@
 namespace std {
   template<typename Facet>
   bool has_facet(const locale& loc) __noexcept {
-    if (Facet::id._val < loc._facets_size) {
+    if (Facet::id.__get() < loc._facets.size()) {
 #if __cpp_rtti
-      return dynamic_cast<const Facet*>(loc._facets[Facet::id._val]) != nullptr;
+      return dynamic_cast<const Facet*>(loc._facets[Facet::id.__get()]) != nullptr;
 #else
-      return static_cast<const Facet*>(loc._facets[Facet::id._val]) != nullptr;
+      return static_cast<const Facet*>(loc._facets[Facet::id.__get()]) != nullptr;
 #endif // !__cpp_rtti
     } else {
       return false;
@@ -28,9 +28,9 @@ namespace std {
     }
 
 #if __cpp_rtti
-    return dynamic_cast<const Facet&>(*loc._facets[Facet::id._val]);
+    return dynamic_cast<const Facet&>(*loc._facets[Facet::id.__get()]);
 #else
-    return static_cast<const Facet&>(*loc._facets[Facet::id._val]);
+    return static_cast<const Facet&>(*loc._facets[Facet::id.__get()]);
 #endif
   }
 } // namespace std

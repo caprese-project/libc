@@ -3,9 +3,14 @@
 
 #include <internal/attribute.h>
 #include <internal/cxx/stddef.h>
+#include <internal/cxx/stl_base/vec_storage.h>
+#include <internal/cxx/stl_base/vla.h>
 
 namespace std {
   class locale {
+    template<typename T>
+    using __container_type = __vla<__vector_storage<T, allocator<T>>>;
+
   public:
     class facet {
       friend class locale;
@@ -28,20 +33,16 @@ namespace std {
     };
 
     class id {
-      friend class locale;
-
-      template<typename Facet>
-      friend bool has_facet(const locale&) __noexcept;
-
-      template<typename Facet>
-      friend const Facet& use_facet(const locale&);
-
       __size_t _val;
 
     public:
       id();
       id(const id&)            = delete;
       id& operator=(const id&) = delete;
+
+      inline __size_t __get() const {
+        return _val;
+      }
     };
 
     friend class facet;
@@ -69,14 +70,10 @@ namespace std {
     static const locale& classic();
 
   protected:
-    facet**  _facets;
-    __size_t _facets_size;
+    __container_type<facet*> _facets;
 
-  public:
-    locale() __noexcept;
-    locale(const locale& other) __noexcept;
-    const locale& operator=(const locale& other) __noexcept;
-    ~locale();
+  protected:
+    void _install_facet(facet* f, __size_t id);
   };
 } // namespace std
 
