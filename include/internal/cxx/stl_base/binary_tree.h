@@ -163,7 +163,7 @@ namespace std {
           assert(target->parent->right == target);
           target->parent->set_right(post_target);
         }
-      } else {
+      } else if (post_target != nullptr) {
         post_target->parent = nullptr;
       }
 
