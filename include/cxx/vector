@@ -1,7 +1,6 @@
 #ifndef CAPRESE_LIBC_CXX_VECTOR_
 #define CAPRESE_LIBC_CXX_VECTOR_
 
-#include <internal/cxx/iterator/reverse_iterator.h>
 #include <internal/cxx/memory/allocator.h>
 #include <internal/cxx/stl_base/vec_storage.h>
 #include <internal/cxx/stl_base/vla.h>
@@ -22,8 +21,8 @@ namespace std {
     using const_pointer          = typename __base::const_pointer;
     using iterator               = typename __base::iterator;
     using const_iterator         = typename __base::const_iterator;
-    using reverse_iterator       = reverse_iterator<iterator>;
-    using const_reverse_iterator = reverse_iterator<const_iterator>;
+    using reverse_iterator       = typename __base::reverse_iterator;
+    using const_reverse_iterator = typename __baes::const_reverse_iterator;
 
   public:
     using __base::__base;

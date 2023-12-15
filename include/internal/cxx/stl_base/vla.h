@@ -6,6 +6,7 @@
 #include <internal/cxx/algorithm/minmax.h>
 #include <internal/cxx/algorithm/seq.h>
 #include <internal/cxx/iterator/functions.h>
+#include <internal/cxx/iterator/reverse_iterator.h>
 #include <internal/cxx/memory/allocator_traits.h>
 #include <internal/cxx/stdexcept/logic_error.h>
 #include <internal/cxx/utility/fwd.h>
@@ -86,35 +87,22 @@ namespace std {
       return _ptr[n];
     }
 
-    friend __vla_iterator_base operator+(const __vla_iterator_base& lhs, difference_type rhs) __noexcept;
-    friend __vla_iterator_base operator+(difference_type lhs, const __vla_iterator_base& rhs) __noexcept;
-    friend __vla_iterator_base operator-(const __vla_iterator_base& lhs, difference_type rhs) __noexcept;
-    friend difference_type     operator-(const __vla_iterator_base& lhs, const __vla_iterator_base& rhs) __noexcept;
+    friend __vla_iterator_base operator+(const __vla_iterator_base& lhs, difference_type rhs) __noexcept {
+      return __vla_iterator_base(lhs._ptr + rhs);
+    }
+
+    friend __vla_iterator_base operator+(difference_type lhs, const __vla_iterator_base& rhs) __noexcept {
+      return __vla_iterator_base(lhs + rhs._ptr);
+    }
+
+    friend __vla_iterator_base operator-(const __vla_iterator_base& lhs, difference_type rhs) __noexcept {
+      return __vla_iterator_base(lhs._ptr - rhs);
+    }
+
+    friend difference_type operator-(const __vla_iterator_base& lhs, const __vla_iterator_base& rhs) __noexcept {
+      return lhs._ptr - rhs._ptr;
+    }
   };
-
-  template<typename ValueType, typename Pointer, typename Reference, typename DifferenceType>
-  __constexpr_cxx_std_20 __vla_iterator_base<ValueType, Pointer, Reference, DifferenceType> operator+(const __vla_iterator_base<ValueType, Pointer, Reference, DifferenceType>& lhs,
-                                                                                                      DifferenceType                                                            rhs) __noexcept {
-    return __vla_iterator_base<ValueType, Pointer, Reference, DifferenceType>(lhs._ptr + rhs);
-  }
-
-  template<typename ValueType, typename Pointer, typename Reference, typename DifferenceType>
-  __constexpr_cxx_std_20 __vla_iterator_base<ValueType, Pointer, Reference, DifferenceType> operator+(DifferenceType                                                            lhs,
-                                                                                                      const __vla_iterator_base<ValueType, Pointer, Reference, DifferenceType>& rhs) __noexcept {
-    return __vla_iterator_base<ValueType, Pointer, Reference, DifferenceType>(lhs + rhs._ptr);
-  }
-
-  template<typename ValueType, typename Pointer, typename Reference, typename DifferenceType>
-  __constexpr_cxx_std_20 __vla_iterator_base<ValueType, Pointer, Reference, DifferenceType> operator-(const __vla_iterator_base<ValueType, Pointer, Reference, DifferenceType>& lhs,
-                                                                                                      DifferenceType                                                            rhs) __noexcept {
-    return __vla_iterator_base<ValueType, Pointer, Reference, DifferenceType>(lhs._ptr - rhs);
-  }
-
-  template<typename ValueType, typename Pointer, typename Reference, typename DifferenceType>
-  __constexpr_cxx_std_20 DifferenceType operator-(const __vla_iterator_base<ValueType, Pointer, Reference, DifferenceType>& lhs,
-                                                  const __vla_iterator_base<ValueType, Pointer, Reference, DifferenceType>& rhs) __noexcept {
-    return lhs._ptr - rhs._ptr;
-  }
 
   template<typename Storage>
   class __vla {
@@ -135,12 +123,6 @@ namespace std {
       friend class const_iterator;
 
     public:
-      using value_type        = typename __base::value_type;
-      using pointer           = typename __base::pointer;
-      using reference         = typename __base::reference;
-      using difference_type   = typename __base::difference_type;
-      using iterator_category = typename __base::iterator_category;
-
       using __base::__base;
     };
 
@@ -150,16 +132,13 @@ namespace std {
       friend class iterator;
 
     public:
-      using value_type        = typename __base::value_type;
-      using pointer           = typename __base::pointer;
-      using reference         = typename __base::reference;
-      using difference_type   = typename __base::difference_type;
-      using iterator_category = typename __base::iterator_category;
-
       using __base::__base;
 
       const_iterator(const iterator& other) __noexcept: __base(other._ptr) { }
     };
+
+    using reverse_iterator       = std::reverse_iterator<iterator>;
+    using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
   private:
     __storage_type _storage;
@@ -231,6 +210,54 @@ namespace std {
       return *this;
     }
 
+    __constexpr_cxx_std_20 iterator begin() __noexcept_cxx_std_11 {
+      return iterator(_storage.front_pointer());
+    }
+
+    __constexpr_cxx_std_20 const_iterator begin() const __noexcept_cxx_std_11 {
+      return const_iterator(_storage.front_pointer());
+    }
+
+    __constexpr_cxx_std_20 iterator end() __noexcept_cxx_std_11 {
+      return iterator(_storage.back_pointer() + 1);
+    }
+
+    __constexpr_cxx_std_20 const_iterator end() const __noexcept_cxx_std_11 {
+      return const_iterator(_storage.back_pointer() + 1);
+    }
+
+    __constexpr_cxx_std_20 const_iterator cbegin() const __noexcept_cxx_std_11 {
+      return const_iterator(_storage.front_pointer());
+    }
+
+    __constexpr_cxx_std_20 const_iterator cend() const __noexcept_cxx_std_11 {
+      return const_iterator(_storage.back_pointer() + 1);
+    }
+
+    __constexpr_cxx_std_20 reverse_iterator rbegin() __noexcept_cxx_std_11 {
+      return reverse_iterator(end());
+    }
+
+    __constexpr_cxx_std_20 const_reverse_iterator rbegin() const __noexcept_cxx_std_11 {
+      return const_reverse_iterator(end());
+    }
+
+    __constexpr_cxx_std_20 reverse_iterator rend() __noexcept_cxx_std_11 {
+      return reverse_iterator(begin());
+    }
+
+    __constexpr_cxx_std_20 const_reverse_iterator rend() const __noexcept_cxx_std_11 {
+      return const_reverse_iterator(begin());
+    }
+
+    __constexpr_cxx_std_20 const_reverse_iterator crbegin() const __noexcept_cxx_std_11 {
+      return const_reverse_iterator(end());
+    }
+
+    __constexpr_cxx_std_20 const_reverse_iterator crend() const __noexcept_cxx_std_11 {
+      return const_reverse_iterator(begin());
+    }
+
     __constexpr_cxx_std_20 size_type size() const __noexcept_cxx_std_11 {
       return _storage.size();
     }
@@ -247,7 +274,7 @@ namespace std {
       return size() == 0;
     }
 
-    __constexpr_cxx_std_20void reserve(size_type n) {
+    __constexpr_cxx_std_20 void reserve(size_type n) {
       size_type old_size = size();
       if (n > old_size) {
         _storage.grow(n - old_size);
@@ -288,7 +315,7 @@ namespace std {
       return _storage.front_pointer()[n];
     }
 
-    __constexpr_cxx_std_20 pointer data() const __noexcept_cxx_std_11 {
+    __constexpr_cxx_std_20 pointer data() __noexcept_cxx_std_11 {
       return _storage.front_pointer();
     }
 

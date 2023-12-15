@@ -2,6 +2,7 @@
 #define CAPRESE_LIBC_INTERNAL_CXX_LOCALE_LOCALE_H_
 
 #include <internal/attribute.h>
+#include <internal/cxx/memory/allocator.h>
 #include <internal/cxx/stddef.h>
 #include <internal/cxx/stl_base/vec_storage.h>
 #include <internal/cxx/stl_base/vla.h>

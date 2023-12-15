@@ -1,6 +1,7 @@
 #ifndef CAPRESE_LIBC_INTERNAL_CXX_STL_BASE_VEC_STORAGE_H_
 #define CAPRESE_LIBC_INTERNAL_CXX_STL_BASE_VEC_STORAGE_H_
 
+#include <internal/branch.h>
 #include <internal/cxx/algorithm/seq.h>
 #include <internal/cxx/memory/allocator_traits.h>
 #include <internal/cxx/utility/fwd.h>
