@@ -2,6 +2,7 @@
 #define CAPRESE_LIBC_CXX_STRING_
 
 #include <compare>
+#include <cstddef>
 #include <initializer_list>
 #include <internal/cxx/fwd/stringfwd.h>
 #include <internal/cxx/string/basic_string.h>
@@ -20,6 +21,12 @@ namespace std {
   using u32string = basic_string<char32_t>;
 
 #endif // __CXX_STD_11__
+
+  int                stoi(const string& str, size_t* idx = nullptr, int base = 10);
+  long               stol(const string& str, size_t* idx = nullptr, int base = 10);
+  unsigned long      stoul(const string& str, size_t* idx = nullptr, int base = 10);
+  long long          stoll(const string& str, size_t* idx = nullptr, int base = 10);
+  unsigned long long stoull(const string& str, size_t* idx = nullptr, int base = 10);
 } // namespace std
 
 #endif // CAPRESE_LIBC_CXX_STRING_
