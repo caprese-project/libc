@@ -65,11 +65,11 @@ namespace std {
       _rdbuf = buf;
     }
 
-    void move(__basic_ios& rhs) { }
+    void move(__basic_ios&) { }
 
-    void move(__basic_ios&& rhs) { }
+    void move(__basic_ios&&) { }
 
-    void swap(__basic_ios& rhs) __noexcept { }
+    void swap(__basic_ios&) __noexcept { }
 
   public:
     explicit __basic_ios(__streambuf_type* buf) {

@@ -261,7 +261,7 @@ namespace std {
       this->_init();
     }
 
-    __basic_stringbuf(__basic_stringbuf&& other): _mode(other._mode), _buf(std::move(other._buf)) { }
+    __basic_stringbuf(__basic_stringbuf&& other): _buf(std::move(other._buf)), _mode(other._mode) { }
 
     __basic_stringbuf& operator=(__basic_stringbuf&& other) {
       const __streambuf_type& base = other;
