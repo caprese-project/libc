@@ -4,6 +4,7 @@
 #include <internal/cxx/type_traits/logic.h>
 #include <internal/cxx/utility/declval.h>
 #include <internal/cxx/utility/fwd.h>
+#include <internal/cxx/utility/pair.h>
 #include <internal/cxx/utility/swap.h>
 #include <internal/cxx/utility/unreachable.h>
 
