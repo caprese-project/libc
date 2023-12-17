@@ -532,7 +532,7 @@ namespace std {
       if (new_size > this->capacity()) {
         this->_allocate(new_size);
       }
-      move_backward(this->cbegin() + pos, this->cend() - 1, this->end() - 1 + n);
+      move_backward(this->cbegin() + pos, this->cend(), this->end() + n);
       _storage.set_size(new_size);
     }
 
