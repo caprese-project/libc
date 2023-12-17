@@ -275,9 +275,9 @@ namespace std {
     }
 
     __constexpr_cxx_std_20 void reserve(size_type n) {
-      size_type old_size = size();
-      if (n > old_size) {
-        _storage.grow(n - old_size);
+      size_type old_capacity = capacity();
+      if (n > old_capacity) {
+        _storage.grow(n - old_capacity);
       }
     }
 

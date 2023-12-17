@@ -1,6 +1,7 @@
 #ifndef CAPRESE_LIBC_INTERNAL_CXX_STL_BASE_VEC_STORAGE_H_
 #define CAPRESE_LIBC_INTERNAL_CXX_STL_BASE_VEC_STORAGE_H_
 
+#include <internal/attribute.h>
 #include <internal/branch.h>
 #include <internal/cxx/algorithm/seq.h>
 #include <internal/cxx/memory/allocator_traits.h>
@@ -64,7 +65,7 @@ namespace std {
     }
 
     __constexpr_cxx_std_20 size_type max_size() const __noexcept_cxx_std_11 {
-      return allocator_traits<Allocator>::max_size();
+      return allocator_traits<allocator_type>::max_size();
     }
 
     __constexpr_cxx_std_20 size_type capacity() const __noexcept_cxx_std_11 {
@@ -100,6 +101,7 @@ namespace std {
 
       pointer new_begin = allocator_traits<allocator_type>::allocate(_allocator, new_capacity);
       move(_begin, _begin + _size, new_begin);
+      allocator_traits<allocator_type>::deallocate(_allocator, _begin, capacity);
 
       _begin = new_begin;
       _end   = new_begin + new_capacity;
