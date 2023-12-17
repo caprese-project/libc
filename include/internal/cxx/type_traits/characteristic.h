@@ -92,7 +92,7 @@ namespace std {
   struct __is_nothrow_constructible_t: public __bool_constant<__is_nothrow_constructible(T, Args...)> { };
 
   template<typename T>
-  struct __is_nothrow_default_constructible: public __bool_constant<__is_nothrow_constructible_t(T)> { };
+  struct __is_nothrow_default_constructible: public __is_nothrow_constructible_t<T> { };
 
   template<typename T, bool = __is_referenceable<T>::value>
   struct __is_nothrow_copy_constructible_helper;

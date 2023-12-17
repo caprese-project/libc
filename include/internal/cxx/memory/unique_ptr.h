@@ -33,7 +33,7 @@ namespace std {
                       __conditional<__is_reference<deleter_type>::value, __is_same_t<E, deleter_type>, __is_convertible<E, deleter_type>>>::type::value>::type;
 
     template<typename U, typename E>
-    using __another_type_move_assignable_concept = typename __enable_if<__conjunction<__is_assignable<pointer&, typename unique_ptr<U, E>::pointer>, __is_assignable<deleter_type&, E>>::type::value,
+    using __another_type_move_assignable_concept = typename __enable_if<__conjunction<__is_assignable_t<pointer&, typename unique_ptr<U, E>::pointer>, __is_assignable_t<deleter_type&, E>>::type::value,
                                                                         unique_ptr&>::type;
 
   private:
@@ -41,10 +41,10 @@ namespace std {
     deleter_type deleter;
 
   public:
-    template<typename Deleter = deleter_type, typename = typename __deleter_concept<Deleter>::type>
+    template<typename Deleter = deleter_type, typename = __deleter_concept<Deleter>>
     __constexpr unique_ptr() __noexcept: ptr(), deleter() { }
 
-    template<typename Deleter = deleter_type, typename = typename __deleter_concept<Deleter>::type>
+    template<typename Deleter = deleter_type, typename = __deleter_concept<Deleter>>
     __constexpr_cxx_std_23 explicit unique_ptr(pointer ptr) __noexcept: ptr(ptr), deleter() { }
 
     template<typename Deleter = deleter_type, typename = typename __enable_if<__is_nothrow_copy_constructible<Deleter>::value>::type>
@@ -56,12 +56,12 @@ namespace std {
     template<typename Deleter = deleter_type, typename = typename __enable_if<__is_nothrow_move_constructible<Deleter>::value>::type>
     __constexpr_cxx_std_23 unique_ptr(unique_ptr&& other) __noexcept: ptr(other.release()), deleter(move(other.deleter)) { }
 
-    template<typename Deleter = deleter_type, typename = typename __deleter_concept<Deleter>::type>
+    template<typename Deleter = deleter_type, typename = __deleter_concept<Deleter>>
     __constexpr unique_ptr(__nullptr_t) __noexcept: ptr(), deleter() { }
 
 #ifdef __CXX_STD_17__
 
-    template<typename U, typename E, typename = typename __another_type_movable_concept<U, E>::type>
+    template<typename U, typename E, typename = __another_type_movable_concept<U, E>>
     __constexpr_cxx_std_23 unique_ptr(unique_ptr<U, E>&& other) __noexcept: ptr(other.release()), deleter(forward<E>(other.get_deleter())) { }
 
 #endif // __CXX_STD_17__
@@ -158,60 +158,61 @@ namespace std {
     template<typename U>
     using __pointer_concept_requires = typename __disjunction<
         __is_same_t<U, pointer>,
-        __conjuction<__is_same_t<pointer, element_type*>, __is_pointer<U>, __is_convertible<typename __remove_pointer<U>::type (*)[], element_type (*)[]>>>::type;
+        __conjunction<__is_same_t<pointer, element_type*>, __is_pointer<U>, __is_convertible<typename __remove_pointer<U>::type (*)[], element_type (*)[]>>>::type;
 
     template<typename U>
-    using __pointer_concept = typename __enable_if<__pointer_concept_requires<U>::value, U>::type;
+    using __pointer_concept = typename __enable_if<__pointer_concept_requires<U>::value>::type;
 
     template<typename U>
-    using __nullable_pointer_concept = typename __enable_if<__disjuction<__is_null_pointer<U>, __pointer_concept_requires<U>::value>, U>::type;
+    using __nullable_pointer_concept = typename __enable_if<__disjunction<__is_null_pointer<U>, __pointer_concept_requires<U>>::value>::type;
 
     template<typename U, typename E>
-    using __another_type_movable_concept = typename __enable_if<__conjuction<__negation<__is_array<U>>,
-                                                                             __is_same_t<pointer, element_type*>,
-                                                                             __is_same_t<typename unique_ptr<U, E>::pointer, typename unique_ptr<U, E>::element_type*>,
-                                                                             __is_convertible<typename unique_ptr<U, E>::element_type (*)[], element_type (*)[]>,
-                                                                             __disjuction<__conjuction<__is_same_t<deleter_type, E>, __is_reference<deleter_type>, __is_reference<E>>,
-                                                                                          __conjuction<__negation<__is_reference<E>>, __is_convertible<E, deleter_type>>>>::value>::type;
+    using __another_type_movable_concept = typename __enable_if<__conjunction<__negation<__is_array<U>>,
+                                                                              __is_same_t<pointer, element_type*>,
+                                                                              __is_same_t<typename unique_ptr<U, E>::pointer, typename unique_ptr<U, E>::element_type*>,
+                                                                              __is_convertible<typename unique_ptr<U, E>::element_type (*)[], element_type (*)[]>,
+                                                                              __disjunction<__conjunction<__is_same_t<deleter_type, E>, __is_reference<deleter_type>, __is_reference<E>>,
+                                                                                            __conjunction<__negation<__is_reference<E>>, __is_convertible<E, deleter_type>>>>::value>::type;
 
     template<typename U, typename E>
-    using __another_type_move_assignable_concept = typename __enable_if<__conjuction<__is_array<U>,
-                                                                                     __is_same_t<pointer, element_type*>,
-                                                                                     __is_same_t<typename unique_ptr<U, E>::pointer, typename unique_ptr<U, E>::element_type*>,
-                                                                                     __is_convertible<typename unique_ptr<U, deleter_type>::element_type (*)[], element_type (*)[]>,
-                                                                                     __is_assignable_t<deleter_type&, E&&>>>::type;
+    using __another_type_move_assignable_concept = typename __enable_if<__conjunction<__is_array<U>,
+                                                                                      __is_same_t<pointer, element_type*>,
+                                                                                      __is_same_t<typename unique_ptr<U, E>::pointer, typename unique_ptr<U, E>::element_type*>,
+                                                                                      __is_convertible<typename unique_ptr<U, deleter_type>::element_type (*)[], element_type (*)[]>,
+                                                                                      __is_assignable_t<deleter_type&, E&&>>::value,
+                                                                        unique_ptr&>::type;
 
     template<typename U>
     using __another_type_resettable_concept = typename __enable_if<
-        __disjuction<__is_same_t<pointer, U>, __conjuction<__is_same_t<pointer, element_type*>, __is_pointer<U>, __is_convertible<typename __remove_pointer<U>::type (*)[], element_type (*)[]>>>,
-        U>::type;
+        __disjunction<__is_same_t<pointer, U>,
+                      __conjunction<__is_same_t<pointer, element_type*>, __is_pointer<U>, __is_convertible<typename __remove_pointer<U>::type (*)[], element_type (*)[]>>>::value>::type;
 
   private:
     pointer      ptr;
     deleter_type deleter;
 
   public:
-    template<typename Deleter = deleter_type, typename = typename __deleter_concept<Deleter>::type>
+    template<typename Deleter = deleter_type, typename = __deleter_concept<Deleter>>
     __constexpr unique_ptr() __noexcept: ptr(), deleter() { }
 
-    template<typename U, typename Deleter = deleter_type, typename = typename __deleter_concept<Deleter>::type>
-    __constexpr_cxx_std_23 explicit unique_ptr(__pointer_concept<U> ptr) __noexcept: ptr(ptr), deleter();
+    template<typename U, typename Deleter = deleter_type, typename = __deleter_concept<Deleter>, typename = __pointer_concept<U>>
+    __constexpr_cxx_std_23 explicit unique_ptr(U ptr) __noexcept: ptr(ptr), deleter() { }
 
-    template<typename U, typename Deleter = deleter_type, typename = typename __enable_if<__is_nothrow_copy_constructible<Deleter>::value>::type>
-    __constexpr_cxx_std_23 unique_ptr(__nullable_pointer_concept<U> ptr, const deleter_type& deleter) __noexcept: ptr(ptr), deleter(deleter) { }
+    template<typename U, typename Deleter = deleter_type, typename = typename __enable_if<__is_nothrow_copy_constructible<Deleter>::value>::type, typename = __nullable_pointer_concept<U>>
+    __constexpr_cxx_std_23 unique_ptr(U ptr, const deleter_type& deleter) __noexcept: ptr(ptr), deleter(deleter) { }
 
-    template<typename U, typename Deleter = deleter_type, typename = typename __enable_if<__is_nothrow_move_constructible<Deleter>::value>::type>
-    __constexpr_cxx_std_23 unique_ptr(__nullable_pointer_concept<U> ptr, deleter_type&& deleter) __noexcept: ptr(ptr), deleter(move(deleter)) { }
+    template<typename U, typename Deleter = deleter_type, typename = typename __enable_if<__is_nothrow_move_constructible<Deleter>::value>::type, typename = __nullable_pointer_concept<U>>
+    __constexpr_cxx_std_23 unique_ptr(U ptr, deleter_type&& deleter) __noexcept: ptr(ptr), deleter(move(deleter)) { }
 
     template<typename Deleter = deleter_type, typename = typename __enable_if<__is_nothrow_move_constructible<Deleter>::value>::type>
     __constexpr_cxx_std_23 unique_ptr(unique_ptr&& other) __noexcept: ptr(other.release()), deleter(move(other.deleter)) { }
 
-    template<typename Deleter = deleter_type, typename = typename __deleter_concept<Deleter>::type>
+    template<typename Deleter = deleter_type, typename = __deleter_concept<Deleter>>
     __constexpr unique_ptr(__nullptr_t) __noexcept: ptr(), deleter() { }
 
 #ifdef __CXX_STD_17__
 
-    template<typename U, typename E, typename = typename __another_type_movable_concept<U, E>::type>
+    template<typename U, typename E, typename = __another_type_movable_concept<U, E>>
     __constexpr_cxx_std_23 unique_ptr(unique_ptr<U, E>&& other) __noexcept: ptr(other.release()), deleter(forward<E>(other.get_deleter())) { }
 
 #endif // __CXX_STD_17__
@@ -307,12 +308,12 @@ namespace std {
   }
 
   template<typename T>
-  __constexpr_cxx_std_23 typename __enable_if<__is_unbounded_array<T>::value, unique_ptr<T>>::type make_unique(size_t size) {
+  __constexpr_cxx_std_23 typename __enable_if<__is_unbounded_array<T>::value, unique_ptr<T>>::type make_unique(__size_t size) {
     using U = typename __remove_extent<T>::type;
     return unique_ptr<T>(new U[size]());
   }
 
-  template<typename T, typename... Array>
+  template<typename T, typename... Args>
   typename __enable_if<__is_bounded_array<T>::value>::type make_unique(Args&&...) = delete;
 } // namespace std
 

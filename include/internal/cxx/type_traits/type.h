@@ -120,19 +120,19 @@ namespace std {
   struct __is_rvalue_reference: public __is_rvalue_reference_helper<typename __remove_cv<T>::type> {};
 
   template<typename T>
-  struct __is_function: public __bool_constant<!__is_const<const T>::value> {};
+  struct __is_function_t: public __bool_constant<!__is_const<const T>::value> { };
 
   template<typename T>
-  struct __is_function<T&>: public __false_type {};
+  struct __is_function_t<T&>: public __false_type { };
 
   template<typename T>
-  struct __is_function<T&&>: public __false_type {};
+  struct __is_function_t<T&&>: public __false_type { };
 
   template<typename>
   struct __is_member_object_pointer_helper: public __false_type { };
 
   template<typename T, typename U>
-  struct __is_member_object_pointer_helper<T U::*>: public __negation<typename __is_function<T>::type> { };
+  struct __is_member_object_pointer_helper<T U::*>: public __negation<typename __is_function_t<T>::type> { };
 
   template<typename T>
   struct __is_member_object_pointer: public __is_member_object_pointer_helper<typename __remove_cv<T>::type> {};
@@ -141,7 +141,7 @@ namespace std {
   struct __is_member_function_pointer_helper: public __false_type { };
 
   template<typename T, typename U>
-  struct __is_member_function_pointer_helper<T U::*>: public __is_function<T> { };
+  struct __is_member_function_pointer_helper<T U::*>: public __is_function_t<T> { };
 
   template<typename T>
   struct __is_member_function_pointer: public __is_member_function_pointer_helper<typename __remove_cv<T>::type> {};
@@ -178,7 +178,7 @@ namespace std {
   struct __is_fundamental: public __disjunction<typename __is_arithmetic<T>::type, typename __is_null_pointer<T>::type> {};
 
   template<typename T>
-  struct __is_object: public __negation<typename __disjunction<typename __is_function<T>::type, typename __is_reference<T>::type, typename __is_void<T>::type>::type> {};
+  struct __is_object: public __negation<typename __disjunction<typename __is_function_t<T>::type, typename __is_reference<T>::type, typename __is_void<T>::type>::type> {};
 
   template<typename T>
   struct __is_member_pointer: public __disjunction<typename __is_member_object_pointer<T>::type, typename __is_member_function_pointer<T>::type> {};

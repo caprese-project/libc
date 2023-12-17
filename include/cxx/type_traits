@@ -69,7 +69,7 @@ namespace std {
   using is_class = __is_class_t<T>;
 
   template<typename T>
-  using is_function = __is_function<T>;
+  using is_function = __is_function_t<T>;
 
   template<typename T>
   using is_reference = __is_reference<T>;
@@ -162,7 +162,7 @@ namespace std {
   using is_move_constructible = __is_move_constructible<T>;
 
   template<typename T, typename... Args>
-  using is_nothrow_constructible = __is_nothrow_constructible_t<T, ... Args>;
+  using is_nothrow_constructible = __is_nothrow_constructible_t<T, Args...>;
 
   template<typename T>
   using is_nothrow_default_constructible = __is_nothrow_default_constructible<T>;
