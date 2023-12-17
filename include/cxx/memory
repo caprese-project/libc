@@ -5,8 +5,10 @@
 #include <internal/cxx/memory/addressof.h>
 #include <internal/cxx/memory/allocator.h>
 #include <internal/cxx/memory/allocator_traits.h>
+#include <internal/cxx/memory/default_delete.h>
 #include <internal/cxx/memory/pointer_traits.h>
 #include <internal/cxx/memory/uninit.h>
+#include <internal/cxx/memory/unique_ptr.h>
 
 namespace std {
   template<typename T>

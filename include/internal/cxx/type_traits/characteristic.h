@@ -58,6 +58,12 @@ namespace std {
   template<typename T, __size_t N>
   struct __is_bounded_array<T[N]>: public __true_type { };
 
+  template<typename T>
+  struct __is_unbounded_array: public __false_type { };
+
+  template<typename T>
+  struct __is_unbounded_array<T[]>: public __true_type { };
+
   template<typename T, typename... Args>
   struct __is_constructible_t: public __bool_constant<__is_constructible(T, Args...)> { };
 
@@ -81,6 +87,90 @@ namespace std {
 
   template<typename T>
   struct __is_move_constructible<T, true>: public __is_constructible_t<T, T&&> { };
+
+  template<typename T, typename... Args>
+  struct __is_nothrow_constructible_t: public __bool_constant<__is_nothrow_constructible(T, Args...)> { };
+
+  template<typename T>
+  struct __is_nothrow_default_constructible: public __bool_constant<__is_nothrow_constructible_t(T)> { };
+
+  template<typename T, bool = __is_referenceable<T>::value>
+  struct __is_nothrow_copy_constructible_helper;
+
+  template<typename T>
+  struct __is_nothrow_copy_constructible_helper<T, false>: public __false_type { };
+
+  template<typename T>
+  struct __is_nothrow_copy_constructible_helper<T, true>: public __is_nothrow_constructible_t<T, const T&> { };
+
+  template<typename T>
+  struct __is_nothrow_copy_constructible: public __is_nothrow_copy_constructible_helper<T> { };
+
+  template<typename T, bool = __is_referenceable<T>::value>
+  struct __is_nothrow_move_constructible_helper;
+
+  template<typename T>
+  struct __is_nothrow_move_constructible_helper<T, false>: public __false_type { };
+
+  template<typename T>
+  struct __is_nothrow_move_constructible_helper<T, true>: public __is_nothrow_constructible_t<T, T&&> { };
+
+  template<typename T>
+  struct __is_nothrow_move_constructible: public __is_nothrow_move_constructible_helper<T> { };
+
+  template<typename T, typename U>
+  struct __is_assignable_t: public __bool_constant<__is_assignable(T, U)> { };
+
+  template<typename T, bool = __is_referenceable<T>::value>
+  struct __is_copy_assignable_helper;
+
+  template<typename T>
+  struct __is_copy_assignable_helper<T, false>: public __false_type { };
+
+  template<typename T>
+  struct __is_copy_assignable_helper<T, true>: public __is_assignable_t<T&, const T&> { };
+
+  template<typename T>
+  struct __is_copy_assignable: public __is_copy_assignable_helper<T> { };
+
+  template<typename T, bool = __is_referenceable<T>::value>
+  struct __is_move_assignable_helper;
+
+  template<typename T>
+  struct __is_move_assignable_helper<T, false>: public __false_type { };
+
+  template<typename T>
+  struct __is_move_assignable_helper<T, true>: public __is_assignable_t<T&, T&&> { };
+
+  template<typename T>
+  struct __is_move_assignable: public __is_move_assignable_helper<T> { };
+
+  template<typename T, typename U>
+  struct __is_nothrow_assignable_t: public __bool_constant<__is_nothrow_assignable(T, U)> { };
+
+  template<typename T, bool = __is_referenceable<T>::value>
+  struct __is_nothrow_copy_assignable_helper;
+
+  template<typename T>
+  struct __is_nothrow_copy_assignable_helper<T, false>: public __false_type { };
+
+  template<typename T>
+  struct __is_nothrow_copy_assignable_helper<T, true>: public __is_nothrow_assignable_t<T&, const T&> { };
+
+  template<typename T>
+  struct __is_nothrow_copy_assignable: public __is_nothrow_copy_assignable_helper<T> { };
+
+  template<typename T, bool = __is_referenceable<T>::value>
+  struct __is_nothrow_move_assignable_helper;
+
+  template<typename T>
+  struct __is_nothrow_move_assignable_helper<T, false>: public __false_type { };
+
+  template<typename T>
+  struct __is_nothrow_move_assignable_helper<T, true>: public __is_nothrow_assignable_t<T&, T&&> { };
+
+  template<typename T>
+  struct __is_nothrow_move_assignable: public __is_nothrow_move_assignable_helper<T> { };
 
 #endif // __GNUC__
 } // namespace std

@@ -1,6 +1,7 @@
 #ifndef CAPRESE_INTERNAL_CXX_TYPE_TRAITS_MODIFY_H_
 #define CAPRESE_INTERNAL_CXX_TYPE_TRAITS_MODIFY_H_
 
+#include <internal/cxx/stddef.h>
 #include <internal/cxx/type_traits/constant.h>
 
 namespace std {
@@ -120,6 +121,51 @@ namespace std {
   template<typename T>
   struct __remove_cvref {
     using type = typename __remove_cv<typename __remove_reference<T>::type>::type;
+  };
+
+  template<typename T>
+  struct __remove_extent {
+    using type = T;
+  };
+
+  template<typename T, __size_t N>
+  struct __remove_extent<T[N]> {
+    using type = T;
+  };
+
+  template<typename T>
+  struct __remove_extent<T[]> {
+    using type = T;
+  };
+
+  template<typename T>
+  struct __remove_all_extents {
+    using type = T;
+  };
+
+  template<typename T, __size_t N>
+  struct __remove_all_extents<T[N]> {
+    using type = typename __remove_all_extents<T>::type;
+  };
+
+  template<typename T>
+  struct __remove_all_extents<T[]> {
+    using type = typename __remove_all_extents<T>::type;
+  };
+
+  template<typename T>
+  struct __add_pointer {
+    using type = typename __remove_reference<T>::type*;
+  };
+
+  template<typename T>
+  struct __remove_pointer {
+    using type = T;
+  };
+
+  template<typename T>
+  struct __remove_pointer<T*> {
+    using type = T;
   };
 } // namespace std
 

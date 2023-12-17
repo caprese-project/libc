@@ -218,6 +218,14 @@
 #define __constexpr_cxx_std_20
 #endif // !__CXX_STD_20__
 
+// __constexpr_cxx_std_23
+
+#ifdef __CXX_STD_23__
+#define __constexpr_cxx_std_23 constexpr
+#else // ^^^ __CXX_STD_23__ ^^^ / vvv !__CXX_STD_23__ vvv
+#define __constexpr_cxx_std_23
+#endif // !__CXX_STD_23__
+
 #else // ^^^ __cplusplus ^^^ / vvv !__cplusplus
 
 // __noreturn
@@ -318,6 +326,7 @@
 #define __constexpr_cxx_std_14
 #define __constexpr_cxx_std_17
 #define __constexpr_cxx_std_20
+#define __constexpr_cxx_std_23
 
 #endif // !__cplusplus
 
