@@ -14,6 +14,8 @@ namespace std {
     using traits_type     = Traits;
     using allocator_type  = Allocator;
     using value_type      = typename traits_type::char_type;
+    using reference       = value_type&;
+    using const_reference = const value_type&;
     using pointer         = typename allocator_traits<allocator_type>::pointer;
     using const_pointer   = typename allocator_traits<allocator_type>::const_pointer;
     using size_type       = typename allocator_traits<allocator_type>::size_type;
@@ -87,6 +89,54 @@ namespace std {
         allocator_traits<allocator_type>::deallocate(_ebo, _ebo._ptr, _capacity);
         _ebo._ptr = _local;
       }
+    }
+
+    __constexpr_cxx_std_20 __string_storage& operator=(const __string_storage& other) {
+      if (this == &other) {
+        return *this;
+      }
+
+      if (_ebo._ptr != _local) {
+        allocator_traits<allocator_type>::deallocate(_ebo, _ebo._ptr, _capacity);
+        _ebo._ptr = _local;
+      }
+
+      _length = other._length;
+      if (_length >= _threshold) {
+        _capacity = _length + 1;
+        _ebo      = other._ebo;
+        _ebo._ptr = allocator_traits<allocator_type>::allocate(_ebo, _capacity);
+      } else {
+        _ebo      = other._ebo;
+        _ebo._ptr = _local;
+      }
+      copy_n(other._ebo._ptr, _length + 1, _ebo._ptr);
+
+      return *this;
+    }
+
+    __constexpr_cxx_std_20 __string_storage& operator=(__string_storage&& other) __noexcept_cxx_std_11 {
+      if (this == &other) {
+        return *this;
+      }
+
+      if (_ebo._ptr != _local) {
+        allocator_traits<allocator_type>::deallocate(_ebo, _ebo._ptr, _capacity);
+        _ebo._ptr = _local;
+      }
+
+      _length = other._length;
+      if (_length >= _threshold) {
+        _capacity       = other._capacity;
+        _ebo            = move(other._ebo);
+        other._ebo._ptr = other._local;
+      } else {
+        _ebo      = move(other._ebo);
+        _ebo._ptr = _local;
+        copy_n(other._ebo._ptr, _length + 1, _ebo._ptr);
+      }
+
+      return *this;
     }
 
     __constexpr_cxx_std_20 size_type size() const __noexcept_cxx_std_11 {

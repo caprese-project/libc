@@ -1,6 +1,7 @@
 #ifndef CAPRESE_LIBC_INTERNAL_CXX_STL_BASE_VLA_H_
 #define CAPRESE_LIBC_INTERNAL_CXX_STL_BASE_VLA_H_
 
+#include <compare>
 #include <initializer_list>
 #include <internal/branch.h>
 #include <internal/cxx/algorithm/minmax.h>
@@ -10,6 +11,7 @@
 #include <internal/cxx/memory/allocator_traits.h>
 #include <internal/cxx/stdexcept/logic_error.h>
 #include <internal/cxx/utility/fwd.h>
+#include <internal/cxx/utility/swap.h>
 #include <internal/exception.h>
 
 namespace std {
@@ -58,6 +60,18 @@ namespace std {
       return tmp;
     }
 
+    __constexpr_cxx_std_20 bool operator==(const __vla_iterator_base& other) const __noexcept {
+      return _ptr == other._ptr;
+    }
+
+#ifndef __CXX_STD_20__
+
+    bool operator!=(const __vla_iterator_base& other) const __noexcept {
+      return !(*this == other);
+    }
+
+#endif // __CXX_STD_20__
+
     // Bidirectional Iterator Requirements
 
     __constexpr_cxx_std_20 __vla_iterator_base& operator--() __noexcept {
@@ -102,41 +116,42 @@ namespace std {
     friend difference_type operator-(const __vla_iterator_base& lhs, const __vla_iterator_base& rhs) __noexcept {
       return lhs._ptr - rhs._ptr;
     }
+
+    __constexpr_cxx_std_20 bool operator<(const __vla_iterator_base& other) const __noexcept {
+      return _ptr < other._ptr;
+    }
+
+#ifndef __CXX_STD_20__
+
+    bool operator>(const __vla_iterator_base& other) const __noexcept {
+      return _ptr > other._ptr;
+    }
+
+    bool operator<=(const __vla_iterator_base& other) const __noexcept {
+      return _ptr <= other._ptr;
+    }
+
+    bool operator>=(const __vla_iterator_base& other) const __noexcept {
+      return _ptr >= other._ptr;
+    }
+
+#endif // __CXX_STD_20__
   };
 
   template<typename Storage>
   class __vla {
   public:
-    using __storage_type  = Storage;
-    using value_type      = typename __storage_type::value_type;
-    using reference       = typename __storage_type::reference;
-    using const_reference = typename __storage_type::const_reference;
-    using allocator_type  = typename __storage_type::allocator_type;
-    using pointer         = typename __storage_type::pointer;
-    using const_pointer   = typename __storage_type::const_pointer;
-    using size_type       = typename __storage_type::size_type;
-    using difference_type = typename __storage_type::difference_type;
-
-    class iterator: public __vla_iterator_base<value_type, pointer, reference, difference_type> {
-      using __base = __vla_iterator_base<value_type, pointer, reference, difference_type>;
-
-      friend class const_iterator;
-
-    public:
-      using __base::__base;
-    };
-
-    class const_iterator: public __vla_iterator_base<const value_type, const_pointer, const_reference, difference_type> {
-      using __base = __vla_iterator_base<const value_type, const_pointer, const_reference, difference_type>;
-
-      friend class iterator;
-
-    public:
-      using __base::__base;
-
-      const_iterator(const iterator& other) __noexcept: __base(other._ptr) { }
-    };
-
+    using __storage_type         = Storage;
+    using value_type             = typename __storage_type::value_type;
+    using reference              = typename __storage_type::reference;
+    using const_reference        = typename __storage_type::const_reference;
+    using allocator_type         = typename __storage_type::allocator_type;
+    using pointer                = typename __storage_type::pointer;
+    using const_pointer          = typename __storage_type::const_pointer;
+    using size_type              = typename __storage_type::size_type;
+    using difference_type        = typename __storage_type::difference_type;
+    using iterator               = __vla_iterator_base<value_type, pointer, reference, difference_type>;
+    using const_iterator         = __vla_iterator_base<const value_type, const_pointer, const_reference, difference_type>;
     using reverse_iterator       = std::reverse_iterator<iterator>;
     using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
@@ -205,8 +220,8 @@ namespace std {
     }
 
     __constexpr_cxx_std_20 __vla& operator=(initializer_list<value_type> init_list) {
-      clear();
-      insert(init_list.begin(), init_list.end());
+      this->clear();
+      this->insert(init_list.begin(), init_list.end());
       return *this;
     }
 
@@ -235,27 +250,27 @@ namespace std {
     }
 
     __constexpr_cxx_std_20 reverse_iterator rbegin() __noexcept_cxx_std_11 {
-      return reverse_iterator(end());
+      return reverse_iterator(this->end());
     }
 
     __constexpr_cxx_std_20 const_reverse_iterator rbegin() const __noexcept_cxx_std_11 {
-      return const_reverse_iterator(end());
+      return const_reverse_iterator(this->end());
     }
 
     __constexpr_cxx_std_20 reverse_iterator rend() __noexcept_cxx_std_11 {
-      return reverse_iterator(begin());
+      return reverse_iterator(this->begin());
     }
 
     __constexpr_cxx_std_20 const_reverse_iterator rend() const __noexcept_cxx_std_11 {
-      return const_reverse_iterator(begin());
+      return const_reverse_iterator(this->begin());
     }
 
     __constexpr_cxx_std_20 const_reverse_iterator crbegin() const __noexcept_cxx_std_11 {
-      return const_reverse_iterator(end());
+      return const_reverse_iterator(this->end());
     }
 
     __constexpr_cxx_std_20 const_reverse_iterator crend() const __noexcept_cxx_std_11 {
-      return const_reverse_iterator(begin());
+      return const_reverse_iterator(this->begin());
     }
 
     __constexpr_cxx_std_20 size_type size() const __noexcept_cxx_std_11 {
@@ -271,11 +286,11 @@ namespace std {
     }
 
     __constexpr_cxx_std_20 bool empty() const __noexcept_cxx_std_11 {
-      return size() == 0;
+      return this->size() == 0;
     }
 
     __constexpr_cxx_std_20 void reserve(size_type n) {
-      size_type old_capacity = capacity();
+      size_type old_capacity = this->capacity();
       if (n > old_capacity) {
         _storage.grow(n - old_capacity);
       }
@@ -290,7 +305,7 @@ namespace std {
     }
 
     __constexpr_cxx_std_20 void shrink_to_fit() {
-      _storage.shrink(_storage.capacity() - size());
+      _storage.shrink(_storage.capacity() - this->size());
     }
 
     __constexpr_cxx_std_20 reference operator[](size_type n) {
@@ -302,14 +317,14 @@ namespace std {
     }
 
     __constexpr_cxx_std_20 reference at(size_type n) {
-      if (n >= size()) {
+      __if_unlikely (n >= this->size()) {
         __throw_exception(out_of_range("vla::at"));
       }
       return _storage.front_pointer()[n];
     }
 
     __constexpr_cxx_std_20 const_reference at(size_type n) const {
-      if (n >= size()) {
+      __if_unlikely (n >= this->size()) {
         __throw_exception(out_of_range("vla::at"));
       }
       return _storage.front_pointer()[n];
@@ -341,17 +356,17 @@ namespace std {
 
     template<typename InputIterator>
     __constexpr_cxx_std_20 void assign(InputIterator first, InputIterator last) {
-      clear();
-      insert(first, last);
+      this->clear();
+      this->insert(this->cbegin(), first, last);
     }
 
     __constexpr_cxx_std_20 void assign(size_type n, const value_type& value) {
-      clear();
-      insert(n, value);
+      this->clear();
+      this->insert(this->cbegin(), n, value);
     }
 
     __constexpr_cxx_std_20 void assign(initializer_list<value_type> init_list) {
-      assign(init_list.begin(), init_list.end());
+      this->assign(this->cbegin(), init_list.begin(), init_list.end());
     }
 
     __constexpr_cxx_std_20 void push_back(const value_type& value) {
@@ -370,8 +385,8 @@ namespace std {
     __constexpr_cxx_std_20 void pop_back() {
       allocator_type alloc = _storage.get_allocator();
       pointer        begin = _storage.front_pointer();
-      allocator_traits<allocator_type>::destroy(alloc, begin + size() - 1);
-      _storage.set_size(size() - 1);
+      allocator_traits<allocator_type>::destroy(alloc, begin + this->size() - 1);
+      _storage.set_size(this->size() - 1);
     }
 
     __constexpr_cxx_std_20 allocator_type get_allocator() const __noexcept_cxx_std_11 {
@@ -379,77 +394,85 @@ namespace std {
     }
 
     __constexpr_cxx_std_20 iterator insert(const_iterator pos, const value_type& value) {
-      size_type index = distance(cbegin(), pos);
-      _shift(index, 1);
+      size_type index = distance(this->cbegin(), pos);
+      this->_shift(index, 1);
       allocator_traits<allocator_type>::construct(_storage.get_allocator(), _storage.front_pointer() + index, value);
+      return this->begin() + index;
     }
 
     __constexpr_cxx_std_20 iterator insert(const_iterator pos, value_type&& value) {
-      size_type index = distance(cbegin(), pos);
-      _shift(index, 1);
+      size_type index = distance(this->cbegin(), pos);
+      this->_shift(index, 1);
       allocator_traits<allocator_type>::construct(_storage.get_allocator(), _storage.front_pointer() + index, move(value));
+      return this->begin() + index;
     }
 
     __constexpr_cxx_std_20 iterator insert(const_iterator pos, size_type n, const value_type& value) {
-      size_type index = distance(cbegin(), pos);
-      _shift(index, n);
+      size_type index = distance(this->cbegin(), pos);
+      this->_shift(index, n);
 
       pointer        ptr   = _storage.front_pointer() + index;
       allocator_type alloc = _storage.get_allocator();
       for (size_type i = 0; i < n; ++i) {
         allocator_traits<allocator_type>::construct(alloc, ptr + i, value);
       }
+      return this->begin() + index;
     }
 
     template<typename InputIterator>
     __constexpr_cxx_std_20 iterator insert(const_iterator pos, InputIterator first, InputIterator last) {
       size_type n     = distance(first, last);
-      size_type index = distance(cbegin(), pos);
-      _shift(index, n);
+      size_type index = distance(this->cbegin(), pos);
+      this->_shift(index, n);
 
       pointer        ptr   = _storage.front_pointer() + index;
       allocator_type alloc = _storage.get_allocator();
       for (size_type i = 0; i < n; ++i) {
         allocator_traits<allocator_type>::construct(alloc, ptr + i, *first++);
       }
+      return this->begin() + index;
     }
 
     __constexpr_cxx_std_20 iterator insert(const_iterator pos, initializer_list<value_type> init_list) {
-      return insert(pos, init_list.begin(), init_list.end());
+      return this->insert(pos, init_list.begin(), init_list.end());
     }
 
     template<typename... Args>
     __constexpr_cxx_std_20 iterator emplace(const_iterator pos, Args&&... args) {
-      size_type index = distance(cbegin(), pos);
-      _shift(index, 1);
+      size_type index = distance(this->cbegin(), pos);
+      this->_shift(index, 1);
       allocator_traits<allocator_type>::construct(_storage.get_allocator(), _storage.front_pointer() + index, forward<Args>(args)...);
+      return this->begin() + index;
     }
 
     __constexpr_cxx_std_20 iterator erase(const_iterator pos) {
-      size_type index = distance(cbegin(), pos);
+      size_type index = distance(this->cbegin(), pos);
       pointer   ptr   = _storage.front_pointer() + index;
       allocator_traits<allocator_type>::destroy(_storage.get_allocator(), ptr);
-      _unshift(index, 1);
+      this->_unshift(index, 1);
+      return this->begin() + index;
     }
 
     __constexpr_cxx_std_20 iterator erase(const_iterator first, const_iterator last) {
       size_type n     = distance(first, last);
-      size_type index = distance(cbegin(), first);
+      size_type index = distance(this->cbegin(), first);
       pointer   ptr   = _storage.front_pointer() + index;
       for (size_type i = 0; i < n; ++i) {
         allocator_traits<allocator_type>::destroy(_storage.get_allocator(), ptr + i);
       }
-      _unshift(index, n);
+      this->_unshift(index, n);
+      return this->begin() + index;
     }
 
     __constexpr_cxx_std_20 void swap(__vla& other) __noexcept_cxx_std_11 {
+      using std::swap;
       swap(_storage, other._storage);
     }
 
     __constexpr_cxx_std_20 void clear() __noexcept_cxx_std_11 {
       allocator_type alloc = _storage.get_allocator();
       pointer        begin = _storage.front_pointer();
-      for (size_type i = 0; i < size(); ++i) {
+      for (size_type i = 0; i < this->size(); ++i) {
         allocator_traits<allocator_type>::destroy(alloc, begin + i);
       }
       _storage.set_size(0);
@@ -457,7 +480,7 @@ namespace std {
 
   private:
     __constexpr_cxx_std_20 void _allocate(size_type n = 0) {
-      size_type old_capacity = capacity();
+      size_type old_capacity = this->capacity();
       size_type new_capacity = old_capacity == 0 ? 1 : old_capacity * 2;
       _storage.grow(max(new_capacity, n));
     }
@@ -465,7 +488,7 @@ namespace std {
     template<typename... Args>
     __constexpr_cxx_std_20 void _resize(size_type n, Args&&... args) {
       allocator_type alloc    = _storage.get_allocator();
-      size_type      old_size = size();
+      size_type      old_size = this->size();
 
       if (n < old_size) {
         pointer begin = _storage.front_pointer();
@@ -488,34 +511,34 @@ namespace std {
 
     template<typename... Args>
     __constexpr_cxx_std_20 void _emplace_back(Args&&... args) {
-      if (size() < capacity()) {
+      if (this->size() < this->capacity()) {
         allocator_type alloc = _storage.get_allocator();
         pointer        begin = _storage.front_pointer();
-        allocator_traits<allocator_type>::construct(alloc, begin + size(), forward<Args>(args)...);
-        _storage.set_size(size() + 1);
+        allocator_traits<allocator_type>::construct(alloc, begin + this->size(), forward<Args>(args)...);
+        _storage.set_size(this->size() + 1);
       } else {
         this->_allocate();
 
         allocator_type alloc = _storage.get_allocator();
         pointer        begin = _storage.front_pointer();
-        allocator_traits<allocator_type>::construct(alloc, begin + size(), forward<Args>(args)...);
+        allocator_traits<allocator_type>::construct(alloc, begin + this->size(), forward<Args>(args)...);
 
-        _storage.set_size(size() + 1);
+        _storage.set_size(this->size() + 1);
       }
     }
 
     __constexpr_cxx_std_20 void _shift(size_type pos, size_type n) {
-      size_type new_size = size() + n;
-      if (new_size > capacity()) {
-        _allocate(new_size);
+      size_type new_size = this->size() + n;
+      if (new_size > this->capacity()) {
+        this->_allocate(new_size);
       }
-      move_backward(cbegin() + pos, cend() - 1, cend() - 1 + n);
+      move_backward(this->cbegin() + pos, this->cend() - 1, this->end() - 1 + n);
       _storage.set_size(new_size);
     }
 
     __constexpr_cxx_std_20 void _unshift(size_type pos, size_type n) {
-      size_type new_size = size() - min(size(), n);
-      move(cbegin() + pos + n, cend(), cbegin() + pos);
+      size_type new_size = this->size() - min(this->size(), n);
+      move(this->cbegin() + pos + n, this->cend(), this->begin() + pos);
       _storage.set_size(new_size);
     }
   };

@@ -141,7 +141,7 @@ namespace std {
     }
 
     __constexpr_cxx_std_20 __basic_string& append(const_pointer str, size_type n) {
-      this->reserve(size() + n);
+      this->reserve(this->size() + n);
 
       for (size_type i = 0; i < n; ++i) {
         this->push_back(str[i]);
@@ -155,7 +155,7 @@ namespace std {
     }
 
     __constexpr_cxx_std_20 __basic_string& append(size_type n, value_type ch) {
-      this->reserve(size() + n);
+      this->reserve(this->size() + n);
 
       for (size_type i = 0; i < n; ++i) {
         this->push_back(ch);
@@ -168,7 +168,7 @@ namespace std {
     __constexpr_cxx_std_20 __basic_string& append(InputIterator first, InputIterator last) {
       size_type length = distance(first, last);
 
-      this->reserve(size() + length);
+      this->reserve(this->size() + length);
 
       for (auto it = first; it != last; ++it) {
         this->push_back(*it);
@@ -221,11 +221,11 @@ namespace std {
     }
 
     __constexpr_cxx_std_20 __basic_string& insert(size_type pos, const_pointer str, size_type n) {
-      __if_unlikely (pos > size()) {
+      __if_unlikely (pos > this->size()) {
         __throw_exception(out_of_range("pos > size()"));
       }
 
-      __base::insert(cbegin() + pos, str, str + n);
+      __base::insert(this->cbegin() + pos, str, str + n);
 
       return *this;
     }
@@ -235,21 +235,21 @@ namespace std {
     }
 
     __constexpr_cxx_std_20 __basic_string& insert(size_type pos, size_type n, value_type ch) {
-      __if_unlikely (pos > size()) {
+      __if_unlikely (pos > this->size()) {
         __throw_exception(out_of_range("pos > size()"));
       }
 
-      __base::insert(cbegin() + pos, n, ch);
+      __base::insert(this->cbegin() + pos, n, ch);
 
       return *this;
     }
 
     __constexpr_cxx_std_20 __basic_string& erase(size_type pos = 0, size_type n = npos) {
-      __if_unlikely (pos > size()) {
+      __if_unlikely (pos > this->size()) {
         __throw_exception(out_of_range("pos > size()"));
       }
 
-      __base::erase(cbegin() + pos, cbegin() + pos + min(size() - pos, n));
+      __base::erase(this->cbegin() + pos, this->cbegin() + pos + min(this->size() - pos, n));
 
       return *this;
     }
@@ -265,13 +265,13 @@ namespace std {
     }
 
     __constexpr_cxx_std_20 int compare(const __basic_string& other) const __noexcept_cxx_std_11 {
-      int result = traits_type::compare(data(), other.data(), min(size(), other.size()));
+      int result = traits_type::compare(this->data(), other.data(), min(this->size(), other.size()));
       if (result != 0) {
         return result;
       } else {
-        if (size() < other.size()) {
+        if (this->size() < other.size()) {
           return -1;
-        } else if (size() > other.size()) {
+        } else if (this->size() > other.size()) {
           return 1;
         } else {
           return 0;
@@ -288,7 +288,7 @@ namespace std {
     }
 
     __constexpr_cxx_std_20 int compare(const Char* s) const {
-      return compare(__basic_string(s));
+      return this->compare(__basic_string(s));
     }
 
     __constexpr_cxx_std_20 int compare(size_type pos, size_type n1, const Char* s) const {

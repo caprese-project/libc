@@ -60,6 +60,46 @@ namespace std {
       _size  = 0;
     }
 
+    __constexpr_cxx_std_20 __vector_storage& operator=(const __vector_storage& other) {
+      if (this == &other) {
+        return *this;
+      }
+
+      allocator_traits<allocator_type>::deallocate(_allocator, _begin, _end - _begin);
+      _begin = nullptr;
+      _end   = nullptr;
+      _size  = 0;
+
+      _size  = other._end - other._begin;
+      _begin = allocator_traits<allocator_type>::allocate(_allocator, _size);
+      copy_n(other._begin, _size, _begin);
+      _end = _begin + _size;
+
+      return *this;
+    }
+
+    __constexpr_cxx_std_20 __vector_storage& operator=(__vector_storage&& other) __noexcept_cxx_std_11 {
+      if (this == &other) {
+        return *this;
+      }
+
+      allocator_traits<allocator_type>::deallocate(_allocator, _begin, _end - _begin);
+      _begin = nullptr;
+      _end   = nullptr;
+      _size  = 0;
+
+      _allocator = move(other._allocator);
+      _begin     = other._begin;
+      _end       = other._end;
+      _size      = other._size;
+
+      other._begin = nullptr;
+      other._end   = nullptr;
+      other._size  = 0;
+
+      return *this;
+    }
+
     __constexpr_cxx_std_20 size_type size() const __noexcept_cxx_std_11 {
       return _size;
     }
