@@ -144,8 +144,9 @@ namespace std {
       this->reserve(this->size() + n);
 
       for (size_type i = 0; i < n; ++i) {
-        this->push_back(str[i]);
+        __base::push_back(str[i]);
       }
+      __base::push_back(value_type());
 
       return *this;
     }
@@ -158,8 +159,9 @@ namespace std {
       this->reserve(this->size() + n);
 
       for (size_type i = 0; i < n; ++i) {
-        this->push_back(ch);
+        __base::push_back(ch);
       }
+      __base::push_back(value_type());
 
       return *this;
     }
@@ -171,8 +173,9 @@ namespace std {
       this->reserve(this->size() + length);
 
       for (auto it = first; it != last; ++it) {
-        this->push_back(*it);
+        __base::push_back(*it);
       }
+      __base::push_back(value_type());
 
       return *this;
     }
@@ -205,6 +208,7 @@ namespace std {
 
     __constexpr_cxx_std_20 __basic_string& assign(const_pointer str, size_type n) {
       __base::assign(str, str + n);
+      __base::push_back(value_type());
       return *this;
     }
 
