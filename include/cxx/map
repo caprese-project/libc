@@ -224,6 +224,11 @@ namespace std {
       insert(init.begin(), init.end());
     }
 
+    template<typename... Args>
+    pair<iterator, bool> emplace(Args&&... args) {
+      return _container.emplace(forward<Args>(args)...);
+    }
+
     iterator erase(iterator position) {
       return _container.erase(*position);
     }
