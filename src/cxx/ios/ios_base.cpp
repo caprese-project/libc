@@ -1,5 +1,6 @@
 #include <cassert>
 #include <internal/cxx/ios/ios_base.h>
+#include <internal/cxx/utility/swap.h>
 
 namespace std {
   void ios_base::_init() {
@@ -42,6 +43,19 @@ namespace std {
 
   ios_base::seekdir ios_base::_get_seekdir() const {
     return static_cast<seekdir>(_ios_base_bits) & _seekdir_mask;
+  }
+
+  void ios_base::_move(ios_base& other) {
+    other._ios_base_bits = other._ios_base_bits;
+    other._prec          = other._prec;
+    other._wide          = other._wide;
+  }
+
+  void ios_base::_swap(ios_base& other) {
+    using std::swap;
+    swap(_ios_base_bits, other._ios_base_bits);
+    swap(_prec, other._prec);
+    swap(_wide, other._wide);
   }
 
   bool ios_base::_is_boolalpha() const {

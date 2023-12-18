@@ -105,8 +105,8 @@ namespace std {
   private:
     static constexpr fmtflags _fmtflags_mask = (uppercase << 1) - 1;
     static constexpr iostate  _iostate_mask  = ((failbit << 1) - 1) & ~_fmtflags_mask;
-    static constexpr openmode _openmode_mask = ((trunc << 1) - 1) & ~_iostate_mask;
-    static constexpr seekdir  _seekdir_mask  = ((end << 1) - 1) & ~_openmode_mask;
+    static constexpr openmode _openmode_mask = ((trunc << 1) - 1) & ~(_fmtflags_mask | _iostate_mask);
+    static constexpr seekdir  _seekdir_mask  = ((end << 1) - 1) & ~(_fmtflags_mask | _iostate_mask | _openmode_mask);
 
     __ios_base_bits _ios_base_bits;
     streamsize      _prec;
@@ -124,6 +124,8 @@ namespace std {
     openmode _get_openmode() const;
     void     _set_seekdir(seekdir seekdir);
     seekdir  _get_seekdir() const;
+    void     _move(ios_base& other);
+    void     _swap(ios_base& other);
 
   public:
     bool _is_boolalpha() const;

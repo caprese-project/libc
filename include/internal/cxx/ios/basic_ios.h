@@ -65,11 +65,40 @@ namespace std {
       _rdbuf = buf;
     }
 
-    void move(__basic_ios&) { }
+    void move(__basic_ios& other) {
+      ios_base::_move(other);
+      _rdbuf   = nullptr;
+      _num_get = other._num_get;
+      _num_put = other._num_put;
+      _ctype   = other._ctype;
+      this->tie(other.tie(nullptr));
+      _exceptions = other._exceptions;
+      _fillch     = other._fillch;
+    }
 
-    void move(__basic_ios&&) { }
+    void move(__basic_ios&& other) {
+      ios_base::_move(other);
+      _rdbuf   = nullptr;
+      _num_get = other._num_get;
+      _num_put = other._num_put;
+      _ctype   = other._ctype;
+      this->tie(other.tie(nullptr));
+      _exceptions = other._exceptions;
+      _fillch     = other._fillch;
+    }
 
-    void swap(__basic_ios&) __noexcept { }
+    void swap(__basic_ios& other) __noexcept {
+      using std::swap;
+
+      ios_base::_swap(other);
+
+      swap(_tie, other._tie);
+      swap(_num_get, other._num_get);
+      swap(_num_put, other._num_put);
+      swap(_ctype, other._ctype);
+      swap(_exceptions, other._exceptions);
+      swap(_fillch, other._fillch);
+    }
 
   public:
     explicit __basic_ios(__streambuf_type* buf) {

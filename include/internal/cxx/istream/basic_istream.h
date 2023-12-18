@@ -93,6 +93,20 @@ namespace std {
 
     __basic_istream(__basic_istream&& other): _gcount(other._gcount) {
       __ios_type::move(other);
+      other._gcount = 0;
+    }
+
+    __basic_istream& operator=(const __basic_istream&) = delete;
+
+    __basic_istream& operator=(__basic_istream&& other) {
+      swap(other);
+      return *this;
+    }
+
+    void swap(basic_istream& other) {
+      using std::swap;
+      __ios_type::swap(other);
+      swap(_gcount, other._gcount);
     }
 
   public:
