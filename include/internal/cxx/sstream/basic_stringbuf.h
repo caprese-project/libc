@@ -261,6 +261,14 @@ namespace std {
       this->_init();
     }
 
+#ifdef __CXX_STD_20__
+
+    explicit __basic_stringbuf(__string_type&& str, ios_base::openmode mode = ios_base::in | ios_base::out): _buf(std::move(str)), _mode(mode) {
+      this->_init();
+    }
+
+#endif // __CXX_STD_20__
+
     __basic_stringbuf(__basic_stringbuf&& other): _buf(std::move(other._buf)), _mode(other._mode) { }
 
     __basic_stringbuf& operator=(__basic_stringbuf&& other) {

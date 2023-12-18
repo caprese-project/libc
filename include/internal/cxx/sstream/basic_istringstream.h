@@ -34,6 +34,14 @@ namespace std {
       this->init(&_buf);
     }
 
+#ifdef __CXX_STD_20__
+
+    explicit __basic_istringstream(__string_type&& str, ios_base::openmode mode = ios_base::in): __istream_type(), _buf(move(str), mode | ios_base::in) {
+      this->init(&_buf);
+    }
+
+#endif // __CXX_STD_20__
+
     __basic_istringstream(__basic_istringstream&& other): __istream_type(move(other)), _buf(move(other._buf)) {
       __istream_type::set_rdbuf(&_buf);
     }
