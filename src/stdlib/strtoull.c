@@ -44,9 +44,9 @@ __weak unsigned long long int strtoull(const char* __restrict s, char** __restri
     if (isdigit(*s)) {
       val = *s - '0';
     } else if (isupper(*s)) {
-      val = *s - 'A';
+      val = *s - 'A' + 10;
     } else if (islower(*s)) {
-      val = *s - 'a';
+      val = *s - 'a' + 10;
     } else {
       break;
     }

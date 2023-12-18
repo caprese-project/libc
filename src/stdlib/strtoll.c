@@ -45,9 +45,9 @@ __weak long long int strtoll(const char* __restrict s, char** __restrict end, in
     if (isdigit(*s)) {
       val = *s - '0';
     } else if (isupper(*s)) {
-      val = *s - 'A';
+      val = *s - 'A' + 10;
     } else if (islower(*s)) {
-      val = *s - 'a';
+      val = *s - 'a' + 10;
     } else {
       break;
     }
