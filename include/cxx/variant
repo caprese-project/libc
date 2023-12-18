@@ -1,0 +1,16 @@
+#ifndef CAPRESE_LIBC_CXX_VARIANT_
+#define CAPRESE_LIBC_CXX_VARIANT_
+
+#include <internal/attribute.h>
+
+#ifdef __CXX_STD_17__
+
+#include <internal/cxx/variant/bad_variant_access.h>
+#include <internal/cxx/variant/monostate.h>
+#include <internal/cxx/variant/variant.h>
+#include <internal/cxx/variant/variant_alternative.h>
+#include <internal/cxx/variant/variant_size.h>
+
+#endif // __CXX_STD_17__
+
+#endif // CAPRESE_LIBC_CXX_VARIANT_

@@ -3,9 +3,26 @@
 
 #include <internal/cxx/stddef.h>
 #include <internal/cxx/type_traits/constant.h>
+#include <internal/cxx/type_traits/logic.h>
 #include <internal/cxx/type_traits/modify.h>
+#include <internal/cxx/utility/declval.h>
 
 namespace std {
+  template<typename T>
+  struct __is_void;
+
+  template<typename T>
+  struct __is_function_t;
+
+  template<typename T>
+  struct __is_array;
+
+  template<typename T>
+  struct __is_reference;
+
+  template<typename T>
+  struct __is_scalar;
+
   template<typename>
   struct __is_const: public __false_type {};
 
@@ -144,6 +161,59 @@ namespace std {
 
   template<typename T>
   struct __is_move_assignable: public __is_move_assignable_helper<T> { };
+
+  template<typename T,
+           bool = __disjunction<typename __is_void<T>::type, typename __is_function_t<T>::type, typename __is_array<T>::type, typename __is_reference<T>::type, typename __is_scalar<T>::type>::value>
+  struct __is_destructible_helper: public __disjunction<typename __is_reference<T>::type, typename __is_scalar<T>::type> { };
+
+  template<typename T>
+  struct __is_destructible_helper<T, false> {
+  private:
+    template<typename _T, typename = decltype(__declval<_T&>().~T())>
+    static __true_type __type(int);
+
+    template<typename>
+    static __false_type __type(...);
+
+  public:
+    using type = decltype(__type<T>(0));
+  };
+
+  template<typename T>
+  struct __is_destructible: public __is_destructible_helper<T> {};
+
+  template<typename T, typename... Args>
+  struct __is_trivially_constructible_t: public __bool_constant<__is_trivially_constructible(T, Args...)> { };
+
+  template<typename T>
+  struct __is_trivially_default_constructible: public __is_trivially_constructible_t<T> { };
+
+  template<typename T, bool = __is_referenceable<T>::value>
+  struct __is_trivially_copy_constructible_helper;
+
+  template<typename T>
+  struct __is_trivially_copy_constructible_helper<T, false>: public __false_type { };
+
+  template<typename T>
+  struct __is_trivially_copy_constructible_helper<T, true>: public __is_trivially_constructible_t<T, const T&> { };
+
+  template<typename T>
+  struct __is_trivially_copy_constructible: public __is_trivially_copy_constructible_helper<T> { };
+
+  template<typename T, bool = __is_referenceable<T>::value>
+  struct __is_trivially_move_constructible_helper;
+
+  template<typename T>
+  struct __is_trivially_move_constructible_helper<T, false>: public __false_type { };
+
+  template<typename T>
+  struct __is_trivially_move_constructible_helper<T, true>: public __is_trivially_constructible_t<T, T&&> { };
+
+  template<typename T>
+  struct __is_trivially_move_constructible: public __is_trivially_move_constructible_helper<T> { };
+
+  template<typename T>
+  struct __is_trivially_destructible: public __conjunction<typename __is_destructible<T>::type, __bool_constant<__has_trivial_destructor(T)>> {};
 
   template<typename T, typename U>
   struct __is_nothrow_assignable_t: public __bool_constant<__is_nothrow_assignable(T, U)> { };
