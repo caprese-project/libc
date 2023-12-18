@@ -103,7 +103,7 @@ namespace std {
       return *this;
     }
 
-    void swap(basic_istream& other) {
+    void swap(__basic_istream& other) {
       using std::swap;
       __ios_type::swap(other);
       swap(_gcount, other._gcount);
