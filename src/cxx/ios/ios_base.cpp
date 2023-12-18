@@ -46,9 +46,9 @@ namespace std {
   }
 
   void ios_base::_move(ios_base& other) {
-    other._ios_base_bits = other._ios_base_bits;
-    other._prec          = other._prec;
-    other._wide          = other._wide;
+    _ios_base_bits = other._ios_base_bits;
+    _prec          = other._prec;
+    _wide          = other._wide;
   }
 
   void ios_base::_swap(ios_base& other) {
