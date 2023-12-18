@@ -115,6 +115,29 @@ namespace std {
 
     return result;
   }
+
+  template<typename InputIterator, typename OutputIterator, typename UnaryOperation>
+  __constexpr_cxx_std_20 OutputIterator transform(InputIterator first, InputIterator last, OutputIterator result, UnaryOperation op) {
+    while (first != last) {
+      *result = op(*first);
+      ++result;
+      ++first;
+    }
+
+    return result;
+  }
+
+  template<typename InputIterator1, typename InputIterator2, typename OutputIterator, typename BinaryOperation>
+  __constexpr_cxx_std_20 OutputIterator transform(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, OutputIterator result, BinaryOperation op) {
+    while (first1 != last1) {
+      *result = op(*first1, *first2);
+      ++result;
+      ++first1;
+      ++first2;
+    }
+
+    return result;
+  }
 } // namespace std
 
 #endif // CAPRESE_LIBC_INTERNAL_CXX_ALGORITHM_SEQ_H_
