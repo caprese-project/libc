@@ -19,6 +19,76 @@ namespace std {
     return true;
   }
 
+  template<class ForwardIterator1, class ForwardIterator2>
+  __constexpr_cxx_std_20 ForwardIterator1 find_end(ForwardIterator1 first1, ForwardIterator1 last1, ForwardIterator2 first2, ForwardIterator2 last2) {
+    if (first2 == last2) {
+      return last1;
+    }
+
+    ForwardIterator1 result = last1;
+    while ((first1 = std::search(first1, last1, first2, last2)) != last1) {
+      result = first1;
+      ++first1;
+    }
+
+    return result;
+  }
+
+  template<class ForwardIterator1, class ForwardIterator2, class BinaryPredicate>
+  __constexpr_cxx_std_20 ForwardIterator1 find_end(ForwardIterator1 first1, ForwardIterator1 last1, ForwardIterator2 first2, ForwardIterator2 last2, BinaryPredicate pred) {
+    if (first2 == last2) {
+      return last1;
+    }
+
+    ForwardIterator1 result = last1;
+    while ((first1 = std::search(first1, last1, first2, last2, pred)) != last1) {
+      result = first1;
+      ++first1;
+    }
+
+    return result;
+  }
+
+  template<typename ForwardIterator1, typename ForwardIterator2>
+  __constexpr_cxx_std_20 ForwardIterator1 search(ForwardIterator1 first1, ForwardIterator1 last1, ForwardIterator2 first2, ForwardIterator2 last2) {
+    while (first1 != last1) {
+      ForwardIterator1 it1 = first1;
+      ForwardIterator2 it2 = first2;
+      while (it1 != last1 && it2 != last2 && *it1 == *it2) {
+        ++it1;
+        ++it2;
+      }
+
+      if (it2 == last2) {
+        return first1;
+      }
+
+      ++first1;
+    }
+
+    return last1;
+  }
+
+  template<typename ForwardIterator1, typename ForwardIterator2, typename BinaryPredicate>
+  __constexpr_cxx_std_20 ForwardIterator1 search(ForwardIterator1 first1, ForwardIterator1 last1, ForwardIterator2 first2, ForwardIterator2 last2, BinaryPredicate pred) {
+    while (first1 != last1) {
+      ForwardIterator1 it1 = first1;
+      ForwardIterator2 it2 = first2;
+      while (it1 != last1 && it2 != last2 && pred(*it1, *it2)) {
+        ++it1;
+        ++it2;
+      }
+
+      if (it2 == last2) {
+        return first1;
+      }
+
+      ++first1;
+    }
+
+    return last1;
+  }
+
   template<typename InputIterator, typename Function>
   __constexpr_cxx_std_14 Function for_each(InputIterator first, InputIterator last, Function f) {
     while (first != last) {

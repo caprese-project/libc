@@ -3,6 +3,7 @@
 
 #include <internal/attribute.h>
 #include <internal/cxx/algorithm/minmax.h>
+#include <internal/cxx/algorithm/seq.h>
 #include <internal/cxx/iterator/functions.h>
 #include <internal/cxx/memory/allocator.h>
 #include <internal/cxx/memory/allocator_traits.h>
@@ -264,9 +265,132 @@ namespace std {
       __base::push_back(value_type());
     }
 
-    __constexpr_cxx_std_20 const_pointer c_str() const __noexcept {
+    __constexpr_cxx_std_20 const_pointer c_str() const __noexcept_cxx_std_11 {
       return __base::data();
     }
+
+    __constexpr_cxx_std_20 size_type copy(pointer str, size_type n, size_type pos = 0) const {
+      __if_unlikely (pos > this->size()) {
+        __throw_exception(out_of_range("pos > size()"));
+      }
+
+      size_type length = min(this->size() - pos, n);
+
+      traits_type::copy(str, this->data() + pos, length);
+
+      return length;
+    }
+
+    __constexpr_cxx_std_20 size_type find(const __basic_string& str, size_type pos = 0) const __noexcept_cxx_std_11 {
+      if (pos >= this->size()) {
+        return npos;
+      }
+
+      auto iter = search(this->begin() + pos, this->end(), str.begin(), str.end(), traits_type::eq);
+
+      if (this->end() == iter) {
+        return npos;
+      } else {
+        return distance(this->begin(), iter);
+      }
+    }
+
+    __constexpr_cxx_std_20 size_type find(const_pointer str, size_type pos, size_type n) const {
+      if (pos >= this->size()) {
+        return npos;
+      }
+
+      auto iter = search(this->begin() + pos, this->end(), str, str + n, traits_type::eq);
+
+      if (this->end() == iter) {
+        return npos;
+      } else {
+        return distance(this->begin(), iter);
+      }
+    }
+
+    __constexpr_cxx_std_20 size_type find(const_pointer str, size_type pos = 0) const {
+      return this->find(str, pos, traits_type::length(str));
+    }
+
+    __constexpr_cxx_std_20 size_type find(value_type ch, size_type pos = 0) const {
+      if (pos >= this->size()) {
+        return npos;
+      }
+
+      const_pointer ptr = char_traits::find(this->c_str() + pos, this->size(), ch);
+      if (ptr == nullptr) {
+        return npos;
+      } else {
+        return distance(this->c_str(), ptr);
+      }
+    }
+
+    __constexpr_cxx_std_20 size_type rfind(const __basic_string& str, size_type pos = npos) const __noexcept_cxx_std_11 {
+      if (pos > this->size()) {
+        pos = this->size();
+      }
+
+      auto iter = find_end(this->begin(), this->begin() + pos, str.begin(), str.end(), traits_type::eq);
+
+      if (this->begin() + pos == iter) {
+        return npos;
+      } else {
+        return distance(this->begin(), iter);
+      }
+    }
+
+    __constexpr_cxx_std_20 size_type rfind(const_pointer str, size_type pos, size_type n) const {
+      if (pos > this->size()) {
+        pos = this->size();
+      }
+
+      auto iter = find_end(this->begin(), this->begin() + pos, str, str + n, traits_type::eq);
+
+      if (this->begin() + pos == iter) {
+        return npos;
+      } else {
+        return distance(this->begin(), iter);
+      }
+    }
+
+    __constexpr_cxx_std_20 size_type rfind(const_pointer str, size_type pos = npos) const {
+      return this->rfind(str, pos, traits_type::length(str));
+    }
+
+    __constexpr_cxx_std_20 size_type rfind(value_type ch, size_type pos = npos) const {
+      return this->rfind(&ch, pos, 1);
+    }
+
+    __constexpr_cxx_std_20 size_type rfind(const_pointer str, size_type pos, size_type n) const {
+      if (n == 0) {
+        return pos;
+      }
+
+      const_pointer result = traits_type::rfind(this->data() + pos, this->size() - pos, str, n);
+
+      return result == nullptr ? npos : result - this->data();
+    }
+
+    __constexpr_cxx_std_20 __basic_string substr(size_type pos = 0, size_type n = npos) const __lvalue_ref_cxx_std_23 {
+      __if_unlikely (pos > this->size()) {
+        __throw_exception(out_of_range("pos > size()"));
+      }
+
+      return __basic_string(*this, pos, n);
+    }
+
+#ifdef __CXX_STD_23__
+
+    constexpr __basic_string substr(size_type pos = 0, size_type n = npos) && {
+      __if_unlikely (pos > this->size()) {
+        __throw_exception(out_of_range("pos > size()"));
+      }
+
+      return __basic_string(move(*this), pos, n);
+    }
+
+#endif // __CXX_STD_23__
 
     __constexpr_cxx_std_20 int compare(const __basic_string& other) const __noexcept_cxx_std_11 {
       int result = traits_type::compare(this->data(), other.data(), min(this->size(), other.size()));
@@ -302,6 +426,46 @@ namespace std {
     __constexpr_cxx_std_20 int compare(size_type pos, size_type n1, const Char* s, size_type n2) const {
       return __basic_string(*this, pos, n1).compare(__basic_string(s, n2));
     }
+
+#ifdef __CXX_STD_20__
+
+    constexpr bool starts_with(value_type ch) const noexcept {
+      return !this->empty() && traits_type::eq(__base::front(), ch);
+    }
+
+    constexpr bool starts_with(const_pointer str) const {
+      size_type len = traits_type::length(str);
+      if (len > size()) {
+        return false;
+      }
+      return traits_type::compare(data(), str, len) == 0;
+    }
+
+    constexpr bool ends_with(value_type ch) const noexcept {
+      return !this->empty() && traits_type::eq(__base::back(), ch);
+    }
+
+    constexpr bool ends_with(const_pointer str) const {
+      size_type len = traits_type::length(str);
+      if (len > size()) {
+        return false;
+      }
+      return traits_type::compare(data() + size() - len, str, len) == 0;
+    }
+
+#endif // __CXX_STD_20__
+
+#ifdef __CXX_STD_23__
+
+    constexpr bool contains(value_type ch) const noexcept {
+      return this->find(ch) != npos;
+    }
+
+    constexpr bool contains(const_pointer str) const {
+      return this->find(str) != npos;
+    }
+
+#endif // __CXX_STD_23__
   };
 
   template<typename Char, typename Traits, typename Allocator>

@@ -226,6 +226,22 @@
 #define __constexpr_cxx_std_23
 #endif // !__CXX_STD_23__
 
+// __lvalue_ref_cxx_std_23
+
+#ifdef __CXX_STD_23__
+#define __lvalue_ref_cxx_std_23 &
+#else // ^^^ __CXX_STD_23__ ^^^ / vvv !__CXX_STD_23__ vvv
+#define __lvalue_ref_cxx_std_23
+#endif // !__CXX_STD_23__
+
+// __rvalue_ref_cxx_std_23
+
+#ifdef __CXX_STD_23__
+#define __rvalue_ref_cxx_std_23 &&
+#else // ^^^ __CXX_STD_23__ ^^^ / vvv !__CXX_STD_23__ vvv
+#define __rvalue_ref_cxx_std_23
+#endif // !__CXX_STD_23__
+
 #else // ^^^ __cplusplus ^^^ / vvv !__cplusplus
 
 // __noreturn
