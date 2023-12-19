@@ -180,7 +180,7 @@ namespace std {
   };
 
   template<typename T>
-  struct __is_destructible: public __is_destructible_helper<T> {};
+  struct __is_destructible_t: public __is_destructible_helper<T>::type { };
 
   template<typename T, typename... Args>
   struct __is_trivially_constructible_t: public __bool_constant<__is_trivially_constructible(T, Args...)> { };
@@ -213,7 +213,7 @@ namespace std {
   struct __is_trivially_move_constructible: public __is_trivially_move_constructible_helper<T> { };
 
   template<typename T>
-  struct __is_trivially_destructible: public __conjunction<typename __is_destructible<T>::type, __bool_constant<__has_trivial_destructor(T)>> {};
+  struct __is_trivially_destructible_t: public __conjunction<typename __is_destructible_t<T>::type, __bool_constant<__has_trivial_destructor(T)>> { };
 
   template<typename T, typename U>
   struct __is_nothrow_assignable_t: public __bool_constant<__is_nothrow_assignable(T, U)> { };

@@ -2,47 +2,13 @@
 #define CAPRESE_LIBC_INTERNAL_CXX_STL_BASE_LAZY_H_
 
 #include <internal/attribute.h>
+#include <internal/cxx/memory/uninit.h>
 #include <internal/cxx/type_traits/characteristic.h>
 #include <internal/cxx/utility/fwd.h>
 
 namespace std {
-  template<typename T, bool = __is_trivially_destructible<T>::value>
-  class __lazy;
-
   template<typename T>
-  class __lazy<T, true> {
-    T _value;
-
-  public:
-    __constexpr __lazy() = default;
-
-    template<typename... Args>
-    __constexpr explicit __lazy(Args&&... args): _value(forward<Args>(args)...) { }
-
-    template<typename... Args>
-    __constexpr void construct(Args&&... args) {
-      _value = T(forward<Args>(args)...);
-    }
-
-    __constexpr T& get() & {
-      return _value;
-    }
-
-    const __constexpr T& get() const& {
-      return _value;
-    }
-
-    __constexpr T&& get() && {
-      return move(_value);
-    }
-
-    const __constexpr T&& get() const&& {
-      return move(_value);
-    }
-  };
-
-  template<typename T>
-  class __lazy<T, false> {
+  class __lazy {
   private:
     alignas(T) char _storage[sizeof(T)];
 
@@ -54,9 +20,34 @@ namespace std {
       this->construct(forward<Args>(args)...);
     }
 
+    __lazy(const __lazy&)            = delete;
+    __lazy(__lazy&&)                 = delete;
+    ~__lazy()                        = default;
+    __lazy& operator=(const __lazy&) = delete;
+    __lazy& operator=(__lazy&&)      = delete;
+
     template<typename... Args>
     __constexpr void construct(Args&&... args) {
-      ::operator new(_storage) T(forward<Args>(args)...);
+      __construct_at(reinterpret_cast<T*>(_storage), forward<Args>(args)...);
+    }
+
+    __constexpr void destroy() {
+      __destroy_at(reinterpret_cast<T*>(_storage));
+    }
+
+    template<typename U, typename __enable_if<__is_assignable_t<T&, U>::value, nullptr_t>::type = nullptr>
+    __constexpr void assign(U&& value) {
+      *reinterpret_cast<T*>(_storage) = forward<U>(value);
+    }
+
+    template<typename U>
+    __constexpr void assign_or_construct(U&& value) {
+      if constexpr (__is_assignable_t<T&, U>::value) {
+        this->assign(forward<U>(value));
+      } else {
+        this->destroy();
+        this->construct(forward<U>(value));
+      }
     }
 
     __constexpr T& get() & {
