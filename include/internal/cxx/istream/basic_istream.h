@@ -639,7 +639,7 @@ namespace std {
     }
 
     __basic_istream& seekg(off_type off, ios_base::seekdir dir) {
-      clear(__ios_type::rdstate() & ~ios_base::eofbit);
+      this->clear(__ios_type::rdstate() & ~ios_base::eofbit);
 
       sentry sentry(*this, true);
       if (sentry) {
