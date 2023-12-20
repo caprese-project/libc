@@ -105,16 +105,12 @@ namespace std {
     __constexpr_cxx_std_14 void clear(Allocator& allocator) {
       if (left != nullptr) {
         left->clear(allocator);
-        allocator_traits<Allocator>::destroy(allocator, left);
-        allocator_traits<Allocator>::deallocate(allocator, left, 1);
-        left = nullptr;
+        assert(left == nullptr);
       }
 
       if (right != nullptr) {
         right->clear(allocator);
-        allocator_traits<Allocator>::destroy(allocator, right);
-        allocator_traits<Allocator>::deallocate(allocator, right, 1);
-        right = nullptr;
+        assert(right == nullptr);
       }
 
       if (parent != nullptr) {
