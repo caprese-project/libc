@@ -323,7 +323,7 @@ namespace std {
 #if __cpp_deduction_guides
 
   template<typename InputIterator>
-  using __iter_key_t = typename __remove_const<typename iterator_traits<InputIterator>::value_type::first_type>;
+  using __iter_key_t = typename __remove_const<typename iterator_traits<InputIterator>::value_type::first_type>::type;
 
   template<typename InputIterator>
   using __iter_val_t = typename iterator_traits<InputIterator>::value_type::second_type;
