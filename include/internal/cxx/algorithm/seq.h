@@ -19,36 +19,6 @@ namespace std {
     return true;
   }
 
-  template<class ForwardIterator1, class ForwardIterator2>
-  __constexpr_cxx_std_20 ForwardIterator1 find_end(ForwardIterator1 first1, ForwardIterator1 last1, ForwardIterator2 first2, ForwardIterator2 last2) {
-    if (first2 == last2) {
-      return last1;
-    }
-
-    ForwardIterator1 result = last1;
-    while ((first1 = std::search(first1, last1, first2, last2)) != last1) {
-      result = first1;
-      ++first1;
-    }
-
-    return result;
-  }
-
-  template<class ForwardIterator1, class ForwardIterator2, class BinaryPredicate>
-  __constexpr_cxx_std_20 ForwardIterator1 find_end(ForwardIterator1 first1, ForwardIterator1 last1, ForwardIterator2 first2, ForwardIterator2 last2, BinaryPredicate pred) {
-    if (first2 == last2) {
-      return last1;
-    }
-
-    ForwardIterator1 result = last1;
-    while ((first1 = std::search(first1, last1, first2, last2, pred)) != last1) {
-      result = first1;
-      ++first1;
-    }
-
-    return result;
-  }
-
   template<typename ForwardIterator1, typename ForwardIterator2>
   __constexpr_cxx_std_20 ForwardIterator1 search(ForwardIterator1 first1, ForwardIterator1 last1, ForwardIterator2 first2, ForwardIterator2 last2) {
     while (first1 != last1) {
@@ -87,6 +57,36 @@ namespace std {
     }
 
     return last1;
+  }
+
+  template<class ForwardIterator1, class ForwardIterator2>
+  __constexpr_cxx_std_20 ForwardIterator1 find_end(ForwardIterator1 first1, ForwardIterator1 last1, ForwardIterator2 first2, ForwardIterator2 last2) {
+    if (first2 == last2) {
+      return last1;
+    }
+
+    ForwardIterator1 result = last1;
+    while ((first1 = search(first1, last1, first2, last2)) != last1) {
+      result = first1;
+      ++first1;
+    }
+
+    return result;
+  }
+
+  template<class ForwardIterator1, class ForwardIterator2, class BinaryPredicate>
+  __constexpr_cxx_std_20 ForwardIterator1 find_end(ForwardIterator1 first1, ForwardIterator1 last1, ForwardIterator2 first2, ForwardIterator2 last2, BinaryPredicate pred) {
+    if (first2 == last2) {
+      return last1;
+    }
+
+    ForwardIterator1 result = last1;
+    while ((first1 = search(first1, last1, first2, last2, pred)) != last1) {
+      result = first1;
+      ++first1;
+    }
+
+    return result;
   }
 
   template<typename InputIterator, typename Function>

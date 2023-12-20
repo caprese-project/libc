@@ -142,7 +142,7 @@ namespace std {
     }
 
     __constexpr_cxx_std_20 __basic_string& append(const_pointer str, size_type n) {
-      this->reserve(this->size() + n);
+      __base::reserve(__base::size() + n);
 
       for (size_type i = 0; i < n; ++i) {
         __base::push_back(str[i]);
@@ -157,7 +157,7 @@ namespace std {
     }
 
     __constexpr_cxx_std_20 __basic_string& append(size_type n, value_type ch) {
-      this->reserve(this->size() + n);
+      __base::reserve(__base::size() + n);
 
       for (size_type i = 0; i < n; ++i) {
         __base::push_back(ch);
@@ -171,7 +171,7 @@ namespace std {
     __constexpr_cxx_std_20 __basic_string& append(InputIterator first, InputIterator last) {
       size_type length = distance(first, last);
 
-      this->reserve(this->size() + length);
+      __base::reserve(__base::size() + length);
 
       for (auto it = first; it != last; ++it) {
         __base::push_back(*it);
@@ -226,11 +226,11 @@ namespace std {
     }
 
     __constexpr_cxx_std_20 __basic_string& insert(size_type pos, const_pointer str, size_type n) {
-      __if_unlikely (pos > this->size()) {
+      __if_unlikely (pos > __base::size()) {
         __throw_exception(out_of_range("pos > size()"));
       }
 
-      __base::insert(this->cbegin() + pos, str, str + n);
+      __base::insert(__base::cbegin() + pos, str, str + n);
 
       return *this;
     }
@@ -240,21 +240,21 @@ namespace std {
     }
 
     __constexpr_cxx_std_20 __basic_string& insert(size_type pos, size_type n, value_type ch) {
-      __if_unlikely (pos > this->size()) {
+      __if_unlikely (pos > __base::size()) {
         __throw_exception(out_of_range("pos > size()"));
       }
 
-      __base::insert(this->cbegin() + pos, n, ch);
+      __base::insert(__base::cbegin() + pos, n, ch);
 
       return *this;
     }
 
     __constexpr_cxx_std_20 __basic_string& erase(size_type pos = 0, size_type n = npos) {
-      __if_unlikely (pos > this->size()) {
+      __if_unlikely (pos > __base::size()) {
         __throw_exception(out_of_range("pos > size()"));
       }
 
-      __base::erase(this->cbegin() + pos, this->cbegin() + pos + min(this->size() - pos, n));
+      __base::erase(__base::cbegin() + pos, __base::cbegin() + pos + min(__base::size() - pos, n));
 
       return *this;
     }
@@ -270,42 +270,42 @@ namespace std {
     }
 
     __constexpr_cxx_std_20 size_type copy(pointer str, size_type n, size_type pos = 0) const {
-      __if_unlikely (pos > this->size()) {
+      __if_unlikely (pos > __base::size()) {
         __throw_exception(out_of_range("pos > size()"));
       }
 
-      size_type length = min(this->size() - pos, n);
+      size_type length = min(__base::size() - pos, n);
 
-      traits_type::copy(str, this->data() + pos, length);
+      traits_type::copy(str, __base::data() + pos, length);
 
       return length;
     }
 
     __constexpr_cxx_std_20 size_type find(const __basic_string& str, size_type pos = 0) const __noexcept_cxx_std_11 {
-      if (pos >= this->size()) {
+      if (pos >= __base::size()) {
         return npos;
       }
 
-      auto iter = search(this->begin() + pos, this->end(), str.begin(), str.end(), traits_type::eq);
+      auto iter = search(__base::begin() + pos, __base::end(), str.begin(), str.end(), traits_type::eq);
 
-      if (this->end() == iter) {
+      if (__base::end() == iter) {
         return npos;
       } else {
-        return distance(this->begin(), iter);
+        return distance(__base::begin(), iter);
       }
     }
 
     __constexpr_cxx_std_20 size_type find(const_pointer str, size_type pos, size_type n) const {
-      if (pos >= this->size()) {
+      if (pos >= __base::size()) {
         return npos;
       }
 
-      auto iter = search(this->begin() + pos, this->end(), str, str + n, traits_type::eq);
+      auto iter = search(__base::begin() + pos, __base::end(), str, str + n, traits_type::eq);
 
-      if (this->end() == iter) {
+      if (__base::end() == iter) {
         return npos;
       } else {
-        return distance(this->begin(), iter);
+        return distance(__base::begin(), iter);
       }
     }
 
@@ -314,11 +314,11 @@ namespace std {
     }
 
     __constexpr_cxx_std_20 size_type find(value_type ch, size_type pos = 0) const {
-      if (pos >= this->size()) {
+      if (pos >= __base::size()) {
         return npos;
       }
 
-      const_pointer ptr = char_traits::find(this->c_str() + pos, this->size(), ch);
+      const_pointer ptr = traits_type::find(this->c_str() + pos, __base::size(), ch);
       if (ptr == nullptr) {
         return npos;
       } else {
@@ -327,30 +327,30 @@ namespace std {
     }
 
     __constexpr_cxx_std_20 size_type rfind(const __basic_string& str, size_type pos = npos) const __noexcept_cxx_std_11 {
-      if (pos > this->size()) {
-        pos = this->size();
+      if (pos > __base::size()) {
+        pos = __base::size();
       }
 
-      auto iter = find_end(this->begin(), this->begin() + pos, str.begin(), str.end(), traits_type::eq);
+      auto iter = find_end(__base::begin(), __base::begin() + pos, str.begin(), str.end(), traits_type::eq);
 
-      if (this->begin() + pos == iter) {
+      if (__base::begin() + pos == iter) {
         return npos;
       } else {
-        return distance(this->begin(), iter);
+        return distance(__base::begin(), iter);
       }
     }
 
     __constexpr_cxx_std_20 size_type rfind(const_pointer str, size_type pos, size_type n) const {
-      if (pos > this->size()) {
-        pos = this->size();
+      if (pos > __base::size()) {
+        pos = __base::size();
       }
 
-      auto iter = find_end(this->begin(), this->begin() + pos, str, str + n, traits_type::eq);
+      auto iter = find_end(__base::begin(), __base::begin() + pos, str, str + n, traits_type::eq);
 
-      if (this->begin() + pos == iter) {
+      if (__base::begin() + pos == iter) {
         return npos;
       } else {
-        return distance(this->begin(), iter);
+        return distance(__base::begin(), iter);
       }
     }
 
@@ -362,18 +362,8 @@ namespace std {
       return this->rfind(&ch, pos, 1);
     }
 
-    __constexpr_cxx_std_20 size_type rfind(const_pointer str, size_type pos, size_type n) const {
-      if (n == 0) {
-        return pos;
-      }
-
-      const_pointer result = traits_type::rfind(this->data() + pos, this->size() - pos, str, n);
-
-      return result == nullptr ? npos : result - this->data();
-    }
-
     __constexpr_cxx_std_20 __basic_string substr(size_type pos = 0, size_type n = npos) const __lvalue_ref_cxx_std_23 {
-      __if_unlikely (pos > this->size()) {
+      __if_unlikely (pos > __base::size()) {
         __throw_exception(out_of_range("pos > size()"));
       }
 
@@ -383,7 +373,7 @@ namespace std {
 #ifdef __CXX_STD_23__
 
     constexpr __basic_string substr(size_type pos = 0, size_type n = npos) && {
-      __if_unlikely (pos > this->size()) {
+      __if_unlikely (pos > __base::size()) {
         __throw_exception(out_of_range("pos > size()"));
       }
 
@@ -393,13 +383,13 @@ namespace std {
 #endif // __CXX_STD_23__
 
     __constexpr_cxx_std_20 int compare(const __basic_string& other) const __noexcept_cxx_std_11 {
-      int result = traits_type::compare(this->data(), other.data(), min(this->size(), other.size()));
+      int result = traits_type::compare(__base::data(), other.data(), min(__base::size(), other.size()));
       if (result != 0) {
         return result;
       } else {
-        if (this->size() < other.size()) {
+        if (__base::size() < other.size()) {
           return -1;
-        } else if (this->size() > other.size()) {
+        } else if (__base::size() > other.size()) {
           return 1;
         } else {
           return 0;
@@ -430,27 +420,27 @@ namespace std {
 #ifdef __CXX_STD_20__
 
     constexpr bool starts_with(value_type ch) const noexcept {
-      return !this->empty() && traits_type::eq(__base::front(), ch);
+      return !__base::empty() && traits_type::eq(__base::front(), ch);
     }
 
     constexpr bool starts_with(const_pointer str) const {
       size_type len = traits_type::length(str);
-      if (len > size()) {
+      if (len > __base::size()) {
         return false;
       }
-      return traits_type::compare(data(), str, len) == 0;
+      return traits_type::compare(__base::data(), str, len) == 0;
     }
 
     constexpr bool ends_with(value_type ch) const noexcept {
-      return !this->empty() && traits_type::eq(__base::back(), ch);
+      return !__base::empty() && traits_type::eq(__base::back(), ch);
     }
 
     constexpr bool ends_with(const_pointer str) const {
       size_type len = traits_type::length(str);
-      if (len > size()) {
+      if (len > __base::size()) {
         return false;
       }
-      return traits_type::compare(data() + size() - len, str, len) == 0;
+      return traits_type::compare(__base::data() + __base::size() - len, str, len) == 0;
     }
 
 #endif // __CXX_STD_20__
