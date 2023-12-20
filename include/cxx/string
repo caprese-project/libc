@@ -27,6 +27,14 @@ namespace std {
   unsigned long      stoul(const string& str, size_t* idx = nullptr, int base = 10);
   long long          stoll(const string& str, size_t* idx = nullptr, int base = 10);
   unsigned long long stoull(const string& str, size_t* idx = nullptr, int base = 10);
+
+  inline namespace literals {
+    inline namespace string_literals {
+      __constexpr_cxx_std_20 string operator""s(const char* str, size_t len) {
+        return string(str, len);
+      }
+    } // namespace string_literals
+  }   // namespace literals
 } // namespace std
 
 #endif // CAPRESE_LIBC_CXX_STRING_
