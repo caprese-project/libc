@@ -107,13 +107,25 @@ namespace std {
         left->clear(allocator);
         allocator_traits<Allocator>::destroy(allocator, left);
         allocator_traits<Allocator>::deallocate(allocator, left, 1);
+        left = nullptr;
       }
 
       if (right != nullptr) {
         right->clear(allocator);
         allocator_traits<Allocator>::destroy(allocator, right);
         allocator_traits<Allocator>::deallocate(allocator, right, 1);
+        right = nullptr;
       }
+
+      if (parent != nullptr) {
+        if (parent->left == this) {
+          parent->left = nullptr;
+        } else {
+          assert(parent->right == this);
+          parent->right = nullptr;
+        }
+      }
+      parent = nullptr;
 
       allocator_traits<Allocator>::destroy(allocator, this);
       allocator_traits<Allocator>::deallocate(allocator, this, 1);

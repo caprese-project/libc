@@ -147,7 +147,6 @@ namespace std {
       for (size_type i = 0; i < n; ++i) {
         __base::push_back(str[i]);
       }
-      __base::push_back(value_type());
 
       return *this;
     }
@@ -162,7 +161,6 @@ namespace std {
       for (size_type i = 0; i < n; ++i) {
         __base::push_back(ch);
       }
-      __base::push_back(value_type());
 
       return *this;
     }
@@ -176,19 +174,12 @@ namespace std {
       for (auto it = first; it != last; ++it) {
         __base::push_back(*it);
       }
-      __base::push_back(value_type());
 
       return *this;
     }
 
     __constexpr_cxx_std_20 __basic_string& append(initializer_list<value_type> init_list) {
       return this->append(init_list.begin(), init_list.end());
-    }
-
-    __constexpr_cxx_std_20 __basic_string& push_back(value_type ch) {
-      __base::push_back(ch);
-      __base::push_back(value_type());
-      return *this;
     }
 
     __constexpr_cxx_std_20 __basic_string& assign(const __basic_string& str) {
@@ -209,7 +200,6 @@ namespace std {
 
     __constexpr_cxx_std_20 __basic_string& assign(const_pointer str, size_type n) {
       __base::assign(str, str + n);
-      __base::push_back(value_type());
       return *this;
     }
 
@@ -257,12 +247,6 @@ namespace std {
       __base::erase(__base::cbegin() + pos, __base::cbegin() + pos + min(__base::size() - pos, n));
 
       return *this;
-    }
-
-    __constexpr_cxx_std_20 void pop_back() {
-      __base::pop_back();
-      __base::pop_back();
-      __base::push_back(value_type());
     }
 
     __constexpr_cxx_std_20 const_pointer c_str() const __noexcept_cxx_std_11 {

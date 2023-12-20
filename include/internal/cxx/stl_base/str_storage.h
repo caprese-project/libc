@@ -156,13 +156,13 @@ namespace std {
     }
 
     __constexpr_cxx_std_20 void set_size(size_type n) __noexcept_cxx_std_11 {
-      __if_unlikely (_ebo._ptr == _local && n >= _threshold) {
+      __if_unlikely (_ebo._ptr == _local && n > _threshold) {
+        _ebo._ptr = allocator_traits<allocator_type>::allocate(_ebo, n + 1);
+        copy_n(_local, _length, _ebo._ptr);
         _capacity = n + 1;
-        _ebo._ptr = allocator_traits<allocator_type>::allocate(_ebo, _capacity);
-        copy_n(_local, _length + 1, _ebo._ptr);
       }
-      _length                = n;
-      _ebo._ptr[_length + 1] = value_type();
+      _length            = n;
+      _ebo._ptr[_length] = value_type();
     }
 
     __constexpr_cxx_std_20 pointer front_pointer() __noexcept_cxx_std_11 {
@@ -183,9 +183,9 @@ namespace std {
 
     __constexpr_cxx_std_20 void grow(size_type n) {
       __if_unlikely (_ebo._ptr == _local) {
-        _capacity = _threshold + n;
-        _ebo._ptr = allocator_traits<allocator_type>::allocate(_ebo, _capacity);
+        _ebo._ptr = allocator_traits<allocator_type>::allocate(_ebo, _threshold + n);
         copy_n(_local, _length + 1, _ebo._ptr);
+        _capacity = _threshold + n;
       } else {
         pointer new_ptr = allocator_traits<allocator_type>::allocate(_ebo, _capacity + n);
         copy_n(_ebo._ptr, _length + 1, new_ptr);
@@ -201,7 +201,7 @@ namespace std {
       } else {
         _length = _length - n;
       }
-      _ebo._ptr[_length + 1] = value_type();
+      _ebo._ptr[_length] = value_type();
     }
 
     __constexpr_cxx_std_20 allocator_type get_allocator() const __noexcept_cxx_std_11 {
