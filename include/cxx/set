@@ -1,0 +1,307 @@
+#ifndef CAPRESE_LIBC_CXX_SET_
+#define CAPRESE_LIBC_CXX_SET_
+
+#include <initializer_list>
+#include <internal/cxx/functional/compare.h>
+#include <internal/cxx/iterator/reverse_iterator.h>
+#include <internal/cxx/iterator/traits.h>
+#include <internal/cxx/memory/allocator.h>
+#include <internal/cxx/stl_base/binary_tree.h>
+#include <internal/cxx/type_traits/logic.h>
+#include <internal/cxx/utility/swap.h>
+#include <internal/exception.h>
+
+namespace std {
+  template<typename K, typename Compare = __less<K>, typename Allocator = allocator<K>>
+  class set {
+  public:
+    using key_type               = K;
+    using value_type             = K;
+    using key_compare            = Compare;
+    using value_compare          = Compare;
+    using allocator_type         = Allocator;
+    using __container_type       = __binary_tree<value_type, value_compare, allocator_type>;
+    using reference              = value_type&;
+    using const_reference        = const value_type&;
+    using iterator               = typename __container_type::iterator;
+    using const_iterator         = typename __container_type::const_iterator;
+    using size_type              = __size_t;
+    using difference_type        = typename iterator<iterator>::difference_type;
+    using pointer                = typename allocator_traits<allocator_type>::pointer;
+    using const_pointer          = typename allocator_traits<allocator_type>::const_pointer;
+    using reverse_iterator       = reverse_iterator<iterator>;
+    using const_reverse_iterator = reverse_iterator<const_iterator>;
+
+  private:
+    value_compare    _compare;
+    allocator_type   _allocator;
+    __container_type _container;
+
+  public:
+    set(): set(value_compare()) { }
+
+    explicit set(const value_compare& compare, const allocator_type& allocator = allocator_type()): _compare(compare), _allocator(allocator), _container(compare, allocator) { }
+
+    explicit set(const allocator_type& allocator): set(value_compare(), allocator) { }
+
+    template<typename InputIterator>
+    set(InputIterator first, InputIterator last, const value_compare& compare = value_compare(), const allocator_type& allocator = allocator_type()): set(compare, allocator) {
+      insert(first, last);
+    }
+
+    template<typename InputIterator>
+    set(InputIterator first, InputIterator last, const allocator_type& allocator): set(first, last, value_compare(), allocator) { }
+
+    set(const set& other): _compare(other._compare), _allocator(other._allocator), _container(other._container) { }
+
+    set(const set& other, const allocator_type& allocator): _compare(other._comp), _allocator(allocator), _container(other._container) { }
+
+    set(set&& other) __noexcept: _compare(move(other._compare)), _allocator(move(other._allocator)), _container(move(other._container)) { }
+
+    set(set&& other, const allocator_type& allocator): _compare(move(other._compare)), _allocator(allocator), _container(move(other._container)) { }
+
+    set(initializer_list<value_type> init, const value_compare& compare = value_compare(), const allocator_type& allocator = allocator_type()): set(compare, allocator) {
+      insert(init.begin(), init.end());
+    }
+
+    set(initializer_list<value_type> init, const allocator_type& allocator): set(init, value_compare(), allocator) { }
+
+    ~set() = default;
+
+    set& operator=(const set& other) {
+      _compare   = other._compare;
+      _allocator = other._allocator;
+      _container = other._container;
+      return *this;
+    }
+
+    set& operator=(set&& other) __noexcept {
+      _compare   = move(other._compare);
+      _allocator = move(other._allocator);
+      _container = move(other._container);
+      return *this;
+    }
+
+    set& operator=(initializer_list<value_type> init) {
+      clear();
+      insert(init.begin(), init.end());
+      return *this;
+    }
+
+    allocator_type get_allocator() const {
+      return _allocator;
+    }
+
+    iterator begin() __noexcept {
+      return _container.begin();
+    }
+
+    const_iterator begin() const __noexcept {
+      return _container.begin();
+    }
+
+    iterator end() __noexcept {
+      return _container.end();
+    }
+
+    const_iterator end() const __noexcept {
+      return _container.end();
+    }
+
+    reverse_iterator rbegin() __noexcept {
+      return reverse_iterator(end());
+    }
+
+    const_reverse_iterator rbegin() const __noexcept {
+      return const_reverse_iterator(end());
+    }
+
+    reverse_iterator rend() __noexcept {
+      return reverse_iterator(begin());
+    }
+
+    const_reverse_iterator rend() const __noexcept {
+      return const_reverse_iterator(begin());
+    }
+
+    const_iterator cbegin() const __noexcept {
+      return begin();
+    }
+
+    const_iterator cend() const __noexcept {
+      return end();
+    }
+
+    const_reverse_iterator crbegin() const __noexcept {
+      return rbegin();
+    }
+
+    const_reverse_iterator crend() const __noexcept {
+      return rend();
+    }
+
+    bool empty() const __noexcept {
+      return size() == 0;
+    }
+
+    size_type size() const __noexcept {
+      return _container.size();
+    }
+
+    size_type max_size() const __noexcept {
+      return _container.max_size();
+    }
+
+    void clear() __noexcept {
+      _container.clear();
+    }
+
+    pair<iterator, bool> insert(const value_type& value) {
+      return _container.insert(value);
+    }
+
+    pair<iterator, bool> insert(value_type&& value) {
+      return _container.emplace(move(value));
+    }
+
+    template<typename InputIterator>
+    void insert(InputIterator first, InputIterator last) {
+      for (; first != last; ++first) {
+        insert(*first);
+      }
+    }
+
+    void insert(initializer_list<value_type> init) {
+      insert(init.begin(), init.end());
+    }
+
+    template<typename... Args>
+    pair<iterator, bool> emplace(Args&&... args) {
+      return _container.emplace(forward<Args>(args)...);
+    }
+
+    iterator erase(iterator position) {
+      return _container.erase(position);
+    }
+
+    iterator erase(const_iterator position) {
+      return _container.erase(position);
+    }
+
+    size_type erase(const key_type& key) {
+      return _container.erase(key);
+    }
+
+    iterator erase(const_iterator first, const_iterator last) {
+      while (first != last) {
+        first = erase(first);
+      }
+      return first;
+    }
+
+    void swap(set& other)
+        __noexcept_if_cxx_std_17(allocator_traits<allocator_type>::is_always_equal::value&& noexcept(swap(__declval<value_compare&>(), __declval<value_compare&>(), __declval<value_compare&>()))) {
+      using std::swap;
+      swap(_compare, other._compare);
+      swap(_allocator, other._allocator);
+      swap(_container, other._container);
+    }
+
+    size_type count(const key_type& key) const {
+      return coutains(key) ? 1 : 0;
+    }
+
+    iterator find(const key_type& key) {
+      return _container.find(key);
+    }
+
+    template<typename T>
+    iterator find(const T& key) {
+      return _container.find(key);
+    }
+
+    const_iterator find(const key_type& key) const {
+      return _container.find(key);
+    }
+
+    template<typename T>
+    const_iterator find(const T& key) const {
+      return _container.find(key);
+    }
+
+    bool contains(const key_type& key) const {
+      return find(key) != end();
+    }
+
+    template<typename T>
+    bool contains(const T& key) const {
+      return find(key) != end();
+    }
+
+    iterator lower_bound(const key_type& key) {
+      return _container.lower_bound(key);
+    }
+
+    template<typename T>
+    iterator lower_bound(const T& key) {
+      return _container.lower_bound(key);
+    }
+
+    const_iterator lower_bound(const key_type& key) const {
+      return _container.lower_bound(key);
+    }
+
+    template<typename T>
+    const_iterator lower_bound(const T& key) const {
+      return _container.lower_bound(key);
+    }
+
+    iterator upper_bound(const key_type& key) {
+      return _container.upper_bound(key);
+    }
+
+    template<typename T>
+    iterator upper_bound(const T& key) {
+      return _container.upper_bound(key);
+    }
+
+    const_iterator upper_bound(const key_type& key) const {
+      return _container.upper_bound(key);
+    }
+
+    template<typename T>
+    const_iterator upper_bound(const T& key) const {
+      return _container.upper_bound(key);
+    }
+
+    key_compare key_comp() const {
+      return _compare;
+    }
+
+    value_compare value_comp() const {
+      return _compare;
+    }
+  };
+
+  template<typename K, typename Compare, typename Allocator>
+  void swap(set<K, Compare, Allocator>& lhs, set<K, Compare, Allocator>& rhs) __noexcept_if_cxx_std_17(noexcept(lhs.swap(rhs))) {
+    lhs.swap(rhs);
+  }
+
+#if __cpp_deduction_guides
+  template<typename InputIterator, typename Compare = __less<typename iterator_traits<InputIterator>::value_type>, typename Allocator = allocator<typename iterator_traits<InputIterator>::value_type>>
+  set(InputIterator, InputIterator, Compare = Compare(), Allocator = Allocator()) -> set<typename iterator_traits<InputIterator>::value_type, Compare, Allocator>;
+
+  template<typename K, typename Compare = __less<K>, typename Allocator = allocator<K>>
+  set(initializer_list<K>, Compare = Compare(), Allocator = Allocator()) -> set<K, Compare, Allocator>;
+
+  template<typename InputIterator, typename Allocator>
+  set(InputIterator, InputIterator, Allocator) -> set<typename iterator_traits<InputIterator>::value_type, __less<typename iterator_traits<InputIterator>::value_type>, Allocator>;
+
+  template<typename K, typename Allocator>
+  set(initializer_list<K>, Allocator) -> set<K, __less<K>, Allocator>;
+#endif // __cpp_deduction_guides
+
+} // namespace std
+
+#endif // CAPRESE_LIBC_CXX_SET_
