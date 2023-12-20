@@ -319,6 +319,31 @@ namespace std {
       return value_compare { _compare };
     }
   };
+
+#if __cpp_deduction_guides
+
+  template<typename InputIterator>
+  using __iter_key_t = typename __remove_const<typename iterator_traits<InputIterator>::value_type::first_type>;
+
+  template<typename InputIterator>
+  using __iter_val_t = typename iterator_traits<InputIterator>::value_type::second_type;
+
+  template<typename InputIterator>
+  using __iter_to_alloc_t = pair<typename __add_const<typename iterator_traits<InputIterator>::value_type::first_type>::type, typename iterator_traits<InputIterator>::value_type::second_type>;
+
+  template<typename InputIterator, typename Compare = __less<__iter_key_t<InputIterator>>, typename Allocator = allocator<__iter_to_alloc_t<InputIterator>>>
+  map(InputIterator, InputIterator, Compare = Compare(), Allocator = Allocator()) -> map<__iter_key_t<InputIterator>, __iter_val_t<InputIterator>, Compare, Allocator>;
+
+  template<typename K, typename T, typename Compare = __less<K>, typename Allocator = allocator<pair<const K, T>>>
+  map(initializer_list<pair<K, T>>, Compare = Compare(), Allocator = Allocator()) -> map<K, T, Compare, Allocator>;
+
+  template<typename InputIterator, typename Allocator>
+  map(InputIterator, InputIterator, Allocator) -> map<__iter_key_t<InputIterator>, __iter_val_t<InputIterator>, __less<__iter_key_t<InputIterator>>, Allocator>;
+
+  template<typename K, typename T, typename Allocator>
+  map(initializer_list<pair<K, T>>, Allocator) -> map<K, T, __less<K>, Allocator>;
+
+#endif // __cpp_deduction_guides
 } // namespace std
 
 #endif // CAPRESE_LIBC_CXX_MAP_
