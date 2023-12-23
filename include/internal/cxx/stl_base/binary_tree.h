@@ -25,245 +25,62 @@ namespace std {
 #endif // __CXX_STD_20__
 
     template<typename Allocator, typename... Args>
-    static __constexpr_cxx_std_14 __splay_tree_node* create(Allocator& allocator, __splay_tree_node* left, __splay_tree_node* right, __splay_tree_node* parent, Args&&... args) {
+    static __splay_tree_node* create(Allocator& allocator, __splay_tree_node* left, __splay_tree_node* right, __splay_tree_node* parent, Args&&... args) {
       __splay_tree_node* node = allocator_traits<Allocator>::allocate(allocator, 1);
       allocator_traits<Allocator>::construct(allocator, node, T(std::forward<Args>(args)...), left, right, parent);
       return node;
     }
 
-    __constexpr_cxx_std_14 void set_left(__splay_tree_node* child) {
-      assert(this != child);
-
-      if (child != nullptr) {
-        __splay_tree_node* old_parent = child->parent;
-        if (old_parent != nullptr) {
-          if (old_parent->left == child) {
-            old_parent->left = nullptr;
-          } else {
-            assert(old_parent->right == child);
-            old_parent->right = nullptr;
-          }
-        }
-
-        left          = child;
-        child->parent = this;
-      } else {
-        left = nullptr;
-      }
-    }
-
-    __constexpr_cxx_std_14 void set_right(__splay_tree_node* child) {
-      assert(this != child);
-
-      if (child != nullptr) {
-        __splay_tree_node* old_parent = child->parent;
-        if (old_parent != nullptr) {
-          if (old_parent->left == child) {
-            old_parent->left = nullptr;
-          } else {
-            assert(old_parent->right == child);
-            old_parent->right = nullptr;
-          }
-        }
-
-        right         = child;
-        child->parent = this;
-      } else {
-        right = nullptr;
-      }
-    }
-
-    __constexpr_cxx_std_14 __splay_tree_node* rotate_left() {
-      __splay_tree_node* right = this->right;
-      this->right              = right->left;
-      right->left              = this;
-
-      right->parent = this->parent;
-      this->parent  = right;
-      if (this->right != nullptr) {
-        this->right->parent = this;
-      }
-
-      return right;
-    }
-
-    __constexpr_cxx_std_14 __splay_tree_node* rotate_right() {
-      __splay_tree_node* left = this->left;
-      this->left              = left->right;
-      left->right             = this;
-
-      left->parent = this->parent;
-      this->parent = left;
-      if (this->left != nullptr) {
-        this->left->parent = this;
-      }
-
-      return left;
-    }
-
     template<typename Allocator>
-    __constexpr_cxx_std_14 void clear(Allocator& allocator) {
-      if (left != nullptr) {
-        left->clear(allocator);
-        assert(left == nullptr);
-      }
-
-      if (right != nullptr) {
-        right->clear(allocator);
-        assert(right == nullptr);
-      }
-
-      if (parent != nullptr) {
-        if (parent->left == this) {
-          parent->left = nullptr;
-        } else {
-          assert(parent->right == this);
-          parent->right = nullptr;
-        }
-      }
-      parent = nullptr;
-
+    void destroy(Allocator& allocator) {
       allocator_traits<Allocator>::destroy(allocator, this);
       allocator_traits<Allocator>::deallocate(allocator, this, 1);
     }
 
-    template<typename U, typename Compare, typename Allocator>
-    __constexpr_cxx_std_14 __splay_tree_node* erase(U&& val, const Compare& compare, Allocator& allocator) {
-      __splay_tree_node* target = this;
+    void rotate() {
+      __splay_tree_node* parent_node = parent;
+      __splay_tree_node* middle      = nullptr;
 
-      do {
-        if (compare(val, target->value)) {
-          target = target->left;
-        } else if (compare(target->value, val)) {
-          target = target->right;
-        } else {
-          break;
-        }
-      } while (target != nullptr);
-
-      if (target == nullptr) {
-        return nullptr;
-      }
-
-      __splay_tree_node* post_target;
-
-      if (target->left == nullptr) {
-        post_target = target->right;
-      } else if (target->left->right == nullptr) {
-        post_target = target->left;
-        post_target->set_right(target->right);
+      if (parent_node->left == this) {
+        middle            = this->right;
+        this->right       = parent_node;
+        parent_node->left = middle;
       } else {
-        __splay_tree_node* node = target->left;
-        while (node->right->right != nullptr) {
-          node = node->right;
-        }
-
-        post_target = node->right;
-        node->set_right(node->right->left);
-        post_target->set_left(target->left);
-        post_target->set_right(target->right);
+        middle             = this->left;
+        this->left         = parent_node;
+        parent_node->right = middle;
       }
 
-      if (target->parent != nullptr) {
-        if (target->parent->left == target) {
-          target->parent->set_left(post_target);
-        } else {
-          assert(target->parent->right == target);
-          target->parent->set_right(post_target);
-        }
-      } else if (post_target != nullptr) {
-        post_target->parent = nullptr;
+      if (middle != nullptr) {
+        middle->parent = parent_node;
       }
 
-      allocator_traits<Allocator>::destroy(allocator, target);
-      allocator_traits<Allocator>::deallocate(allocator, target, 1);
+      this->parent        = parent_node->parent;
+      parent_node->parent = this;
 
-      return post_target;
+      if (this->parent != nullptr) {
+        if (this->parent->left == parent_node) {
+          this->parent->left = this;
+        } else if (this->parent->right == parent_node) {
+          this->parent->right = this;
+        }
+      }
     }
 
-    template<typename U, typename Compare, typename Allocator>
-    __constexpr_cxx_std_14 __splay_tree_node* insert(U&& val, const Compare& compare, Allocator& allocator) {
-      __splay_tree_node* target = this;
-
-      do {
-        if (compare(val, target->value)) {
-          if (target->left == nullptr) {
-            target->left = create(allocator, nullptr, nullptr, target, std::forward<U>(val));
-            target       = target->left;
-            break;
-          } else {
-            target = target->left;
-          }
-        } else if (compare(target->value, val)) {
-          if (target->right == nullptr) {
-            target->right = create(allocator, nullptr, nullptr, target, std::forward<U>(val));
-            target        = target->right;
-            break;
-          } else {
-            target = target->right;
-          }
+    void splay() {
+      while (this->parent != nullptr) {
+        if (this->parent->parent == nullptr) {
+          this->rotate();
+        } else if (this->parent->left == this && this->parent->parent->left == this->parent) {
+          this->parent->rotate();
+          this->rotate();
+        } else if (this->parent->right == this && this->parent->parent->right == this->parent) {
+          this->parent->rotate();
+          this->rotate();
         } else {
-          break;
+          this->rotate();
+          this->rotate();
         }
-      } while (target != nullptr);
-
-      return target;
-    }
-
-    template<typename U, typename Compare>
-    __constexpr_cxx_std_14 __splay_tree_node* splay(U&& val, const Compare& compare) {
-      __splay_tree_node* target = this;
-
-      if (compare(val, target->value)) {
-        if (target->left == nullptr) {
-          return target;
-        }
-
-        if (compare(val, target->left->value)) {
-          if (target->left->left != nullptr) {
-            target->left->left = target->left->left->splay(std::forward<U>(val), compare);
-          }
-          target = target->rotate_right();
-        } else if (compare(target->left->value, val)) {
-          if (target->left->right != nullptr) {
-            target->left->right = target->left->right->splay(std::forward<U>(val), compare);
-            if (target->left->right != nullptr) {
-              target->left = target->left->rotate_left();
-            }
-          }
-        }
-
-        if (target->left == nullptr) {
-          return target;
-        } else {
-          return target->rotate_right();
-        }
-      } else if (compare(target->value, val)) {
-        if (target->right == nullptr) {
-          return target;
-        }
-
-        if (compare(val, target->right->value)) {
-          if (target->right->left != nullptr) {
-            target->right->left = target->right->left->splay(std::forward<U>(val), compare);
-            if (target->right->left != nullptr) {
-              target->right = target->right->rotate_right();
-            }
-          }
-        } else if (compare(target->right->value, val)) {
-          if (target->right->right != nullptr) {
-            target->right->right = target->right->right->splay(std::forward<U>(val), compare);
-          }
-          target = target->rotate_left();
-        }
-
-        if (target->right == nullptr) {
-          return target;
-        } else {
-          return target->rotate_left();
-        }
-      } else {
-        return target;
       }
     }
   };
@@ -281,31 +98,34 @@ namespace std {
     using reference         = value_type&;
     using iterator_category = bidirectional_iterator_tag;
 
+    template<typename U, typename Compare, typename Allocator>
+    friend class __splay_tree;
+
   private:
     __node_type* _current;
 
   public:
-    __constexpr_cxx_std_11 __splay_tree_node_iterator(): _current(nullptr) { }
+    __splay_tree_node_iterator(): _current(nullptr) { }
 
-    __constexpr_cxx_std_11 explicit __splay_tree_node_iterator(__node_type* current): _current(current) { }
+    explicit __splay_tree_node_iterator(__node_type* current): _current(current) { }
 
-    __constexpr_cxx_std_11 __splay_tree_node_iterator(const __splay_tree_node_iterator& other): _current(other._current) { }
+    __splay_tree_node_iterator(const __splay_tree_node_iterator& other): _current(other._current) { }
 
     ~__splay_tree_node_iterator() = default;
 
-    __constexpr_cxx_std_14 __splay_tree_node_iterator& operator=(const __splay_tree_node_iterator& other) {
+    __splay_tree_node_iterator& operator=(const __splay_tree_node_iterator& other) {
       _current = other._current;
     }
 
-    __constexpr_cxx_std_11 reference operator*() const {
+    reference operator*() const {
       return _current->value;
     }
 
-    __constexpr_cxx_std_11 pointer operator->() const {
+    pointer operator->() const {
       return __addressof(_current->value);
     }
 
-    __constexpr_cxx_std_14 __splay_tree_node_iterator& operator++() {
+    __splay_tree_node_iterator& operator++() {
       if (_current->right != nullptr) {
         _current = _current->right;
         while (_current->left != nullptr) {
@@ -322,13 +142,13 @@ namespace std {
       return *this;
     }
 
-    __constexpr_cxx_std_14 __splay_tree_node_iterator operator++([[maybe_unused]] int) {
+    __splay_tree_node_iterator operator++([[maybe_unused]] int) {
       __splay_tree_node_iterator tmp = *this;
       ++(*this);
       return tmp;
     }
 
-    __constexpr_cxx_std_14 __splay_tree_node_iterator& operator--() {
+    __splay_tree_node_iterator& operator--() {
       if (_current->left != nullptr) {
         _current = _current->left;
         while (_current->right != nullptr) {
@@ -345,17 +165,17 @@ namespace std {
       return *this;
     }
 
-    __constexpr_cxx_std_14 __splay_tree_node_iterator operator--([[maybe_unused]] int) {
+    __splay_tree_node_iterator operator--([[maybe_unused]] int) {
       __splay_tree_node_iterator tmp = *this;
       --(*this);
       return tmp;
     }
 
-    friend __constexpr_cxx_std_11 bool operator==(const __splay_tree_node_iterator& lhs, const __splay_tree_node_iterator& rhs) {
+    friend bool operator==(const __splay_tree_node_iterator& lhs, const __splay_tree_node_iterator& rhs) {
       return lhs._current == rhs._current;
     }
 
-    friend __constexpr_cxx_std_11 bool operator!=(const __splay_tree_node_iterator& lhs, const __splay_tree_node_iterator& rhs) {
+    friend bool operator!=(const __splay_tree_node_iterator& lhs, const __splay_tree_node_iterator& rhs) {
       return lhs._current != rhs._current;
     }
   };
@@ -372,247 +192,316 @@ namespace std {
     Compare             _compare;
     node_allocator_type _allocator;
     mutable node_type*  _root;
+    node_type*          _min;
+    node_type*          _max;
     __size_t            _size;
 
   public:
-    __constexpr_cxx_std_11 __splay_tree(const Compare& compare, const Allocator&): _compare(compare), _allocator(), _root(nullptr), _size(0) { }
+    __splay_tree(const Compare& compare, const Allocator&): _compare(compare), _allocator(), _root(nullptr), _min(nullptr), _max(nullptr), _size(0) { }
 
-    __constexpr_cxx_std_14 __splay_tree(const __splay_tree& other): _compare(other._compare), _allocator(other._allocator), _root(nullptr), _size(0) {
+    __splay_tree(const __splay_tree& other): _compare(other._compare), _allocator(other._allocator), _root(nullptr), _min(nullptr), _max(nullptr), _size(0) {
       for (auto&& elem : other) {
-        insert(elem);
+        this->insert(elem);
       }
     }
 
-    __constexpr_cxx_std_14 __splay_tree(__splay_tree&& other): _compare(std::move(other._compare)), _allocator(std::move(other._allocator)), _root(other._root), _size(other._size) {
+    __splay_tree(__splay_tree&& other): _compare(std::move(other._compare)), _allocator(std::move(other._allocator)), _root(other._root), _min(other._min), _max(other._max), _size(other._size) {
       other._root = nullptr;
       other._size = 0;
     }
 
     __constexpr_cxx_std_20 ~__splay_tree() {
-      clear();
+      this->clear();
     }
 
-    __constexpr_cxx_std_14 __splay_tree& operator=(const __splay_tree& other) {
+    __splay_tree& operator=(const __splay_tree& other) {
       if (this != &other) {
-        clear();
+        this->clear();
 
         for (auto&& elem : other) {
-          insert(elem);
+          this->insert(elem);
         }
       }
 
       return *this;
     }
 
-    __constexpr_cxx_std_14 __splay_tree& operator=(__splay_tree&& other) {
+    __splay_tree& operator=(__splay_tree&& other) {
       if (this != &other) {
-        clear();
+        this->clear();
 
         _compare   = std::move(other._compare);
         _allocator = std::move(other._allocator);
         _root      = other._root;
+        _min       = other._min;
+        _max       = other._max;
         _size      = other._size;
 
         other._root = nullptr;
+        other._min  = nullptr;
+        other._max  = nullptr;
         other._size = 0;
       }
 
       return *this;
     }
 
-    __constexpr_cxx_std_11 __size_t size() const {
-      return _size;
+    __size_t size() const {
+      return this->_size;
     }
 
-    __constexpr_cxx_std_11 __size_t max_size() const {
-      return allocator_traits<node_allocator_type>::max_size(_allocator);
+    __size_t max_size() const {
+      return allocator_traits<node_allocator_type>::max_size(this->_allocator);
     }
 
-    __constexpr_cxx_std_14 iterator begin() {
-      return _begin<iterator>();
+    iterator begin() {
+      return this->_begin<iterator>();
     }
 
-    __constexpr_cxx_std_14 const_iterator begin() const {
-      return _begin<const_iterator>();
+    const_iterator begin() const {
+      return this->_begin<const_iterator>();
     }
 
-    __constexpr_cxx_std_14 iterator end() {
-      return _end<iterator>();
+    iterator end() {
+      return this->_end<iterator>();
     }
 
-    __constexpr_cxx_std_14 const_iterator end() const {
-      return _end<const_iterator>();
+    const_iterator end() const {
+      return this->_end<const_iterator>();
     }
 
-    __constexpr_cxx_std_14 void clear() {
-      if (_root != nullptr) {
-        _root->clear(_allocator);
-      }
-
-      _size = 0;
-      _root = nullptr;
+    void clear() {
+      this->_clear(this->_root);
+      this->_size = 0;
+      this->_root = nullptr;
     }
 
     template<typename U>
-    __constexpr_cxx_std_14 iterator erase(U&& val) {
-      if (find(val) == end()) {
-        return end();
-      }
-
-      _root = _root->erase(std::forward<U>(val), _compare, _allocator);
-      --_size;
-
-      return iterator(_root);
+    iterator erase(U&& val) {
+      return this->_erase(forward<U>(val));
     }
 
-    __constexpr_cxx_std_14 pair<iterator, bool> insert(const T& val) {
-      return _insert(val);
+    pair<iterator, bool> insert(const T& val) {
+      return this->_insert(val);
     }
 
-    __constexpr_cxx_std_14 pair<iterator, bool> insert(T&& val) {
-      return _insert(std::move(val));
+    pair<iterator, bool> insert(T&& val) {
+      return this->_insert(std::move(val));
     }
 
     template<typename... Args>
-    __constexpr_cxx_std_14 pair<iterator, bool> emplace(Args&&... args) {
-      if (_root != nullptr) {
-        return _insert(T(std::forward<Args>(args)...));
+    pair<iterator, bool> emplace(Args&&... args) {
+      if (this->_root != nullptr) {
+        return this->_insert(T(std::forward<Args>(args)...));
       }
 
-      _root = node_type::create(_allocator, nullptr, nullptr, nullptr, std::forward<Args>(args)...);
-      ++_size;
+      this->_root = node_type::create(this->_allocator, nullptr, nullptr, nullptr, std::forward<Args>(args)...);
+      ++this->_size;
 
-      return pair<iterator, bool>(iterator(_root), true);
+      return pair<iterator, bool>(iterator(this->_root), true);
     }
 
     template<typename U>
-    __constexpr_cxx_std_14 iterator find(U&& val) {
-      return _find<iterator>(forward<U>(val));
+    iterator find(U&& val) {
+      return this->_find<iterator>(forward<U>(val));
     }
 
     template<typename U>
-    __constexpr_cxx_std_14 const_iterator find(U&& val) const {
-      return _find<const_iterator>(forward<U>(val));
+    const_iterator find(U&& val) const {
+      return this->_find<const_iterator>(forward<U>(val));
     }
 
     template<typename U>
-    __constexpr_cxx_std_14 iterator lower_bound(U&& val) {
-      return _lower_bound<iterator>(forward<U>(val));
+    iterator lower_bound(U&& val) {
+      return this->_lower_bound<iterator>(forward<U>(val));
     }
 
     template<typename U>
-    __constexpr_cxx_std_14 const_iterator lower_bound(U&& val) const {
-      return _lower_bound<const_iterator>(forward<U>(val));
+    const_iterator lower_bound(U&& val) const {
+      return this->_lower_bound<const_iterator>(forward<U>(val));
     }
 
     template<typename U>
-    __constexpr_cxx_std_14 iterator upper_bound(U&& val) {
-      return _upper_bound<iterator>(forward<U>(val));
+    iterator upper_bound(U&& val) {
+      return this->_upper_bound<iterator>(forward<U>(val));
     }
 
     template<typename U>
-    __constexpr_cxx_std_14 const_iterator upper_bound(U&& val) const {
-      return _upper_bound<const_iterator>(forward<U>(val));
+    const_iterator upper_bound(U&& val) const {
+      return this->_upper_bound<const_iterator>(forward<U>(val));
     }
 
   private:
-    template<typename Iterator>
-    __constexpr_cxx_std_14 Iterator _begin() const {
-      if (_root == nullptr) {
-        return _end<Iterator>();
+    void _splay(node_type* node) {
+      node->splay();
+      this->_root = node;
+    }
+
+    void _clear(node_type* node) {
+      if (node == nullptr) {
+        return;
       }
 
-      node_type* current = _root;
-      while (current->left != nullptr) {
-        current = current->left;
-      }
-
-      return Iterator(current);
+      this->_clear(node->left);
+      this->_clear(node->right);
+      node->destroy(this->_allocator);
     }
 
     template<typename Iterator>
-    __constexpr_cxx_std_14 Iterator _end() const {
+    Iterator _begin() const {
+      if (this->_root == nullptr) {
+        return _end<Iterator>();
+      }
+
+      return Iterator(this->_min);
+    }
+
+    template<typename Iterator>
+    Iterator _end() const {
       return Iterator(nullptr);
     }
 
     template<typename U>
-    __constexpr_cxx_std_14 pair<iterator, bool> _insert(U&& val) {
-      iterator iter = find(val);
-      if (iter != end()) {
-        return pair<iterator, bool>(iter, false);
-      }
-
-      node_type* pos;
-
+    pair<iterator, bool> _insert(U&& val) {
       if (_root == nullptr) {
-        pos = _root = node_type::create(_allocator, nullptr, nullptr, nullptr, std::forward<U>(val));
+        this->_root = this->_min = this->_max = node_type::create(this->_allocator, nullptr, nullptr, nullptr, std::forward<U>(val));
+      } else if (this->_compare(val, this->_min->value)) {
+        this->_min->left = node_type::create(this->_allocator, nullptr, nullptr, this->_min, std::forward<U>(val));
+        this->_min       = this->_min->left;
+        this->_splay(this->_min);
+      } else if (this->_compare(this->_max->value, val)) {
+        this->_max->right = node_type::create(this->_allocator, nullptr, nullptr, this->_max, std::forward<U>(val));
+        this->_max        = this->_max->right;
+        this->_splay(this->_max);
       } else {
-        pos = _root->insert(std::forward<U>(val), _compare, _allocator);
+        node_type* node = this->_lower_bound(val);
+        if (this->_compare(node->value, val)) {
+          this->_splay(node);
+          return pair<iterator, bool>(this->_root, false);
+        }
+
+        node->left = node_type::create(this->_allocator, node->left, nullptr, node, std::forward<U>(val));
+        if (node->left->left != nullptr) {
+          node->left->left->parent = node->left;
+        }
+
+        this->_splay(node->left);
       }
 
       ++_size;
 
-      return pair<iterator, bool>(iterator(pos), true);
+      return pair<iterator, bool>(iterator(this->_root), true);
+    }
+
+    template<typename U>
+    iterator _erase(U&& val) {
+      iterator iter = this->find(val);
+      if (iter == this->end()) {
+        return this->end();
+      }
+
+      node_type* node = iter._current;
+      this->_splay(node);
+
+      if (this->_root->left == nullptr) {
+        assert(this->_root == this->_min);
+
+        if (this->_root->right == nullptr) {
+          assert(this->_root == this->_max);
+
+          this->_root = nullptr;
+          this->_min  = nullptr;
+          this->_max  = nullptr;
+        } else {
+          this->_root         = this->_root->right;
+          this->_root->parent = nullptr;
+          this->_min          = this->_root;
+          while (this->_min->left != nullptr) {
+            this->_min = this->_min->left;
+          }
+          this->_splay(this->_min);
+        }
+      } else if (this->_root->right != nullptr) {
+        this->_root         = this->_root->left;
+        this->_root->parent = nullptr;
+        this->_max          = this->_root;
+        while (this->_max->right != nullptr) {
+          this->_max = this->_max->right;
+        }
+        this->_splay(this->_max);
+      } else {
+        this->_root->left->parent = nullptr;
+        node_type* next_root      = this->_root->left;
+        while (next_root->right != nullptr) {
+          next_root = next_root->right;
+        }
+        this->_splay(next_root);
+        next_root->right         = node->right;
+        next_root->right->parent = next_root;
+        this->_root->parent      = nullptr;
+      }
+
+      iterator result(node->right);
+      node->destroy(this->_allocator);
+
+      return result;
     }
 
     template<typename Iterator, typename U>
-    __constexpr_cxx_std_14 Iterator _find(U&& val) const {
-      if (_root == nullptr) {
-        return _end<Iterator>();
-      }
+    Iterator _find(U&& val) const {
+      Iterator iter = this->_lower_bound<Iterator>(val);
 
-      _root = _root->splay(val, _compare);
-      if (_compare(val, _root->value) || _compare(_root->value, val)) {
-        return _end<Iterator>();
+      if (this->_root == nullptr || _compare(val, this->_root->value) || _compare(this->_root->value, val)) {
+        return this->_end<Iterator>();
       }
 
       return Iterator(_root);
     }
 
     template<typename Iterator, typename U>
-    __constexpr_cxx_std_14 Iterator _lower_bound(U&& val) const {
-      if (_root == nullptr) {
-        return _end<Iterator>();
+    Iterator _lower_bound(U&& val) const {
+      node_type* node  = nullptr;
+      node_type* left  = _root;
+      node_type* right = nullptr;
+
+      while (left != nullptr) {
+        node = left;
+        if (!_compare(left->value, val)) {
+          right = left;
+          left  = left->left;
+        } else {
+          left = left->right;
+        }
       }
 
-      _root = _root->splay(val, _compare);
-      if (_compare(val, _root->value)) {
-        return Iterator(_root);
+      if (right == nullptr && node != nullptr) {
+        this->_splay(node);
       }
 
-      node_type* target = _root->right;
-      if (target == nullptr) {
-        return _end<Iterator>();
-      }
-
-      while (target->left != nullptr) {
-        target = target->left;
-      }
-
-      return Iterator(target);
+      return Iterator(right);
     }
 
     template<typename Iterator, typename U>
-    __constexpr_cxx_std_14 Iterator _upper_bound(U&& val) const {
-      if (_root == nullptr) {
-        return _end<Iterator>();
+    Iterator _upper_bound(U&& val) const {
+      node_type* node  = nullptr;
+      node_type* left  = _root;
+      node_type* right = nullptr;
+
+      while (left != nullptr) {
+        node = left;
+        if (_compare(val, left->value)) {
+          right = left;
+          left  = left->left;
+        } else {
+          left = left->right;
+        }
       }
 
-      _root = _root->splay(val, _compare);
-      if (!_compare(_root->value, val)) {
-        return Iterator(_root);
+      if (right == nullptr && node != nullptr) {
+        this->_splay(node);
       }
 
-      node_type* target = _root->right;
-      if (target == nullptr) {
-        return _end<Iterator>();
-      }
-
-      while (target->left != nullptr) {
-        target = target->left;
-      }
-
-      return Iterator(target);
+      return Iterator(right);
     }
   };
 
