@@ -332,7 +332,7 @@ namespace std {
     }
 
   private:
-    void _splay(node_type* node) {
+    void _splay(node_type* node) const {
       node->splay();
       this->_root = node;
     }
@@ -374,7 +374,7 @@ namespace std {
         this->_max        = this->_max->right;
         this->_splay(this->_max);
       } else {
-        node_type* node = this->_lower_bound(val);
+        node_type* node = this->_lower_bound<iterator>(val)._current;
         if (this->_compare(node->value, val)) {
           this->_splay(node);
           return pair<iterator, bool>(this->_root, false);
@@ -401,7 +401,7 @@ namespace std {
       }
 
       node_type* node = iter._current;
-      this->_splay(node);
+      assert(node == this->_root);
 
       if (this->_root->left == nullptr) {
         assert(this->_root == this->_min);
@@ -444,6 +444,8 @@ namespace std {
       iterator result(node->right);
       node->destroy(this->_allocator);
 
+      --this->_size;
+
       return result;
     }
 
@@ -466,16 +468,20 @@ namespace std {
 
       while (left != nullptr) {
         node = left;
-        if (!_compare(left->value, val)) {
+        if (_compare(left->value, val)) {
+          left = left->right;
+        } else {
           right = left;
           left  = left->left;
-        } else {
-          left = left->right;
         }
       }
 
       if (right == nullptr && node != nullptr) {
         this->_splay(node);
+      }
+
+      if (right != nullptr) {
+        this->_splay(right);
       }
 
       return Iterator(right);
@@ -499,6 +505,10 @@ namespace std {
 
       if (right == nullptr && node != nullptr) {
         this->_splay(node);
+      }
+
+      if (right != nullptr) {
+        this->_splay(right);
       }
 
       return Iterator(right);
