@@ -671,7 +671,7 @@ namespace std {
       }
 
       iterator iter(node);
-      if (this->_compare(*iter, value)) {
+      if (iter != this->end() && this->_compare(*iter, value)) {
         ++iter;
 #ifndef NDEBUG
         if (iter != this->end()) {
@@ -701,7 +701,17 @@ namespace std {
         }
       }
 
-      return const_iterator(node);
+      const_iterator iter(node);
+      if (iter != this->end() && this->_compare(*iter, value)) {
+        ++iter;
+#ifndef NDEBUG
+        if (iter != this->end()) {
+          assert(!this->_compare(*iter, value));
+        }
+#endif // !NDEBUG
+      }
+
+      return iter;
     }
 
     template<typename U>
