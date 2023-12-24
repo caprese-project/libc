@@ -655,7 +655,7 @@ namespace std {
         if (this->_compare(node->value, value)) {
           node = node->right;
         } else if (this->_compare(value, node->value)) {
-          if (node->left != nullptr && this->_compare(value, node->left->value)) {
+          if (node->left != nullptr && !this->_compare(node->left->value, value)) {
             node = node->left;
           } else {
             break;
@@ -674,7 +674,7 @@ namespace std {
         if (this->_compare(node->value, value)) {
           node = node->right;
         } else if (this->_compare(value, node->value)) {
-          if (node->left != nullptr && this->_compare(value, node->left->value)) {
+          if (node->left != nullptr && !this->_compare(node->left->value, value)) {
             node = node->left;
           } else {
             break;
