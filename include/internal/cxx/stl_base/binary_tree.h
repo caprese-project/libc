@@ -281,6 +281,10 @@ namespace std {
         node = target;
       }
 
+      while (node->parent != nullptr) {
+        node = node->parent;
+      }
+
       return node;
     }
 
@@ -318,6 +322,10 @@ namespace std {
         }
 
         node = target;
+      }
+
+      while (node->parent != nullptr) {
+        node = node->parent;
       }
 
       return node;
@@ -604,11 +612,7 @@ namespace std {
       } else if (iter._current->left == nullptr) {
         iter._current->set_left(node);
       } else {
-        node_type* pos = iter._current->left;
-        while (pos->right != nullptr) {
-          pos = pos->right;
-        }
-        pos->set_right(node);
+        iter._current->left->get_max_node()->set_right(node);
       }
 
       this->_root = node->balance_i();
@@ -651,11 +655,12 @@ namespace std {
     template<typename U>
     iterator lower_bound(U&& value) {
       node_type* node = this->_root;
+
       while (node != nullptr) {
         if (this->_compare(node->value, value)) {
           node = node->right;
         } else if (this->_compare(value, node->value)) {
-          if (node->left != nullptr && !this->_compare(node->left->value, value)) {
+          if (node->left != nullptr) {
             node = node->left;
           } else {
             break;
@@ -664,17 +669,29 @@ namespace std {
           break;
         }
       }
-      return iterator(node);
+
+      iterator iter(node);
+      if (this->_compare(*iter, value)) {
+        ++iter;
+#ifndef NDEBUG
+        if (iter != this->end()) {
+          assert(!this->_compare(*iter, value));
+        }
+#endif // !NDEBUG
+      }
+
+      return iter;
     }
 
     template<typename U>
     const_iterator lower_bound(U&& value) const {
       node_type* node = this->_root;
+
       while (node != nullptr) {
         if (this->_compare(node->value, value)) {
           node = node->right;
         } else if (this->_compare(value, node->value)) {
-          if (node->left != nullptr && !this->_compare(node->left->value, value)) {
+          if (node->left != nullptr) {
             node = node->left;
           } else {
             break;
@@ -683,6 +700,7 @@ namespace std {
           break;
         }
       }
+
       return const_iterator(node);
     }
 
