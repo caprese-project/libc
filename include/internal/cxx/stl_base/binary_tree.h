@@ -145,14 +145,19 @@ namespace std {
      * +-----+ +-----+    |-----+ +-----+
      */
     void replace(__avl_tree_node* other) {
-      if (this->parent->left == this) {
-        this->parent->left = other;
-      } else {
-        this->parent->right = other;
+      if (this->parent != nullptr) {
+        if (this->parent->left == this) {
+          this->parent->left = other;
+        } else {
+          assert(this->parent->right == this);
+          this->parent->right = other;
+        }
       }
+
       if (other != nullptr) {
         other->parent = this->parent;
       }
+
       this->parent = nullptr;
     }
 
