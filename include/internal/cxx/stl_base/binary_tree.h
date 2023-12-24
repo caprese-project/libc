@@ -578,6 +578,8 @@ namespace std {
 
       this->_root = next->balance_d();
 
+      --this->_size;
+
       return iterator(next);
     }
 
@@ -610,6 +612,8 @@ namespace std {
       }
 
       this->_root = node->balance_i();
+
+      ++this->_size;
 
       return std::pair<iterator, bool>(iterator(node), true);
     }
