@@ -33,6 +33,7 @@ extern "C" {
   char* strerror(int errnum);
 
   size_t strlen(const char* s);
+  size_t strnlen(const char* s, size_t n);
 
 #ifdef __cplusplus
 } // extern "C"

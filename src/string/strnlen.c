@@ -4,7 +4,7 @@
 #include <internal/branch.h>
 #include <string.h>
 
-__weak size_t strlen(const char* s) {
+__weak size_t strnlen(const char* s, size_t n) {
   const char* p = s;
 
 #ifndef __OPTIMIZE_SIZE__
@@ -14,7 +14,7 @@ __weak size_t strlen(const char* s) {
   __if_unlikely (s_offset != 0) {
     const size_t offset = sizeof(uintptr_t) - s_offset;
     for (size_t i = 0; i < offset; ++i) {
-      __if_unlikely (s[i] == '\0') {
+      __if_unlikely (i >= n || s[i] == '\0') {
         return i;
       }
     }
@@ -22,14 +22,14 @@ __weak size_t strlen(const char* s) {
   }
 
   const uintptr_t* a = (const uintptr_t*)p;
-  while (!__has_null(*a)) {
+  while ((const char*)a - s + sizeof(uintptr_t) - 1 < n && !__has_null(*a)) {
     ++a;
   }
   p = (const char*)a;
 
 #endif // __OPTIMIZE_SIZE__
 
-  while (*p != '\0') {
+  while (*p != '\0' && p - s < n) {
     ++p;
   }
 
