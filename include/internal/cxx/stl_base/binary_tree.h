@@ -569,26 +569,37 @@ namespace std {
         return iter;
       }
 
-      node_type* next;
+      iterator next(iter);
+      ++next;
+
       if (iter._current->left != nullptr) {
         node_type* left  = iter._current->left;
         node_type* right = iter._current->right;
-        next             = left->get_max_node();
-        next->replace(next->left);
-        next->set_left(left);
-        next->set_right(right);
+        node_type* node  = left->get_max_node();
+        node->replace(node->left);
+        node->set_left(left);
+        node->set_right(right);
+        iter._current->replace(node);
+        this->_root = node->balance_d();
+      } else if (iter._current->right != nullptr) {
+        node_type* node = iter._current->right;
+        iter._current->replace(node);
+        this->_root = node->balance_d();
       } else {
-        next = iter._current->right;
+        node_type* node = iter._current->parent;
+        iter._current->replace(nullptr);
+        if (node != nullptr) {
+          this->_root = node->balance_d();
+        } else {
+          this->_root = nullptr;
+        }
       }
 
-      iter._current->replace(next);
       iter._current->destroy(this->_allocator);
-
-      this->_root = next->balance_d();
 
       --this->_size;
 
-      return iterator(next);
+      return next;
     }
 
     template<typename U>

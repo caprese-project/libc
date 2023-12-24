@@ -49,7 +49,7 @@ namespace std {
     }
 
     __constexpr_cxx_std_20 __string_storage(const __string_storage& other): _ebo(_local, other._ebo), _length(other._length) {
-      if (_length >= _threshold) {
+      if (_length > _threshold) {
         _capacity = _length + 1;
         _ebo._ptr = allocator_traits<allocator_type>::allocate(_ebo, _capacity);
       }
@@ -57,7 +57,7 @@ namespace std {
     }
 
     __constexpr_cxx_std_20 __string_storage(__string_storage&& other) __noexcept_cxx_std_11: _ebo(_local, move(other._ebo)), _length(other._length) {
-      if (_length >= _threshold) {
+      if (_length > _threshold) {
         _capacity       = other._capacity;
         _ebo._ptr       = other._ebo._ptr;
         other._ebo._ptr = nullptr;
@@ -67,7 +67,7 @@ namespace std {
     }
 
     __constexpr_cxx_std_20 __string_storage(const __string_storage& other, const allocator_type& allocator): _ebo(_local, allocator), _length(other._length) {
-      if (_length >= _threshold) {
+      if (_length > _threshold) {
         _capacity = _length + 1;
         _ebo._ptr = allocator_traits<allocator_type>::allocate(_ebo, _capacity);
       }
@@ -75,7 +75,7 @@ namespace std {
     }
 
     __constexpr_cxx_std_20 __string_storage(__string_storage&& other, const allocator_type& allocator): _ebo(_local, allocator), _length(other._length) {
-      if (_length >= _threshold) {
+      if (_length > _threshold) {
         _capacity       = other._capacity;
         _ebo._ptr       = other._ebo._ptr;
         other._ebo._ptr = nullptr;
@@ -102,7 +102,7 @@ namespace std {
       }
 
       _length = other._length;
-      if (_length >= _threshold) {
+      if (_length > _threshold) {
         _capacity = _length + 1;
         _ebo      = other._ebo;
         _ebo._ptr = allocator_traits<allocator_type>::allocate(_ebo, _capacity);
@@ -126,7 +126,7 @@ namespace std {
       }
 
       _length = other._length;
-      if (_length >= _threshold) {
+      if (_length > _threshold) {
         _capacity       = other._capacity;
         _ebo            = move(other._ebo);
         other._ebo._ptr = other._local;
