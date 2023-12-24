@@ -77,7 +77,7 @@ namespace std {
         }
       }
 
-      if (this->left != nullptr) {
+      if (this->left != nullptr && this->left->parent == this) {
         this->left->parent = nullptr;
       }
 
@@ -98,7 +98,7 @@ namespace std {
         }
       }
 
-      if (this->right != nullptr) {
+      if (this->right != nullptr && this->right->parent == this) {
         this->right->parent = nullptr;
       }
 
@@ -194,8 +194,10 @@ namespace std {
       this->replace(node);
       this->set_right(node->left);
       node->set_left(this);
-      node->left->update();
+
+      this->update();
       node->update();
+
       return node;
     }
 
@@ -230,8 +232,10 @@ namespace std {
       this->replace(node);
       this->set_left(node->right);
       node->set_right(this);
-      node->right->update();
+
+      this->update();
       node->update();
+
       return node;
     }
 
