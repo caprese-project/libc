@@ -68,9 +68,7 @@ namespace std {
     }
 
     void set_left(__avl_tree_node* node) {
-      assert(node != nullptr);
-
-      if (node->parent != nullptr) {
+      if (node != nullptr && node->parent != nullptr) {
         if (node->parent->left == node) {
           node->parent->left = nullptr;
         } else {
@@ -83,14 +81,15 @@ namespace std {
         this->left->parent = nullptr;
       }
 
-      node->parent = this;
-      this->left   = node;
+      if (node != nullptr) {
+        node->parent = this;
+      }
+
+      this->left = node;
     }
 
     void set_right(__avl_tree_node* node) {
-      assert(node != nullptr);
-
-      if (node->parent != nullptr) {
+      if (node != nullptr && node->parent != nullptr) {
         if (node->parent->left == node) {
           node->parent->left = nullptr;
         } else {
@@ -103,8 +102,11 @@ namespace std {
         this->right->parent = nullptr;
       }
 
-      node->parent = this;
-      this->right  = node;
+      if (node != nullptr) {
+        node->parent = this;
+      }
+
+      this->right = node;
     }
 
     __avl_tree_node* get_max_node() {
@@ -186,6 +188,8 @@ namespace std {
      *     +-----+ +-----+    +-----+ +-----+
      */
     __avl_tree_node* rotate_left() {
+      assert(this->right != nullptr);
+
       __avl_tree_node* node = this->right;
       this->replace(node);
       this->set_right(node->left);
@@ -220,6 +224,8 @@ namespace std {
      * +-----+ +-----+                    +-----+ +-----+
      */
     __avl_tree_node* rotate_right() {
+      assert(this->left != nullptr);
+
       __avl_tree_node* node = this->left;
       this->replace(node);
       this->set_left(node->right);
@@ -239,8 +245,9 @@ namespace std {
       return this->rotate_left();
     }
 
-    void balance_i() {
+    __avl_tree_node* balance_i() {
       __avl_tree_node* node = this;
+
       while (node->parent != nullptr) {
         __avl_tree_node* target     = node->parent;
         int              old_height = target->height;
@@ -273,10 +280,13 @@ namespace std {
 
         node = target;
       }
+
+      return node;
     }
 
-    void barance_d() {
+    __avl_tree_node* balance_d() {
       __avl_tree_node* node = this;
+
       while (node->parent != nullptr) {
         __avl_tree_node* target     = node->parent;
         int              old_height = target->height;
@@ -309,6 +319,8 @@ namespace std {
 
         node = target;
       }
+
+      return node;
     }
   };
 
@@ -564,7 +576,7 @@ namespace std {
       iter._current->replace(next);
       iter._current->destroy(this->_allocator);
 
-      next->barance_d();
+      this->_root = next->balance_d();
 
       return iterator(next);
     }
@@ -597,7 +609,7 @@ namespace std {
         pos->set_right(node);
       }
 
-      node->balance_i();
+      this->_root = node->balance_i();
 
       return std::pair<iterator, bool>(iterator(node), true);
     }
