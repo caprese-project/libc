@@ -654,64 +654,12 @@ namespace std {
 
     template<typename U>
     iterator lower_bound(U&& value) {
-      node_type* node = this->_root;
-
-      while (node != nullptr) {
-        if (this->_compare(node->value, value)) {
-          node = node->right;
-        } else if (this->_compare(value, node->value)) {
-          if (node->left != nullptr) {
-            node = node->left;
-          } else {
-            break;
-          }
-        } else {
-          break;
-        }
-      }
-
-      iterator iter(node);
-      if (iter != this->end() && this->_compare(*iter, value)) {
-        ++iter;
-#ifndef NDEBUG
-        if (iter != this->end()) {
-          assert(!this->_compare(*iter, value));
-        }
-#endif // !NDEBUG
-      }
-
-      return iter;
+      return iterator(this->__lower_bound(this->_root, std::forward<U>(value)));
     }
 
     template<typename U>
     const_iterator lower_bound(U&& value) const {
-      node_type* node = this->_root;
-
-      while (node != nullptr) {
-        if (this->_compare(node->value, value)) {
-          node = node->right;
-        } else if (this->_compare(value, node->value)) {
-          if (node->left != nullptr) {
-            node = node->left;
-          } else {
-            break;
-          }
-        } else {
-          break;
-        }
-      }
-
-      const_iterator iter(node);
-      if (iter != this->end() && this->_compare(*iter, value)) {
-        ++iter;
-#ifndef NDEBUG
-        if (iter != this->end()) {
-          assert(!this->_compare(*iter, value));
-        }
-#endif // !NDEBUG
-      }
-
-      return iter;
+      return const_iterator(this->__lower_bound(this->_root, std::forward<U>(value)));
     }
 
     template<typename U>
@@ -730,6 +678,25 @@ namespace std {
         ++iter;
       }
       return iter;
+    }
+
+  private:
+    template<typename U>
+    node_type* __lower_bound(node_type* node, U&& value) const {
+      while (node != nullptr) {
+        if (this->_compare(node->value, value)) {
+          node = node->right;
+        } else if (this->_compare(value, node->value)) {
+          node_type* left = this->__lower_bound(node->left, std::forward<U>(value));
+          if (left != nullptr) {
+            node = left;
+          }
+          break;
+        } else {
+          break;
+        }
+      }
+      return node;
     }
   };
 
