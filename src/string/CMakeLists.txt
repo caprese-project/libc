@@ -19,6 +19,7 @@ target_sources(
   strncat.c
   strncmp.c
   strncpy.c
+  strnlen.c
   strpbrk.c
   strrchr.c
   strspn.c
