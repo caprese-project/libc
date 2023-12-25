@@ -3,6 +3,7 @@
 
 #include <cassert>
 #include <internal/attribute.h>
+#include <internal/branch.h>
 #include <internal/cxx/algorithm/minmax.h>
 #include <internal/cxx/iterator/tags.h>
 #include <internal/cxx/memory/addressof.h>
@@ -12,6 +13,9 @@
 #include <internal/cxx/utility/pair.h>
 
 namespace std {
+  template<typename T, typename Compare, typename Allocator>
+  class __avl_tree;
+
   template<typename T>
   struct __avl_tree_node {
     T                value;
@@ -117,8 +121,24 @@ namespace std {
       return node;
     }
 
+    const __avl_tree_node* get_max_node() const {
+      const __avl_tree_node* node = this;
+      while (node->right != nullptr) {
+        node = node->right;
+      }
+      return node;
+    }
+
     __avl_tree_node* get_min_node() {
       __avl_tree_node* node = this;
+      while (node->left != nullptr) {
+        node = node->left;
+      }
+      return node;
+    }
+
+    const __avl_tree_node* get_min_node() const {
+      const __avl_tree_node* node = this;
       while (node->left != nullptr) {
         node = node->left;
       }
@@ -336,10 +356,11 @@ namespace std {
     }
   };
 
-  template<typename T>
+  template<typename T, typename Compare, typename Allocator>
   class __avl_tree_iterator {
   private:
     using node_type = __avl_tree_node<typename std::__remove_const<T>::type>;
+    using tree_type = __avl_tree<typename std::__remove_const<T>::type, Compare, Allocator>;
 
   public:
     using difference_type   = __ptrdiff_t;
@@ -348,18 +369,20 @@ namespace std {
     using reference         = value_type&;
     using iterator_category = bidirectional_iterator_tag;
 
-    template<typename, typename Compare, typename Allocator>
+    template<typename, typename, typename>
     friend class __avl_tree;
 
   private:
-    node_type* _current;
+    const tree_type* _tree;
+    node_type*       _current;
 
   public:
-    explicit __avl_tree_iterator(node_type* current = nullptr): _current(current) { }
+    __avl_tree_iterator(const tree_type* tree, node_type* current): _tree(tree), _current(current) { }
 
-    __avl_tree_iterator(const __avl_tree_iterator& other): _current(other._current) { }
+    __avl_tree_iterator(const __avl_tree_iterator& other): _tree(other._tree), _current(other._current) { }
 
-    __avl_tree_iterator(__avl_tree_iterator&& other): _current(other._current) {
+    __avl_tree_iterator(__avl_tree_iterator&& other): _tree(other._tree), _current(other._current) {
+      other._tree    = nullptr;
       other._current = nullptr;
     }
 
@@ -367,6 +390,7 @@ namespace std {
 
     __avl_tree_iterator& operator=(const __avl_tree_iterator& other) & {
       if (this != &other) {
+        this->_tree    = other._tree;
         this->_current = other._current;
       }
 
@@ -375,7 +399,9 @@ namespace std {
 
     __avl_tree_iterator& operator=(__avl_tree_iterator&& other) & {
       if (this != &other) {
+        this->_tree    = other._tree;
         this->_current = other._current;
+        other._tree    = nullptr;
         other._current = nullptr;
       }
 
@@ -391,7 +417,9 @@ namespace std {
     }
 
     __avl_tree_iterator& operator++() {
-      assert(_current != nullptr);
+      if (_current == nullptr) {
+        return *this;
+      }
 
       if (_current->right != nullptr) {
         _current = _current->right;
@@ -416,7 +444,10 @@ namespace std {
     }
 
     __avl_tree_iterator& operator--() {
-      assert(_current != nullptr);
+      if (_current == nullptr) {
+        _current = _tree->_root->get_max_node();
+        return *this;
+      }
 
       if (_current->left != nullptr) {
         _current = _current->left;
@@ -453,12 +484,15 @@ namespace std {
   class __avl_tree {
   public:
     using node_type      = __avl_tree_node<T>;
-    using iterator       = __avl_tree_iterator<T>;
-    using const_iterator = __avl_tree_iterator<const T>;
+    using iterator       = __avl_tree_iterator<T, Compare, Allocator>;
+    using const_iterator = __avl_tree_iterator<const T, Compare, Allocator>;
 
   private:
     using compare_type   = Compare;
     using allocator_type = typename std::allocator_traits<Allocator>::template rebind_alloc<node_type>;
+
+    template<typename, typename, typename>
+    friend class __avl_tree_iterator;
 
   private:
     compare_type   _compare;
@@ -524,22 +558,22 @@ namespace std {
       __if_unlikely (this->_root == nullptr) {
         return this->end();
       }
-      return iterator(this->_root->get_min_node());
+      return iterator(this, this->_root->get_min_node());
     }
 
     const_iterator begin() const {
       __if_unlikely (this->_root == nullptr) {
         return this->end();
       }
-      return const_iterator(this->_root->get_min_node());
+      return const_iterator(this, this->_root->get_min_node());
     }
 
     iterator end() {
-      return iterator(nullptr);
+      return iterator(this, nullptr);
     }
 
     const_iterator end() const {
-      return const_iterator(nullptr);
+      return const_iterator(this, nullptr);
     }
 
     void clear() {
@@ -611,7 +645,7 @@ namespace std {
       __if_unlikely (this->_root == nullptr) {
         this->_root = node_type::create(this->_allocator, std::forward<U>(value));
         this->_size = 1;
-        return std::pair<iterator, bool>(iterator(this->_root), true);
+        return std::pair<iterator, bool>(iterator(this, this->_root), true);
       }
 
       iterator iter = this->lower_bound(value);
@@ -634,7 +668,7 @@ namespace std {
 
       ++this->_size;
 
-      return std::pair<iterator, bool>(iterator(node), true);
+      return std::pair<iterator, bool>(iterator(this, node), true);
     }
 
     template<typename... Args>
@@ -646,7 +680,7 @@ namespace std {
       this->_root = node_type::create(this->_allocator, std::forward<Args>(args)...);
       this->_size = 1;
 
-      return std::pair<iterator, bool>(iterator(this->_root), true);
+      return std::pair<iterator, bool>(iterator(this, this->_root), true);
     }
 
     template<typename U>
@@ -669,12 +703,12 @@ namespace std {
 
     template<typename U>
     iterator lower_bound(U&& value) {
-      return iterator(this->__lower_bound(this->_root, std::forward<U>(value)));
+      return iterator(this, this->__lower_bound(this->_root, std::forward<U>(value)));
     }
 
     template<typename U>
     const_iterator lower_bound(U&& value) const {
-      return const_iterator(this->__lower_bound(this->_root, std::forward<U>(value)));
+      return const_iterator(this, this->__lower_bound(this->_root, std::forward<U>(value)));
     }
 
     template<typename U>
