@@ -29,7 +29,7 @@ __weak size_t strnlen(const char* s, size_t n) {
 
 #endif // __OPTIMIZE_SIZE__
 
-  while (*p != '\0' && p - s < n) {
+  while (*p != '\0' && (size_t)(p - s) < n) {
     ++p;
   }
 
