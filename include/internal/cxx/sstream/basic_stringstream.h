@@ -25,13 +25,13 @@ namespace std {
 
   public:
     explicit __basic_stringstream(ios_base::openmode mode): __iostream_type(), _buf(mode | ios_base::in | ios_base::out) {
-      init(&_buf);
+      this->init(&_buf);
     }
 
     __basic_stringstream(): __basic_stringstream(ios_base::in | ios_base::out) { }
 
     explicit __basic_stringstream(const __string_type& str, ios_base::openmode mode = ios_base::in | ios_base::out): __iostream_type(), _buf(str, mode | ios_base::in | ios_base::out) {
-      init(&_buf);
+      this->init(&_buf);
     }
 
     __basic_stringstream(__basic_stringstream&& other): __iostream_type(move(other)), _buf(move(other._buf)) {

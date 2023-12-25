@@ -25,13 +25,13 @@ namespace std {
 
   public:
     explicit __basic_ostringstream(ios_base::openmode mode): __ostream_type(), _buf(mode | ios_base::out) {
-      init(&_buf);
+      this->init(&_buf);
     }
 
     __basic_ostringstream(): __basic_ostringstream(ios_base::out) { }
 
     explicit __basic_ostringstream(const __string_type& str, ios_base::openmode mode = ios_base::out): __ostream_type(), _buf(str, mode | ios_base::out) {
-      init(&_buf);
+      this->init(&_buf);
     }
 
     __basic_ostringstream(__basic_ostringstream&& other): __ostream_type(move(other)), _buf(move(other._buf)) {
