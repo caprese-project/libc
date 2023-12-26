@@ -5,17 +5,19 @@
 #include <internal/version.h>
 #include <stdarg.h>
 #include <stddef.h>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus
 
   struct __FILE {
-    int    __buf_mode;
-    char   __ungetc_buf;
-    char*  __buf;
-    size_t __buf_size;
-    size_t __buf_pos;
+    uintptr_t __fd;
+    int       __mode;
+    char      __ungetc_buf;
+    char*     __buf;
+    size_t    __buf_size;
+    size_t    __buf_pos;
     size_t (*__read)(void* __restrict ptr, size_t size, size_t nmemb, struct __FILE* __restrict stream);
     size_t (*__write)(const void* __restrict ptr, size_t size, size_t nmemb, struct __FILE* __restrict stream);
     int (*__ungetc)(int ch, struct __FILE* stream);
@@ -38,6 +40,7 @@ extern "C" {
   void  setbuf(FILE* __restrict stream, char* __restrict buf);
   int   setvbuf(FILE* __restrict stream, char* __restrict buf, int mode, size_t size);
 
+  int __finitialize(const char* __restrict filename, int reopen, FILE* stream);
   int __ffinalize(FILE* stream);
 
   int fprintf(FILE* __restrict stream, const char* __restrict format, ...);
@@ -100,11 +103,19 @@ __deprecated char* gets(char* str);
 } // extern "C"
 #endif // __cplusplus
 
-#define _IOFBF                0b0001
-#define _IOLBF                0b0010
-#define _IONBF                0b0011
+#define _IOFBF 0b0001
+#define _IOLBF 0b0010
+#define _IONBF 0b0011
+
 #define _IOBUF_AUTO_ALLOCATED 0b0100
 #define _IOBUF_MODE_READ      0b1000
+
+#define _O_READ   (0b00001 << 4)
+#define _O_WRITE  (0b00010 << 4)
+#define _O_APPEND (0b00100 << 4)
+#define _O_PLUS   (0b01000 << 4)
+#define _O_BINARY (0b10000 << 4)
+#define _O_MASK   (0b11111 << 4)
 
 #define BUFSIZ 0x1000
 

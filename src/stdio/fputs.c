@@ -2,6 +2,7 @@
 #include <internal/attribute.h>
 #include <internal/branch.h>
 #include <stdio.h>
+#include <string.h>
 
 static int __fputs_fbf(const char* __restrict str, FILE* __restrict stream) {
   while (*str != '\0') {
@@ -53,11 +54,11 @@ __weak int fputs(const char* __restrict str, FILE* __restrict stream) {
     return EOF;
   }
 
-  if ((stream->__buf_mode & _IOBUF_MODE_READ) != 0) {
+  if ((stream->__mode & _IOBUF_MODE_READ) != 0) {
     fflush(stream);
   }
 
-  switch (stream->__buf_mode & 0b11) {
+  switch (stream->__mode & 0b11) {
     case _IOFBF:
       return __fputs_fbf(str, stream);
     case _IOLBF:

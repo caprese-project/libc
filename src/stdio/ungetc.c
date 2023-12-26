@@ -8,7 +8,7 @@ __weak int ungetc(int ch, FILE* stream) {
     return EOF;
   }
 
-  if ((stream->__buf_mode & 0b11) != _IONBF && (stream->__buf_mode & _IOBUF_MODE_READ) != 0 && stream->__buf_pos != 0) {
+  if ((stream->__mode & 0b11) != _IONBF && (stream->__mode & _IOBUF_MODE_READ) != 0 && stream->__buf_pos != 0) {
     stream->__ungetc_buf = ch;
     --stream->__buf_pos;
   } else {

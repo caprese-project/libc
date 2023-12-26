@@ -25,7 +25,7 @@ __weak int setvbuf(FILE* __restrict stream, char* __restrict buf, int mode, size
     }
   }
 
-  stream->__buf_mode = mode;
+  stream->__mode     = mode;
   stream->__buf      = buf;
   stream->__buf_size = size;
   stream->__buf_pos  = 0;
