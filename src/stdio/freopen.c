@@ -1,6 +1,7 @@
 #include <errno.h>
 #include <internal/attribute.h>
 #include <internal/branch.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -8,7 +9,8 @@
 extern int __parse_fopen_mode(const char* mode);
 
 __weak FILE* freopen(const char* __restrict filename, const char* __restrict mode, FILE* __restrict stream) {
-  int imode = 0;
+  int  imode = 0;
+  bool alloc = false;
 
   if (stream != NULL) {
     imode = stream->__mode & _O_MASK;
@@ -18,6 +20,7 @@ __weak FILE* freopen(const char* __restrict filename, const char* __restrict mod
     __if_unlikely (stream == NULL) {
       return NULL;
     }
+    alloc = true;
   }
 
   __if_unlikely (filename == NULL) {
@@ -35,7 +38,9 @@ __weak FILE* freopen(const char* __restrict filename, const char* __restrict mod
   stream->__mode = imode;
 
   __if_unlikely (__finitialize(filename, 1, stream) == EOF) {
-    free(stream);
+    if (alloc) {
+      free(stream);
+    }
     return NULL;
   }
 
