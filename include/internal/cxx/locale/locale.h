@@ -82,7 +82,7 @@ namespace std {
     locale(const locale& other) __noexcept;
     ~locale();
 
-    locale& operator=(const locale& other) __noexcept;
+    const locale& operator=(const locale& other) __noexcept;
   };
 } // namespace std
 

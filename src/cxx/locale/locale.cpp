@@ -45,7 +45,7 @@ namespace std {
     }
   }
 
-  locale& locale::operator=(const locale& other) __noexcept {
+  const locale& locale::operator=(const locale& other) __noexcept {
     if (this != &other) {
       for (facet* facet : _facets) {
         --facet->refs;
