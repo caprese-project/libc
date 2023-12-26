@@ -12,12 +12,12 @@ __weak FILE* freopen(const char* __restrict filename, const char* __restrict mod
 
   if (stream != NULL) {
     imode = stream->__mode & _O_MASK;
-    fclose(stream);
-  }
-
-  stream = malloc(sizeof(FILE));
-  __if_unlikely (stream == NULL) {
-    return NULL;
+    __ffinalize(stream);
+  } else {
+    stream = malloc(sizeof(FILE));
+    __if_unlikely (stream == NULL) {
+      return NULL;
+    }
   }
 
   __if_unlikely (filename == NULL) {
