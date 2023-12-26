@@ -50,10 +50,6 @@ static int __fputs_nbf(const char* __restrict str, FILE* __restrict stream) {
 }
 
 __weak int fputs(const char* __restrict str, FILE* __restrict stream) {
-  __if_unlikely (str == NULL || stream == NULL) {
-    return EOF;
-  }
-
   if ((stream->__mode & _IOBUF_MODE_READ) != 0) {
     fflush(stream);
   }

@@ -2,6 +2,7 @@
 #include <internal/attribute.h>
 #include <internal/branch.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 // fopen.c
 extern int __parse_fopen_mode(const char* mode);
@@ -10,7 +11,7 @@ __weak FILE* freopen(const char* __restrict filename, const char* __restrict mod
   int imode = 0;
 
   if (stream != NULL) {
-    imode = stream->mode & _O_MASK;
+    imode = stream->__mode & _O_MASK;
     fclose(stream);
   }
 
