@@ -2,9 +2,20 @@
 #define CAPRESE_LIBC_STDINT_H_
 
 #include <internal/datamodel.h>
+#include <limits.h>
 
 #define SIG_ATOMIC_MIN INT_MIN
 #define SIG_ATOMIC_MAX INT_MAX
+
+#if defined(__LP64)
+#define PTRDIFF_MAX LONG_MAX
+#define PTRDIFF_MIN LONG_MIN
+#define SIZE_MAX    ULONG_MAX
+#elif defined(__ILP32)
+#define PTRDIFF_MAX INT_MAX
+#define PTRDIFF_MIN INT_MIN
+#define SIZE_MAX    UINT_MAX
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -37,6 +48,8 @@ extern "C" {
   typedef unsigned long        uintptr_t;
   typedef unsigned long long   uintmax_t;
 #endif
+
+#define RSIZE_MAX (SIZE_MAX >> 1)
 
   // TODO: Define least and fast as optimal types
 

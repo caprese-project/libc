@@ -3,6 +3,7 @@
 
 #include <internal/datamodel.h>
 #include <internal/stddef.h>
+#include <internal/version.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -20,8 +21,11 @@ extern "C" {
   typedef __SIZE_TYPE    size_t;
   typedef __SSIZE_TYPE   ssize_t;
 
-  typedef int    errno_t;
+  typedef int errno_t;
+
+#if defined(__C_STD_11__) || (defined(__STDC_WANT_LIB_EXT1__) && __STDC_WANT_LIB_EXT1__ >= 1)
   typedef size_t rsize_t;
+#endif // __C_STD_11__
 
   typedef struct {
     long long   __long_long;

@@ -2,6 +2,7 @@
 #define CAPRESE_LIBC_STDIO_H_
 
 #include <internal/attribute.h>
+#include <internal/version.h>
 #include <stdarg.h>
 #include <stddef.h>
 
@@ -51,6 +52,12 @@ extern "C" {
   int   putchar(int ch);
   int   puts(const char* str);
   int   ungetc(int ch, FILE* stream);
+
+#if defined(__C_STD_11__) || (defined(__STDC_WANT_LIB_EXT1__) && __STDC_WANT_LIB_EXT1__ >= 1)
+  char* gets_s(char* str, rsize_t n);
+#else  // ^^^ __C_STD_11__ ^^^ / vvv !__C_STD_11__ vvv
+  __deprecated char* gets(char* str);
+#endif // !__C_STD_11__
 
   size_t fread(void* __restrict ptr, size_t size, size_t nmemb, FILE* __restrict stream);
   size_t fwrite(const void* __restrict ptr, size_t size, size_t nmemb, FILE* __restrict stream);

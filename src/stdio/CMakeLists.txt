@@ -26,6 +26,8 @@ target_sources(
   fwrite.c
   getc.c
   getchar.c
+  gets.c
+  gets_s.c
   perror.c
   printf.c
   putc.c
