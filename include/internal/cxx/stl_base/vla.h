@@ -41,6 +41,10 @@ namespace std {
       return *this;
     }
 
+    __constexpr_cxx_std_20 pointer base() const __noexcept {
+      return _ptr;
+    }
+
     // Input Iterator Requirements
 
     __constexpr_cxx_std_20 reference operator*() const {
@@ -101,22 +105,6 @@ namespace std {
       return _ptr[n];
     }
 
-    friend __vla_iterator_base operator+(const __vla_iterator_base& lhs, difference_type rhs) __noexcept {
-      return __vla_iterator_base(lhs._ptr + rhs);
-    }
-
-    friend __vla_iterator_base operator+(difference_type lhs, const __vla_iterator_base& rhs) __noexcept {
-      return __vla_iterator_base(lhs + rhs._ptr);
-    }
-
-    friend __vla_iterator_base operator-(const __vla_iterator_base& lhs, difference_type rhs) __noexcept {
-      return __vla_iterator_base(lhs._ptr - rhs);
-    }
-
-    friend difference_type operator-(const __vla_iterator_base& lhs, const __vla_iterator_base& rhs) __noexcept {
-      return lhs._ptr - rhs._ptr;
-    }
-
     __constexpr_cxx_std_20 bool operator<(const __vla_iterator_base& other) const __noexcept {
       return _ptr < other._ptr;
     }
@@ -137,6 +125,26 @@ namespace std {
 
 #endif // __CXX_STD_20__
   };
+
+  template<typename V, typename P, typename R, typename D>
+  __constexpr_cxx_std_20 inline __vla_iterator_base<V, P, R, D> operator+(const __vla_iterator_base<V, P, R, D>& lhs, typename __vla_iterator_base<V, P, R, D>::difference_type rhs) __noexcept {
+    return __vla_iterator_base<V, P, R, D>(lhs.base() + rhs);
+  }
+
+  template<typename V, typename P, typename R, typename D>
+  __constexpr_cxx_std_20 inline __vla_iterator_base<V, P, R, D> operator+(typename __vla_iterator_base<V, P, R, D>::difference_type lhs, const __vla_iterator_base<V, P, R, D>& rhs) __noexcept {
+    return __vla_iterator_base<V, P, R, D>(lhs + rhs.base());
+  }
+
+  template<typename V, typename P, typename R, typename D>
+  __constexpr_cxx_std_20 inline __vla_iterator_base<V, P, R, D> operator-(const __vla_iterator_base<V, P, R, D>& lhs, typename __vla_iterator_base<V, P, R, D>::difference_type rhs) __noexcept {
+    return __vla_iterator_base<V, P, R, D>(lhs.base() - rhs);
+  }
+
+  template<typename V, typename P, typename R, typename D>
+  __constexpr_cxx_std_20 inline typename __vla_iterator_base<V, P, R, D>::difference_type operator-(const __vla_iterator_base<V, P, R, D>& lhs, const __vla_iterator_base<V, P, R, D>& rhs) __noexcept {
+    return lhs.base() - rhs.base();
+  }
 
   template<typename Storage>
   class __vla {
@@ -394,16 +402,18 @@ namespace std {
     }
 
     __constexpr_cxx_std_20 iterator insert(const_iterator pos, const value_type& value) {
-      size_type index = distance(this->cbegin(), pos);
+      allocator_type alloc = _storage.get_allocator();
+      size_type      index = distance(this->cbegin(), pos);
       this->_shift(index, 1);
-      allocator_traits<allocator_type>::construct(_storage.get_allocator(), _storage.front_pointer() + index, value);
+      allocator_traits<allocator_type>::construct(alloc, _storage.front_pointer() + index, value);
       return this->begin() + index;
     }
 
     __constexpr_cxx_std_20 iterator insert(const_iterator pos, value_type&& value) {
-      size_type index = distance(this->cbegin(), pos);
+      allocator_type alloc = _storage.get_allocator();
+      size_type      index = distance(this->cbegin(), pos);
       this->_shift(index, 1);
-      allocator_traits<allocator_type>::construct(_storage.get_allocator(), _storage.front_pointer() + index, move(value));
+      allocator_traits<allocator_type>::construct(alloc, _storage.front_pointer() + index, move(value));
       return this->begin() + index;
     }
 
@@ -439,26 +449,29 @@ namespace std {
 
     template<typename... Args>
     __constexpr_cxx_std_20 iterator emplace(const_iterator pos, Args&&... args) {
-      size_type index = distance(this->cbegin(), pos);
+      allocator_type alloc = _storage.get_allocator();
+      size_type      index = distance(this->cbegin(), pos);
       this->_shift(index, 1);
-      allocator_traits<allocator_type>::construct(_storage.get_allocator(), _storage.front_pointer() + index, forward<Args>(args)...);
+      allocator_traits<allocator_type>::construct(alloc, _storage.front_pointer() + index, forward<Args>(args)...);
       return this->begin() + index;
     }
 
     __constexpr_cxx_std_20 iterator erase(const_iterator pos) {
-      size_type index = distance(this->cbegin(), pos);
-      pointer   ptr   = _storage.front_pointer() + index;
-      allocator_traits<allocator_type>::destroy(_storage.get_allocator(), ptr);
+      allocator_type alloc = _storage.get_allocator();
+      size_type      index = distance(this->cbegin(), pos);
+      pointer        ptr   = _storage.front_pointer() + index;
+      allocator_traits<allocator_type>::destroy(alloc, ptr);
       this->_unshift(index, 1);
       return this->begin() + index;
     }
 
     __constexpr_cxx_std_20 iterator erase(const_iterator first, const_iterator last) {
-      size_type n     = distance(first, last);
-      size_type index = distance(this->cbegin(), first);
-      pointer   ptr   = _storage.front_pointer() + index;
+      allocator_type alloc = _storage.get_allocator();
+      size_type      n     = distance(first, last);
+      size_type      index = distance(this->cbegin(), first);
+      pointer        ptr   = _storage.front_pointer() + index;
       for (size_type i = 0; i < n; ++i) {
-        allocator_traits<allocator_type>::destroy(_storage.get_allocator(), ptr + i);
+        allocator_traits<allocator_type>::destroy(alloc, ptr + i);
       }
       this->_unshift(index, n);
       return this->begin() + index;
