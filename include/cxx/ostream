@@ -3,6 +3,7 @@
 
 #include <internal/cxx/ostream/basic_ostream.h>
 #include <internal/cxx/ostream/manipulators.h>
+#include <internal/cxx/ostream/operator.h>
 #include <internal/cxx/string/char_traits.h>
 
 namespace std {

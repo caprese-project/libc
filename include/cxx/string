@@ -7,6 +7,7 @@
 #include <internal/cxx/fwd/stringfwd.h>
 #include <internal/cxx/string/basic_string.h>
 #include <internal/cxx/string/char_traits.h>
+#include <internal/cxx/string/io.h>
 
 namespace std {
 #ifdef __CXX_STD_20__

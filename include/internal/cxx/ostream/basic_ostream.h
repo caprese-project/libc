@@ -165,9 +165,7 @@ namespace std {
         ios_base::iostate err = ios_base::goodbit;
 
         __try {
-          if (__ios_type::rdbuf()->sputn(str, n) != n) {
-            __ios_type::setstate(ios_base::badbit);
-          }
+          this->__write(str, n);
         }
         __catch (...) {
           // basic_ostream::setstate may throw an exception.
@@ -240,6 +238,50 @@ namespace std {
       return *this;
     }
 
+    void __write(const char_type* str, streamsize n) {
+      if (__ios_type::rdbuf()->sputn(str, n) != n) {
+        __ios_type::setstate(ios_base::badbit);
+      }
+    }
+
+    void __fill(streamsize n) {
+      char_type ch = __ios_type::fill();
+
+      while (n > 0) {
+        if (traits_type::eq_int_type(__ios_type::rdbuf()->sputc(ch), traits_type::eof())) {
+          __ios_type::setstate(ios_base::badbit);
+          break;
+        }
+        --n;
+      }
+    }
+
+    void __insert(const char_type* str, streamsize n) {
+      sentry sentry(*this);
+
+      if (sentry) {
+        __try {
+          streamsize width = ios_base::width();
+          if (width > n) {
+            if (ios_base::_is_left()) {
+              this->__write(str, n);
+              this->__fill(width - n);
+            } else {
+              this->__fill(width - n);
+              this->__write(str, n);
+            }
+          } else {
+            this->__write(str, n);
+          }
+          ios_base::width(0);
+        }
+        __catch (...) {
+          // basic_ostream::setstate may throw an exception.
+          ios_base::_set_iostate(ios_base::badbit);
+        }
+      }
+    }
+
   private:
     template<typename T>
     __basic_ostream& insert(T n) {
@@ -249,7 +291,7 @@ namespace std {
         ios_base::iostate err = ios_base::goodbit;
 
         __try {
-          if (__ios_type::_num_put.put(*this, *this, this->fill(), n).failed()) {
+          if (__ios_type::_num_put.put(*this, *this, __ios_type::fill(), n).failed()) {
             err |= ios_base::badbit;
           }
         }
