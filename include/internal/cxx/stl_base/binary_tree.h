@@ -445,7 +445,9 @@ namespace std {
 
     __avl_tree_iterator& operator--() {
       if (_current == nullptr) {
-        _current = _tree->_root->get_max_node();
+        if (_tree->_root != nullptr) {
+          _current = _tree->_root->get_max_node();
+        }
         return *this;
       }
 
