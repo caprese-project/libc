@@ -68,6 +68,7 @@ namespace std {
     static constexpr category messages = 0x200;
     static constexpr category all      = collate | ctype | monetary | numeric | time | messages;
 
+    static const locale& global();
     static const locale& classic();
 
   protected:
@@ -75,6 +76,11 @@ namespace std {
 
   protected:
     void _install_facet(facet* f, __size_t id);
+
+  public:
+    locale() __noexcept;
+    locale(const locale& other) __noexcept;
+    ~locale();
   };
 } // namespace std
 

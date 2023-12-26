@@ -25,6 +25,26 @@ namespace std {
     _facets[id] = f;
   }
 
+  locale::locale() __noexcept: locale(locale::global()) { }
+
+  locale::locale(const locale& other) __noexcept {
+    for (facet* facet : other._facets) {
+      if (facet != nullptr) {
+        ++facet->refs;
+      }
+    }
+    _facets = other._facets;
+  }
+
+  locale::~locale() {
+    for (facet* facet : _facets) {
+      --facet->refs;
+      if (facet->refs == 0) {
+        delete facet;
+      }
+    }
+  }
+
   struct __classic_locale {
     locale loc;
 
@@ -34,6 +54,11 @@ namespace std {
       loc._install_facet(new num_put<char>(1), num_put<char>::id.__get());
     }
   };
+
+  const locale& locale::global() {
+    static locale global_locale = locale::classic();
+    return global_locale;
+  }
 
   const locale& locale::classic() {
     static __classic_locale classic_locale;
