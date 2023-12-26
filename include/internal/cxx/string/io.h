@@ -16,8 +16,8 @@ namespace std {
 
   template<typename Char, typename Traits, typename Allocator>
   __basic_istream<Char, Traits>& operator>>(__basic_istream<Char, Traits>& stream, __basic_string<Char, Traits, Allocator>& str) {
-    streamsize        read_count = 0;
-    streamsize        max_size   = stream.width();
+    size_t            read_count = 0;
+    size_t            max_size   = stream.width();
     ios_base::iostate state      = ios_base::goodbit;
 
     if (max_size == 0) {
@@ -66,8 +66,8 @@ namespace std {
 
   template<typename Char, typename Traits, typename Allocator>
   __basic_istream<Char, Traits>& getline(__basic_istream<Char, Traits>& stream, __basic_string<Char, Traits, Allocator>& str, Char delim) {
-    streamsize        read_count = 0;
-    streamsize        max_size   = str.max_size();
+    size_t            read_count = 0;
+    size_t            max_size   = str.max_size();
     ios_base::iostate state      = ios_base::goodbit;
 
     typename __basic_istream<Char, Traits>::sentry sentry(stream, true);
