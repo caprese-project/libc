@@ -8,14 +8,36 @@ __weak char* fgets(char* __restrict dst, int n, FILE* __restrict stream) {
     return NULL;
   }
 
-  int ch;
+  char* s = dst;
 
-  while (n > 1 && (ch = fgetc(stream)) != EOF) {
-    *dst++ = ch;
-    n--;
+  if (stream->__ungetc_buf != EOF) {
+    *dst++ = stream->__ungetc_buf;
+    --n;
+    stream->__ungetc_buf = EOF;
+  }
+
+  if (stream->__buf_pos != 0) {
+    if ((stream->__buf_mode & _IOBUF_MODE_READ) != 0) {
+      while (stream->__buf_pos != 0 && n > 0) {
+        *dst++ = stream->__buf[--stream->__buf_pos];
+        --n;
+      }
+    } else {
+      fflush(stream);
+    }
+  }
+
+  if (n != 0) {
+    size_t size = stream->__read(dst, 1, n, stream);
+    dst += size;
+
+    if (size != n) {
+      *dst = '\0';
+      return NULL;
+    }
   }
 
   *dst = '\0';
 
-  return dst;
+  return s;
 }

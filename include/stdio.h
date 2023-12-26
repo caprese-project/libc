@@ -10,7 +10,18 @@
 extern "C" {
 #endif // __cplusplus
 
-  struct __FILE;
+  struct __FILE {
+    int    __buf_mode;
+    char   __ungetc_buf;
+    char*  __buf;
+    size_t __buf_size;
+    size_t __buf_pos;
+    size_t (*__read)(void* __restrict ptr, size_t size, size_t nmemb, struct __FILE* __restrict stream);
+    size_t (*__write)(const void* __restrict ptr, size_t size, size_t nmemb, struct __FILE* __restrict stream);
+    int (*__ungetc)(int ch, struct __FILE* stream);
+    char __placeholder[];
+  };
+
   typedef struct __FILE FILE;
 
   typedef ptrdiff_t fpos_t;
@@ -26,6 +37,8 @@ extern "C" {
   FILE* freopen(const char* __restrict filename, const char* __restrict mode, FILE* __restrict stream);
   void  setbuf(FILE* __restrict stream, char* __restrict buf);
   int   setvbuf(FILE* __restrict stream, char* __restrict buf, int mode, size_t size);
+
+  int __ffinalize(FILE* stream);
 
   int fprintf(FILE* __restrict stream, const char* __restrict format, ...);
   int fscanf(FILE* __restrict stream, const char* __restrict format, ...);
@@ -56,7 +69,7 @@ extern "C" {
 #if defined(__C_STD_11__) || (defined(__STDC_WANT_LIB_EXT1__) && __STDC_WANT_LIB_EXT1__ >= 1)
   char* gets_s(char* str, rsize_t n);
 #else  // ^^^ __C_STD_11__ ^^^ / vvv !__C_STD_11__ vvv
-  __deprecated char* gets(char* str);
+__deprecated char* gets(char* str);
 #endif // !__C_STD_11__
 
   size_t fread(void* __restrict ptr, size_t size, size_t nmemb, FILE* __restrict stream);
@@ -87,9 +100,11 @@ extern "C" {
 } // extern "C"
 #endif // __cplusplus
 
-#define _IOFBF 1
-#define _IOLBF 2
-#define _IONBF 3
+#define _IOFBF                0b0001
+#define _IOLBF                0b0010
+#define _IONBF                0b0011
+#define _IOBUF_AUTO_ALLOCATED 0b0100
+#define _IOBUF_MODE_READ      0b1000
 
 #define BUFSIZ 0x1000
 
