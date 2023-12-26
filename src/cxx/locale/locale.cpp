@@ -45,6 +45,27 @@ namespace std {
     }
   }
 
+  locale& locale::operator=(const locale& other) __noexcept {
+    if (this != &other) {
+      for (facet* facet : _facets) {
+        --facet->refs;
+        if (facet->refs == 0) {
+          delete facet;
+        }
+      }
+
+      for (facet* facet : other._facets) {
+        if (facet != nullptr) {
+          ++facet->refs;
+        }
+      }
+
+      _facets = other._facets;
+    }
+
+    return *this;
+  }
+
   struct __classic_locale {
     locale loc;
 

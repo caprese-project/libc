@@ -81,6 +81,8 @@ namespace std {
     locale() __noexcept;
     locale(const locale& other) __noexcept;
     ~locale();
+
+    locale& operator=(const locale& other) __noexcept;
   };
 } // namespace std
 
