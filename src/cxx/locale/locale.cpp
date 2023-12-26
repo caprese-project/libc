@@ -38,9 +38,11 @@ namespace std {
 
   locale::~locale() {
     for (facet* facet : _facets) {
-      --facet->refs;
-      if (facet->refs == 0) {
-        delete facet;
+      if (facet != nullptr) {
+        --facet->refs;
+        if (facet->refs == 0) {
+          delete facet;
+        }
       }
     }
   }
@@ -48,9 +50,11 @@ namespace std {
   const locale& locale::operator=(const locale& other) __noexcept {
     if (this != &other) {
       for (facet* facet : _facets) {
-        --facet->refs;
-        if (facet->refs == 0) {
-          delete facet;
+        if (facet != nullptr) {
+          --facet->refs;
+          if (facet->refs == 0) {
+            delete facet;
+          }
         }
       }
 
