@@ -8,11 +8,7 @@
 extern "C" {
 #endif // __cplusplus
 
-#ifdef __cplusplus
-#define NULL ((void*)0)
-#else
 #define NULL 0
-#endif // __cplusplus
 
 #ifdef __GNUC__
 #define offsetof(type, member) __builtin_offsetof(type, member)
