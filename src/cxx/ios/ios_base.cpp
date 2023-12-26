@@ -186,6 +186,16 @@ namespace std {
     return old;
   }
 
+  locale ios_base::imbue(const locale& loc) {
+    locale old = _loc;
+    _loc       = loc;
+    return old;
+  }
+
+  locale ios_base::getloc() {
+    return _loc;
+  }
+
   void ios_base::register_callback(event_callback cb, int index) {
     // TODO: impl
     (void)cb;

@@ -2,6 +2,8 @@
 #define CAPRESE_LIBC_INTERNAL_CXX_STRING_IO_H_
 
 #include <internal/cxx/istream/basic_istream.h>
+#include <internal/cxx/locale/ctype.h>
+#include <internal/cxx/locale/facet.h>
 #include <internal/cxx/ostream/basic_ostream.h>
 #include <internal/cxx/string/basic_string.h>
 
@@ -29,28 +31,27 @@ namespace std {
         str.erase();
 
         typename __basic_istream<Char, Traits>::int_type eof = Traits::eof();
+        const ctype<Char>&                               ct  = use_facet<ctype<Char>>(stream.getloc());
 
         typename __basic_istream<Char, Traits>::__streambuf_type* buf = stream.rdbuf();
 
         typename __basic_istream<Char, Traits>::int_type ch = buf->sgetc();
-        while (read_count < max_size && !Traits::eq_int_type(ch, eof) && !Traits::isspace(Traits::to_char_type(ch))) {
+        while (read_count < max_size && !Traits::eq_int_type(ch, eof) && !ct.is(ctype_base::space, Traits::to_char_type(ch))) {
           str.push_back(Traits::to_char_type(ch));
           ++read_count;
           ch = buf->snextc();
         }
 
-        if (Traits::eq_int_type(ch, eof)) {
+        if (read_count < max_size && Traits::eq_int_type(ch, eof)) {
           state |= ios_base::eofbit;
-        } else {
-          buf->sungetc();
         }
+
+        stream.width(0);
       }
       __catch (...) {
         stream.setstate(ios_base::badbit);
       }
     }
-
-    stream.width(0);
 
     __if_unlikely (read_count == 0) {
       state |= ios_base::failbit;

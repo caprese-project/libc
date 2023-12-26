@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <internal/cxx/ios/types.h>
+#include <internal/cxx/locale/locale.h>
 #include <internal/cxx/system_error/system_error.h>
 #include <internal/version.h>
 
@@ -111,6 +112,7 @@ namespace std {
     __ios_base_bits _ios_base_bits;
     streamsize      _prec;
     streamsize      _wide;
+    locale          _loc;
 
   protected:
     ios_base() = default;
@@ -167,6 +169,9 @@ namespace std {
 
     streamsize width() const;
     streamsize width(streamsize wide);
+
+    locale imbue(const locale& loc);
+    locale getloc();
 
     void register_callback(event_callback cb, int index);
   };
