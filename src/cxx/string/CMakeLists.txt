@@ -5,6 +5,7 @@ add_library(caprese_libcxx_string OBJECT)
 target_sources(
   caprese_libcxx_string PRIVATE
   stox.cpp
+  to_string.cpp
 )
 
 target_compile_options(
