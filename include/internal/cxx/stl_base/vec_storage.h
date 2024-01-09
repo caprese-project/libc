@@ -140,7 +140,9 @@ namespace std {
       }
 
       pointer new_begin = allocator_traits<allocator_type>::allocate(_allocator, new_capacity);
-      move(_begin, _begin + _size, new_begin);
+      for (size_type i = 0; i < _size; ++i) {
+        allocator_traits<allocator_type>::construct(_allocator, new_begin + i, move(_begin[i]));
+      }
       allocator_traits<allocator_type>::deallocate(_allocator, _begin, capacity);
 
       _begin = new_begin;
