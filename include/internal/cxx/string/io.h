@@ -24,7 +24,7 @@ namespace std {
       max_size = str.max_size();
     }
 
-    typename __basic_istream<Char, Traits>::sentry sentry(stream, true);
+    typename __basic_istream<Char, Traits>::sentry sentry(stream);
 
     if (sentry) {
       __try {
