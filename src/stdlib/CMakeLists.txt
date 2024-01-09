@@ -19,11 +19,13 @@ target_sources(
   div.c
   exit.c
   free.c
+  getenv.c
   ldiv.c
   lldiv.c
   malloc.c
   quick_exit.c
   realloc.c
+  setenv.c
   strtod.c
   strtof.c
   strtol.c

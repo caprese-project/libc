@@ -57,6 +57,9 @@ extern "C" {
   __noreturn void quick_exit(int status);
   int             at_quick_exit(void (*func)(void));
 
+  char* getenv(const char* name);
+  int   setenv(const char* name, const char* value, int overwrite);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif // __cplusplus
