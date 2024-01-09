@@ -421,17 +421,18 @@ namespace std {
         return *this;
       }
 
-      if (_current->right != nullptr) {
-        _current = _current->right;
-        while (_current->left != nullptr) {
-          _current = _current->left;
+      if (_current->right == nullptr) [[unlikely]] {
+        while (_current->parent != nullptr && _current->parent->right == _current) {
+          _current = _current->parent;
+        }
+
+        if (_current->parent == nullptr || _current->parent->right == _current) {
+          _current = nullptr;
+        } else {
+          _current = _current->parent;
         }
       } else {
-        node_type* node = _current;
-        while (node->parent != nullptr && node->parent->right == node) {
-          node = node->parent;
-        }
-        _current = node->parent;
+        _current = _current->right->get_min_node();
       }
 
       return *this;
@@ -451,17 +452,18 @@ namespace std {
         return *this;
       }
 
-      if (_current->left != nullptr) {
-        _current = _current->left;
-        while (_current->right != nullptr) {
-          _current = _current->right;
+      if (_current->left == nullptr) [[unlikely]] {
+        while (_current->parent != nullptr && _current->parent->left == _current) {
+          _current = _current->parent;
+        }
+
+        if (_current->parent == nullptr || _current->parent->left == _current) {
+          _current = nullptr;
+        } else {
+          _current = _current->parent;
         }
       } else {
-        node_type* node = _current;
-        while (node->parent != nullptr && node->parent->left == node) {
-          node = node->parent;
-        }
-        _current = node->parent;
+        _current = _current->left->get_max_node();
       }
 
       return *this;
