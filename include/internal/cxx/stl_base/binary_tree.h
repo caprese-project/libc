@@ -726,7 +726,7 @@ namespace std {
 
     template<typename U>
     const_iterator upper_bound(U&& value) const {
-      iterator iter = this->lower_bound(value);
+      const_iterator iter = this->lower_bound(value);
       if (iter != this->end() && !this->_compare(value, *iter)) {
         ++iter;
       }
