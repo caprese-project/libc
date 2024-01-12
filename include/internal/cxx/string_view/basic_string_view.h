@@ -28,8 +28,8 @@ namespace std {
     using const_reference        = const value_type&;
     using iterator               = const value_type*;
     using const_iterator         = const value_type*;
-    using reverse_iterator       = reverse_iterator<iterator>;
-    using const_reverse_iterator = reverse_iterator<const_iterator>;
+    using reverse_iterator       = std::reverse_iterator<iterator>;
+    using const_reverse_iterator = std::reverse_iterator<const_iterator>;
     using size_type              = __size_t;
     using difference_type        = __ptrdiff_t;
 
