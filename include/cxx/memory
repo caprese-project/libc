@@ -7,6 +7,7 @@
 #include <internal/cxx/memory/allocator_traits.h>
 #include <internal/cxx/memory/default_delete.h>
 #include <internal/cxx/memory/pointer_traits.h>
+#include <internal/cxx/memory/to_address.h>
 #include <internal/cxx/memory/uninit.h>
 #include <internal/cxx/memory/unique_ptr.h>
 
@@ -18,6 +19,18 @@ namespace std {
 
   template<typename T>
   const T* addressof(const T&&) = delete;
+
+#ifdef __CXX_STD_20__
+  template<typename T>
+  constexpr auto to_address(const T& ptr) noexcept {
+    return __to_address(ptr);
+  }
+
+  template<typename T>
+  constexpr T* to_address(T* ptr) noexcept {
+    return __to_address(ptr);
+  }
+#endif // __CXX_STD_20__
 } // namespace std
 
 #endif // CAPRESE_LIBC_CXX_MEMORY_
