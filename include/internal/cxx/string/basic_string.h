@@ -1,24 +1,41 @@
 #ifndef CAPRESE_LIBC_INTERNAL_CXX_STRING_BASIC_STRING_H_
 #define CAPRESE_LIBC_INTERNAL_CXX_STRING_BASIC_STRING_H_
 
+#include <initializer_list>
 #include <internal/attribute.h>
 #include <internal/cxx/algorithm/minmax.h>
 #include <internal/cxx/algorithm/seq.h>
 #include <internal/cxx/iterator/functions.h>
+#include <internal/cxx/iterator/traits.h>
 #include <internal/cxx/memory/allocator.h>
 #include <internal/cxx/memory/allocator_traits.h>
 #include <internal/cxx/stdexcept/logic_error.h>
 #include <internal/cxx/stl_base/str_storage.h>
 #include <internal/cxx/stl_base/vla.h>
 #include <internal/cxx/string/char_traits.h>
+#include <internal/cxx/type_traits/detection.h>
+#include <internal/cxx/type_traits/logic.h>
+#include <internal/cxx/type_traits/type_relation.h>
 #include <internal/cxx/utility/fwd.h>
 #include <internal/exception.h>
+
+#ifdef __CXX_STD_17__
+
+#include <internal/cxx/string_view/basic_string_view.h>
+
+#endif // __CXX_STD_17__
 
 namespace std {
   template<typename Char, typename Traits = char_traits<Char>, typename Allocator = allocator<Char>>
   class __basic_string: public __vla<__string_storage<Char, Traits, Allocator>> {
     using __storage = __string_storage<Char, Traits, Allocator>;
     using __base    = __vla<__storage>;
+
+#ifdef __CXX_STD_17__
+
+    using __view = basic_string_view<Char, Traits>;
+
+#endif // __CXX_STD_17__
 
   public:
     using traits_type            = typename __storage::traits_type;
@@ -37,6 +54,27 @@ namespace std {
 
   public:
     static constexpr size_type npos = static_cast<size_type>(-1);
+
+  private:
+#ifdef __CXX_STD_17__
+    template<typename T, typename U = void>
+    using __if_view = typename __enable_if<
+        __conjunction<__is_convertible<const T&, __view>, __negation<__is_convertible<const T*, const __basic_string*>>, __negation<__is_convertible<const T&, const_pointer>>>::value,
+        U>::type;
+
+    template<typename StringView>
+    static __if_view<StringView, __view> __to_view(const StringView& view) {
+      return __view(view);
+    }
+
+    struct __view_wrapper {
+      __view _view;
+
+      explicit __view_wrapper(const __view& view): _view(view) { }
+    };
+
+    __constexpr_cxx_std_20 __basic_string(__view_wrapper wrapper, const allocator_type& allocator): __basic_string(wrapper._view.data(), wrapper._view.size(), allocator) { }
+#endif // __CXX_STD_17__
 
   public:
     __constexpr_cxx_std_20 __basic_string() __noexcept_if_cxx_std_17(noexcept(allocator_type())) = default;
@@ -84,6 +122,17 @@ namespace std {
 
     __constexpr_cxx_std_20 __basic_string(__basic_string&& other, const allocator_type& allocator): __base(move(other), allocator) { }
 
+#ifdef __CXX_STD_17__
+
+    template<typename StringView, typename = __if_view<StringView>>
+    __constexpr_cxx_std_20 explicit __basic_string(const StringView& view, const allocator_type& allocator = allocator_type()): __basic_string(__view_wrapper(__to_view(view)), allocator) { }
+
+    template<typename StringView, typename = __if_view<StringView>>
+    __constexpr_cxx_std_20 __basic_string(const StringView& view, size_type pos, size_type n, const allocator_type& allocator = allocator_type())
+        : __basic_string(__view_wrapper(__to_view(view).substr(pos, n)), allocator) { }
+
+#endif // __CXX_STD_17__
+
     __constexpr_cxx_std_20 __basic_string& operator=(const __basic_string& other) = default;
 
     __constexpr_cxx_std_20 __basic_string& operator=(__basic_string&& other)
@@ -100,6 +149,15 @@ namespace std {
     __constexpr_cxx_std_20 __basic_string& operator=(initializer_list<value_type> init_list) {
       return *this = __basic_string(init_list);
     }
+
+#ifdef __CXX_STD_17__
+
+    template<typename StringView>
+    __constexpr_cxx_std_20 __if_view<StringView, __basic_string&> operator=(const StringView& view) {
+      return *this = __basic_string(view);
+    }
+
+#endif // __CXX_STD_17__
 
 #ifdef __CXX_STD_23__
     __basic_string& operator=(nullptr_t) = delete;
@@ -128,6 +186,16 @@ namespace std {
       this->append(init_list);
       return *this;
     }
+
+#ifdef __CXX_STD_17__
+
+    template<typename StringView>
+    __constexpr_cxx_std_20 __if_view<StringView, __basic_string&> operator+=(const StringView& view) {
+      this->append(view);
+      return *this;
+    }
+
+#endif // __CXX_STD_17__
 
     __constexpr_cxx_std_20 __basic_string& append(const __basic_string& str) {
       return this->append(str.data(), str.size());
@@ -182,6 +250,22 @@ namespace std {
       return this->append(init_list.begin(), init_list.end());
     }
 
+#ifdef __CXX_STD_17__
+
+    template<typename StringView>
+    __constexpr_cxx_std_20 __if_view<StringView, __basic_string&> append(const StringView& view) {
+      __view sv = __to_view(view);
+      return this->append(sv.data(), sv.size());
+    }
+
+    template<typename StringView>
+    __constexpr_cxx_std_20 __if_view<StringView, __basic_string&> append(const StringView& view, size_type pos, size_type n = npos) {
+      __view sv = __to_view(view).substr(pos, n);
+      return this->append(sv.data(), sv.size());
+    }
+
+#endif // __CXX_STD_17__
+
     __constexpr_cxx_std_20 __basic_string& assign(const __basic_string& str) {
       return *this = str;
     }
@@ -206,6 +290,22 @@ namespace std {
     __constexpr_cxx_std_20 __basic_string& assign(const_pointer str) {
       return this->assign(str, traits_type::length(str));
     }
+
+#ifdef __CXX_STD_17__
+
+    template<typename StringView>
+    __constexpr_cxx_std_20 __if_view<StringView, __basic_string&> assign(const StringView& view) {
+      __view sv = __to_view(view);
+      return this->assign(sv.data(), sv.size());
+    }
+
+    template<typename StringView>
+    __constexpr_cxx_std_20 __if_view<StringView, __basic_string&> assign(const StringView& view, size_type pos, size_type n = npos) {
+      __view sv = __to_view(view).substr(pos, n);
+      return this->assign(sv.data(), sv.size());
+    }
+
+#endif // __CXX_STD_17__
 
     __constexpr_cxx_std_20 __basic_string& insert(size_type pos, const __basic_string& str) {
       return this->insert(pos, str.data(), str.size());
@@ -239,6 +339,22 @@ namespace std {
       return *this;
     }
 
+#ifdef __CXX_STD_17__
+
+    template<typename StringView>
+    __constexpr_cxx_std_20 __if_view<StringView, __basic_string&> insert(size_type pos, const StringView& view) {
+      __view sv = __to_view(view);
+      return this->insert(pos, sv.data(), sv.size());
+    }
+
+    template<typename StringView>
+    __constexpr_cxx_std_20 __if_view<StringView, __basic_string&> insert(size_type pos1, const StringView& view, size_type pos2, size_type n = npos) {
+      __view sv = __to_view(view).substr(pos2, n);
+      return this->insert(pos1, sv.data(), sv.size());
+    }
+
+#endif // __CXX_STD_17__
+
     __constexpr_cxx_std_20 __basic_string& erase(size_type pos = 0, size_type n = npos) {
       __if_unlikely (pos > __base::size()) {
         __throw_exception(out_of_range("pos > size()"));
@@ -252,6 +368,14 @@ namespace std {
     __constexpr_cxx_std_20 const_pointer c_str() const __noexcept_cxx_std_11 {
       return __base::data();
     }
+
+#ifdef __CXX_STD_17__
+
+    __constexpr_cxx_std_20 operator __view() const noexcept {
+      return __view(__base::data(), __base::size());
+    }
+
+#endif // __CXX_STD_17__
 
     __constexpr_cxx_std_20 size_type copy(pointer str, size_type n, size_type pos = 0) const {
       __if_unlikely (pos > __base::size()) {
@@ -310,6 +434,16 @@ namespace std {
       }
     }
 
+#ifdef __CXX_STD_17__
+
+    template<typename StringView>
+    __constexpr_cxx_std_20 __if_view<StringView, size_type> find(const StringView& view, size_type pos = 0) const {
+      __view sv = __to_view(view);
+      return this->find(sv.data(), pos, sv.size());
+    }
+
+#endif // __CXX_STD_17__
+
     __constexpr_cxx_std_20 size_type rfind(const __basic_string& str, size_type pos = npos) const __noexcept_cxx_std_11 {
       if (pos > __base::size()) {
         pos = __base::size();
@@ -345,6 +479,16 @@ namespace std {
     __constexpr_cxx_std_20 size_type rfind(value_type ch, size_type pos = npos) const {
       return this->rfind(&ch, pos, 1);
     }
+
+#ifdef __CXX_STD_17__
+
+    template<typename StringView>
+    __constexpr_cxx_std_20 __if_view<StringView, size_type> rfind(const StringView& view, size_type pos = 0) const {
+      __view sv = __to_view(view);
+      return this->rfind(sv.data(), pos, sv.size());
+    }
+
+#endif // __CXX_STD_17__
 
     __constexpr_cxx_std_20 __basic_string substr(size_type pos = 0, size_type n = npos) const __lvalue_ref_cxx_std_23 {
       __if_unlikely (pos > __base::size()) {
@@ -401,30 +545,60 @@ namespace std {
       return __basic_string(*this, pos, n1).compare(__basic_string(s, n2));
     }
 
+#ifdef __CXX_STD_17__
+
+    template<typename StringView>
+    __constexpr_cxx_std_20 __if_view<StringView, int> compare(const StringView& view) const {
+      __view sv = __to_view(view);
+
+      size_type len = min(__base::size(), sv.size());
+      int       ret = traits_type::compare(__base::data(), sv.data(), len);
+
+      if (ret == 0) {
+        ret = __base::size() == sv.size() ? 0 : (__base::size() < sv.size() ? -1 : 1);
+      }
+
+      return ret;
+    }
+
+    template<typename StringView>
+    __constexpr_cxx_std_20 __if_view<StringView, int> compare(size_type pos, size_type n, const StringView& view) const {
+      __view sv = __to_view(view);
+      return __view(*this).substr(pos, n).compare(sv);
+    }
+
+    template<typename StringView>
+    __constexpr_cxx_std_20 __if_view<StringView, int> compare(size_type pos1, size_type n1, const StringView& view, size_type pos2, size_type n2 = npos) const {
+      __view sv = __to_view(view).substr(pos2, n2);
+      return __view(*this).substr(pos1, n2).compare(sv);
+    }
+
+#endif // __CXX_STD_17__
+
 #ifdef __CXX_STD_20__
 
     constexpr bool starts_with(value_type ch) const noexcept {
-      return !__base::empty() && traits_type::eq(__base::front(), ch);
+      return __view(__base::data(), __base::size()).starts_with(ch);
     }
 
-    constexpr bool starts_with(const_pointer str) const {
-      size_type len = traits_type::length(str);
-      if (len > __base::size()) {
-        return false;
-      }
-      return traits_type::compare(__base::data(), str, len) == 0;
+    constexpr bool starts_with(const_pointer str) const noexcept {
+      return __view(__base::data(), __base::size()).starts_with(str);
+    }
+
+    constexpr bool starts_with(__view str) const noexcept {
+      return __view(__base::data(), __base::size()).starts_with(str);
     }
 
     constexpr bool ends_with(value_type ch) const noexcept {
-      return !__base::empty() && traits_type::eq(__base::back(), ch);
+      return __view(__base::data(), __base::size()).ends_with(ch);
     }
 
-    constexpr bool ends_with(const_pointer str) const {
-      size_type len = traits_type::length(str);
-      if (len > __base::size()) {
-        return false;
-      }
-      return traits_type::compare(__base::data() + __base::size() - len, str, len) == 0;
+    constexpr bool ends_with(const_pointer str) const noexcept {
+      return __view(__base::data(), __base::size()).ends_with(str);
+    }
+
+    constexpr bool ends_with(__view str) const noexcept {
+      return __view(__base::data(), __base::size()).ends_with(str);
     }
 
 #endif // __CXX_STD_20__
@@ -432,11 +606,15 @@ namespace std {
 #ifdef __CXX_STD_23__
 
     constexpr bool contains(value_type ch) const noexcept {
-      return this->find(ch) != npos;
+      return __view(__base::data(), __base::size()).contains(ch);
     }
 
-    constexpr bool contains(const_pointer str) const {
-      return this->find(str) != npos;
+    constexpr bool contains(const_pointer str) const noexcept {
+      return __view(__base::data(), __base::size()).contains(str);
+    }
+
+    constexpr bool contains(__view str) const noexcept {
+      return __view(__base::data(), __base::size()).contains(str);
     }
 
 #endif // __CXX_STD_23__
@@ -620,6 +798,27 @@ namespace std {
   __constexpr_cxx_std_20 bool operator>=(const Char* lhs, const __basic_string<Char, Traits, Allocator>& rhs) {
     return rhs.compare(lhs) <= 0;
   }
+
+#if __cpp_deduction_guides
+
+  template<typename InputIterator, typename Allocator = allocator<typename iterator_traits<InputIterator>::value_type>>
+  __basic_string(InputIterator, InputIterator, Allocator = Allocator())
+      -> __basic_string<typename iterator_traits<InputIterator>::value_type, char_traits<typename iterator_traits<InputIterator>::value_type>, Allocator>;
+
+#ifdef __CXX_STD_20__
+
+  template<typename Char, typename Traits, typename Allocator = allocator<Char>>
+  explicit __basic_string(basic_string_view<Char, Traits>, const Allocator& = Allocator()) -> __basic_string<Char, Traits, Allocator>;
+
+  template<typename Char, typename Traits, typename Allocator = allocator<Char>>
+  __basic_string(basic_string_view<Char, Traits>,
+                 typename __basic_string<Char, Traits, Allocator>::size_type,
+                 typename __basic_string<Char, Traits, Allocator>::size_type,
+                 const Allocator& = Allocator()) -> __basic_string<Char, Traits, Allocator>;
+
+#endif // __CXX_STD_20__
+
+#endif // __cpp_deduction_guides
 } // namespace std
 
 #endif // CAPRESE_LIBC_INTERNAL_CXX_STRING_BASIC_STRING_H_
