@@ -15,6 +15,7 @@
 #include <internal/cxx/type_traits/type_relation.h>
 #include <internal/cxx/utility/pair.h>
 #include <internal/exception.h>
+#include <internal/version.h>
 
 namespace std {
   template<typename K, typename V, typename Compare = __less<K>, typename Allocator = allocator<pair<const K, V>>>
@@ -291,9 +292,32 @@ namespace std {
       return _container.find(key);
     }
 
+#ifdef __CXX_STD_14__
+
+    template<typename Key>
+    iterator find(const Key& key) {
+      return _container.find(key);
+    }
+
+    template<typename Key>
+    const_iterator find(const Key& key) const {
+      return _container.find(key);
+    }
+
+#endif // __CXX_STD_14__
+
+#ifdef __CXX_STD_20__
+
     bool contains(const key_type& key) const {
       return find(key) != end();
     }
+
+    template<typename Key>
+    bool contains(const Key& key) const {
+      return find(key) != end();
+    }
+
+#endif // __CXX_STD_20__
 
     iterator lower_bound(const key_type& key) {
       return _container.lower_bound(key);
@@ -303,6 +327,20 @@ namespace std {
       return _container.lower_bound(key);
     }
 
+#ifdef __CXX_STD_14__
+
+    template<typename Key>
+    iterator lower_bound(const Key& key) {
+      return _container.lower_bound(key);
+    }
+
+    template<typename Key>
+    const_iterator lower_bound(const Key& key) const {
+      return _container.lower_bound(key);
+    }
+
+#endif // __CXX_STD_14__
+
     iterator upper_bound(const key_type& key) {
       return _container.upper_bound(key);
     }
@@ -310,6 +348,20 @@ namespace std {
     const_iterator upper_bound(const key_type& key) const {
       return _container.upper_bound(key);
     }
+
+#ifdef __CXX_STD_14__
+
+    template<typename Key>
+    iterator upper_bound(const Key& key) {
+      return _container.upper_bound(key);
+    }
+
+    template<typename Key>
+    const_iterator upper_bound(const Key& key) const {
+      return _container.upper_bound(key);
+    }
+
+#endif // __CXX_STD_14__
 
     key_compare key_comp() const {
       return _compare;
