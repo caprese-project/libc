@@ -4,4 +4,9 @@
 #include <internal/cxx/functional/compare.h>
 #include <internal/cxx/functional/ref.h>
 
+namespace std {
+  template<typename T>
+  using less = __less<T>;
+} // namespace std
+
 #endif // CAPRESE_LIBC_CXX_FUNCTIONAL_
