@@ -167,6 +167,19 @@ namespace std {
       return !eq_int_type(c, eof()) ? c : to_int_type(char_type());
     }
   };
+
+#if __cpp_lib_three_way_comparison
+
+  template<typename CharTraits, typename Fallback = std::weak_ordering>
+  constexpr auto __char_traits_comparison_category(int cmp) noexcept {
+    if constexpr (requires { typename CharTraits::comparison_category; }) {
+      return static_cast<typename CharTraits::comparison_category>(cmp <=> 0);
+    } else {
+      return static_cast<Fallback>(cmp <=> 0);
+    }
+  }
+
+#endif // __cpp_lib_three_way_comparison
 } // namespace std
 
 #endif // CAPRESE_LIBC_INTERNAL_CXX_STRING_CHAR_TRAITS_H_

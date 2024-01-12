@@ -1,0 +1,40 @@
+#ifndef CAPRESE_LIBC_CXX_STRING_VIEW_
+#define CAPRESE_LIBC_CXX_STRING_VIEW_
+
+#include <internal/version.h>
+
+#ifdef __CXX_STD_17__
+
+#include <internal/cxx/string_view/basic_string_view.h>
+#include <internal/cxx/string_view/io.h>
+
+namespace std {
+  using string_view    = basic_string_view<char>;
+  using wstring_view   = basic_string_view<wchar_t>;
+  using u16string_view = basic_string_view<char16_t>;
+  using u32string_view = basic_string_view<char32_t>;
+
+#ifdef __CXX_STD_20__
+
+  using u8string_view = basic_string_view<char8_t>;
+
+#endif // __CXX_STD_20__
+
+  inline namespace literals {
+    inline namespace string_view_literals {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wliteral-suffix"
+
+      inline string_view operator""sv(const char* str, size_t len) {
+        return string_view(str, len);
+      }
+
+#pragma GCC diagnostic pop
+    } // namespace string_view_literals
+  }   // namespace literals
+
+} // namespace std
+
+#endif // __CXX_STD_17__
+
+#endif // CAPRESE_LIBC_CXX_STRING_VIEW_
