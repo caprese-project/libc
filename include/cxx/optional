@@ -1,0 +1,8 @@
+#ifndef CAPRESE_LIBC_CXX_OPTIONAL_
+#define CAPRESE_LIBC_CXX_OPTIONAL_
+
+#include <internal/cxx/optional/bad_optional_access.h>
+#include <internal/cxx/optional/nullopt.h>
+#include <internal/cxx/optional/optional.h>
+
+#endif // CAPRESE_LIBC_CXX_OPTIONAL_

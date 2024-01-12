@@ -50,6 +50,7 @@ add_subdirectory(src/cxx/ios)
 add_subdirectory(src/cxx/iostream)
 add_subdirectory(src/cxx/locale)
 add_subdirectory(src/cxx/new)
+add_subdirectory(src/cxx/optional)
 add_subdirectory(src/cxx/stdexcept)
 add_subdirectory(src/cxx/string)
 add_subdirectory(src/cxx/typeinfo)
@@ -125,6 +126,7 @@ target_sources(
   $<TARGET_OBJECTS:caprese_libcxx_ios>
   $<TARGET_OBJECTS:caprese_libcxx_iostream>
   $<TARGET_OBJECTS:caprese_libcxx_locale>
+  $<TARGET_OBJECTS:caprese_libcxx_optional>
   $<TARGET_OBJECTS:caprese_libcxx_stdexcept>
   $<TARGET_OBJECTS:caprese_libcxx_string>
 )
