@@ -5,7 +5,7 @@
 #include <internal/cxx/functional/ref.h>
 
 namespace std {
-  template<typename T>
+  template<typename T = void>
   using less = __less<T>;
 } // namespace std
 
