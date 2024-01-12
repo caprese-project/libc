@@ -239,10 +239,21 @@ namespace std {
     }
 
     size_type erase(const key_type& key) {
-      size_t old_size = size();
+      size_type old_size = size();
       _container.erase(key);
       return old_size - size();
     }
+
+#ifdef __CXX_STD_23__
+
+    template<typename Key>
+    size_type erase(Key&& key) {
+      size_type old_size = size();
+      _container.erase(forward<Key>(key));
+      return old_size - size();
+    }
+
+#endif // __CXX_STD_23__
 
     mapped_type& operator[](const key_type& key) {
       iterator iter = find(key);
