@@ -2,7 +2,7 @@
 #define CAPRESE_INTERNAL_CXX_TYPE_TRAITS_REF_H_
 
 #include <internal/cxx/functional/ref.h>
-#include <internal/cxx/type_traits/modify.h>
+#include <internal/cxx/type_traits/decay.h>
 
 namespace std {
   template<typename T>

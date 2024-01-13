@@ -7,6 +7,7 @@
 #include <internal/cxx/optional/bad_optional_access.h>
 #include <internal/cxx/optional/nullopt.h>
 #include <internal/cxx/stl_base/spec_members.h>
+#include <internal/cxx/type_traits/decay.h>
 #include <internal/cxx/type_traits/modify.h>
 #include <internal/cxx/type_traits/type.h>
 #include <internal/cxx/type_traits/type_relation.h>
