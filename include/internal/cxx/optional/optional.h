@@ -603,27 +603,27 @@ namespace std {
   };
 
   template<typename T>
-  __constexpr_cxx_std_23 inline typename __enable_if_t<__conjunction<__is_move_constructible<T>, __is_swappable<T>>::value>::type swap(optional<T>& lhs,
-                                                                                                                                       optional<T>& rhs) noexcept(noexcept(lhs.swap(rhs))) {
+  __constexpr_cxx_std_23 inline typename __enable_if<__conjunction<__is_move_constructible<T>, __is_swappable<T>>::value>::type swap(optional<T>& lhs,
+                                                                                                                                     optional<T>& rhs) noexcept(noexcept(lhs.swap(rhs))) {
     lhs.swap(rhs);
   }
 
   template<typename T>
-  typename __enable_if_t<__negation<__conjunction<__is_move_constructible<T>, __is_swappable<T>>>::value>::type swap(optional<T>&, optional<T>&) = delete;
+  typename __enable_if<__negation<__conjunction<__is_move_constructible<T>, __is_swappable<T>>>::value>::type swap(optional<T>&, optional<T>&) = delete;
 
   template<typename T>
-  constexpr typename __enable_if_t<__is_constructible_t<typename __decay<T>::type, T>::value, optional<typename __decay<T>::type>>::type make_optional(T&& value) noexcept(
+  constexpr typename __enable_if<__is_constructible_t<typename __decay<T>::type, T>::value, optional<typename __decay<T>::type>>::type make_optional(T&& value) noexcept(
       __is_nothrow_constructible_t<optional<typename __decay<T>::type>, T>::value) {
     return optional<typename __decay<T>::type>(forward<T>(value));
   }
 
   template<typename T, typename... Args>
-  constexpr typename __enable_if_t<__is_constructible_t<T, Args...>::value, optional<T>>::type make_optional(Args&&... args) noexcept(__is_nothrow_constructible_t<T, Args...>::value) {
+  constexpr typename __enable_if<__is_constructible_t<T, Args...>::value, optional<T>>::type make_optional(Args&&... args) noexcept(__is_nothrow_constructible_t<T, Args...>::value) {
     return optional<T>(in_place, forward<Args>(args)...);
   }
 
   template<typename T, typename U, typename... Args>
-  constexpr typename __enable_if_t<__is_constructible_t<T, initializer_list<U>&, Args...>::value, optional<T>>::type make_optional(initializer_list<U> init_list, Args&&... args) noexcept(
+  constexpr typename __enable_if<__is_constructible_t<T, initializer_list<U>&, Args...>::value, optional<T>>::type make_optional(initializer_list<U> init_list, Args&&... args) noexcept(
       __is_nothrow_constructible_t<T, initializer_list<U>&, Args...>::value) {
     return optional<T>(in_place, init_list, forward<Args>(args)...);
   }
