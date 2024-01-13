@@ -10,6 +10,7 @@
 #include <internal/cxx/type_traits/detection.h>
 #include <internal/cxx/type_traits/logic.h>
 #include <internal/cxx/type_traits/modify.h>
+#include <internal/cxx/type_traits/ref.h>
 #include <internal/cxx/type_traits/sign.h>
 #include <internal/cxx/type_traits/type.h>
 #include <internal/cxx/type_traits/type_relation.h>
@@ -280,6 +281,16 @@ namespace std {
   template<typename T>
   using decay = __decay<T>;
 
+#ifdef __CXX_STD_20__
+
+  template<typename T>
+  using unwrap_reference = __unwrap_reference<T>;
+
+  template<typename T>
+  using unwrap_ref_decay = __unwrap_ref_decay<T>;
+
+#endif // __CXX_STD_20__
+
   template<typename T>
   using remove_extent = __remove_extent<T>;
 
@@ -355,6 +366,16 @@ namespace std {
 
   template<typename T>
   using decay_t = typename decay<T>::type;
+
+#ifdef __CXX_STD_20__
+
+  template<typename T>
+  using unwrap_reference_t = typename unwrap_reference<T>::type;
+
+  template<typename T>
+  using unwrap_ref_decay_t = typename unwrap_ref_decay<T>::type;
+
+#endif // __CXX_STD_20__
 
   template<typename T>
   using remove_extent_t = typename remove_extent<T>::type;

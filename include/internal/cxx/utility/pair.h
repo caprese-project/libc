@@ -3,6 +3,7 @@
 
 #include <internal/attribute.h>
 #include <internal/cxx/type_traits/detection.h>
+#include <internal/cxx/type_traits/ref.h>
 #include <internal/cxx/type_traits/type.h>
 #include <internal/cxx/utility/fwd.h>
 #include <internal/cxx/utility/swap.h>
@@ -103,6 +104,24 @@ namespace std {
   __constexpr_cxx_std_20 void swap(pair<T, U>& lhs, pair<T, U>& rhs) __noexcept {
     lhs.swap(rhs);
   }
+
+#ifdef __CXX_STD_11__
+
+  template<typename T, typename U>
+  __constexpr_cxx_std_14 pair<typename __unwrap_ref_decay<T>::type, typename __unwrap_ref_decay<U>::type> make_pair(T&& first, U&& second) {
+    using V = typename __unwrap_ref_decay<T>::type;
+    using W = typename __unwrap_ref_decay<U>::type;
+    return pair<V, W>(forward<T>(first), forward<U>(second));
+  }
+
+#else // ^^^ __CXX_STD_11__ ^^^ / vvv !__CXX_STD_11__ vvv
+
+  template<typename T, typename U>
+  inline pair<T, U> make_pair(T first, U second) {
+    return pair<T, U>(first, second);
+  }
+
+#endif // !__CXX_STD_11__
 
 #if __cpp_deduction_guides
   template<typename T, typename U>
