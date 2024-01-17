@@ -179,6 +179,8 @@ namespace std {
       for (size_type i = 0; i < n; ++i) {
         allocator_traits<allocator_type>::construct(alloc, begin + i);
       }
+
+      _storage.set_size(n);
     }
 
     __constexpr_cxx_std_20 __vla(size_type n, const value_type& value, const allocator_type& allocator = allocator_type()): _storage(allocator) {
@@ -189,6 +191,8 @@ namespace std {
       for (size_type i = 0; i < n; ++i) {
         allocator_traits<allocator_type>::construct(alloc, begin + i, value);
       }
+
+      _storage.set_size(n);
     }
 
     template<typename InputIterator>
@@ -201,6 +205,8 @@ namespace std {
       for (size_type i = 0; i < n; ++i) {
         allocator_traits<allocator_type>::construct(alloc, begin + i, *first++);
       }
+
+      _storage.set_size(n);
     }
 
     __constexpr_cxx_std_20 __vla(const __vla& other): _storage(other._storage) { }
