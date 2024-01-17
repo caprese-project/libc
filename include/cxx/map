@@ -208,6 +208,16 @@ namespace std {
       insert(init.begin(), init.end());
     }
 
+    template<typename M>
+    pair<iterator, bool> insert_or_assign(const key_type& key, M&& obj) {
+      return _container.insert_or_assign(key, forward<M>(obj));
+    }
+
+    template<typename M>
+    pair<iterator, bool> insert_or_assign(key_type&& key, M&& obj) {
+      return _container.insert_or_assign(move(key), forward<M>(obj));
+    }
+
     template<typename... Args>
     pair<iterator, bool> emplace(Args&&... args) {
       return _container.emplace(forward<Args>(args)...);

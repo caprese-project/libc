@@ -44,6 +44,12 @@ namespace std {
       return node;
     }
 
+    template<typename Allocator, typename... Args>
+    void assign(Allocator& allocator, Args&&... args) {
+      allocator_traits<Allocator>::destroy(allocator, this);
+      allocator_traits<Allocator>::construct(allocator, this, T(std::forward<Args>(args)...), this->height, this->parent, this->left, this->right);
+    }
+
     template<typename Allocator>
     void destroy(Allocator& allocator) {
       assert(this->left == nullptr);
@@ -659,6 +665,38 @@ namespace std {
       }
 
       node_type* node = node_type::create(this->_allocator, std::forward<U>(value));
+
+      if (iter == this->end()) {
+        this->_root->get_max_node()->set_right(node);
+      } else if (iter._current->left == nullptr) {
+        iter._current->set_left(node);
+      } else {
+        iter._current->left->get_max_node()->set_right(node);
+      }
+
+      this->_root = node->balance_i();
+
+      ++this->_size;
+
+      return std::pair<iterator, bool>(iterator(this, node), true);
+    }
+
+    template<typename Key, typename Value>
+    std::pair<iterator, bool> insert_or_assign(Key&& key, Value&& value) {
+      __if_unlikely (this->_root == nullptr) {
+        this->_root = node_type::create(this->_allocator, std::forward<Key>(key), std::forward<Value>(value));
+        this->_size = 1;
+        return std::pair<iterator, bool>(iterator(this, this->_root), true);
+      }
+
+      iterator iter = this->lower_bound(key);
+      // !(*iter < value) && !(value < *iter) -> value == *iter
+      if (iter != this->end() && !this->_compare(key, KeyExtractor()(*iter))) {
+        iter._current->assign(this->_allocator, std::forward<Key>(key), std::forward<Value>(value));
+        return std::pair<iterator, bool>(iter, false);
+      }
+
+      node_type* node = node_type::create(this->_allocator, std::forward<Key>(key), std::forward<Value>(value));
 
       if (iter == this->end()) {
         this->_root->get_max_node()->set_right(node);
