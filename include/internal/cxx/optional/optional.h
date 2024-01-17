@@ -82,7 +82,7 @@ namespace std {
 
     constexpr __optional_storage_base(__optional_storage_base&& other, __optional_non_trivial_tag): _has_value(other._has_value) {
       if (other._has_value) {
-        this->construct(move(other._storage._value));
+        this->construct(std::move(other._storage._value));
         other._has_value = false;
       }
     }
@@ -109,22 +109,22 @@ namespace std {
     }
 
     constexpr void copy(const __optional_storage_base& other) {
-      if (this->_has_value && other->_has_value) {
-        this->_storage._value = other->_storage._value;
-      } else if (this->_has_value && !other->_has_value) {
+      if (this->_has_value && other._has_value) {
+        this->_storage._value = other._storage._value;
+      } else if (this->_has_value && !other._has_value) {
         this->destroy();
-      } else if (!this->_has_value && other->_has_value) {
-        this->construct(other->_storage._value);
+      } else if (!this->_has_value && other._has_value) {
+        this->construct(other._storage._value);
       }
     }
 
     constexpr void move(__optional_storage_base&& other) {
-      if (this->_has_value && other->_has_value) {
-        this->_storage._value = move(other->_storage._value);
-      } else if (this->_has_value && !other->_has_value) {
+      if (this->_has_value && other._has_value) {
+        this->_storage._value = move(other._storage._value);
+      } else if (this->_has_value && !other._has_value) {
         this->destroy();
-      } else if (!this->_has_value && other->_has_value) {
-        this->construct(move(other->_storage._value));
+      } else if (!this->_has_value && other._has_value) {
+        this->construct(move(other._storage._value));
       }
     }
 

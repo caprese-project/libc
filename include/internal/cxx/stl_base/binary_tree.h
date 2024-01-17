@@ -488,14 +488,14 @@ namespace std {
   class __avl_tree {
   public:
     using node_type      = __avl_tree_node<T>;
-    using iterator       = __avl_tree_iterator<T, Compare, Allocator>;
-    using const_iterator = __avl_tree_iterator<const T, Compare, Allocator>;
+    using iterator       = __avl_tree_iterator<T, Compare, Allocator, KeyExtractor>;
+    using const_iterator = __avl_tree_iterator<const T, Compare, Allocator, KeyExtractor>;
 
   private:
     using compare_type   = Compare;
     using allocator_type = typename std::allocator_traits<Allocator>::template rebind_alloc<node_type>;
 
-    template<typename, typename, typename>
+    template<typename, typename, typename, typename>
     friend class __avl_tree_iterator;
 
   private:
