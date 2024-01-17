@@ -51,15 +51,6 @@ namespace std {
   template<typename T>
   union __variant_storage<T> {
     alignas(T) char _value[sizeof(T)];
-
-    constexpr __variant_storage() = default;
-
-    constexpr __variant_storage(const __variant_storage& other): _value(other._value.get()) { }
-
-    constexpr __variant_storage(__variant_storage&& other): _value(move(other._value).get()) { }
-
-    template<typename... Args>
-    constexpr explicit __variant_storage(Args&&... args): _value(forward<Args>(args)...) { }
   };
 
   template<typename T, typename U, typename... Tn>
@@ -68,15 +59,6 @@ namespace std {
 
     alignas(T) char _value[sizeof(T)];
     next_type _next;
-
-    constexpr __variant_storage() = default;
-
-    constexpr __variant_storage(const __variant_storage& other): _value(other._value.get()) { }
-
-    constexpr __variant_storage(__variant_storage&& other): _value(move(other._value).get()) { }
-
-    template<typename... Args>
-    constexpr explicit __variant_storage(Args&&... args): _value(forward<Args>(args)...) { }
   };
 
   class __variant_vtable {
@@ -288,9 +270,10 @@ namespace std {
     constexpr variant(T&& t) noexcept(__is_nothrow_constructible_t<Tj, T>::value): variant(in_place_index<__find_index<variant, Tj>::value>, forward<T>(t)) { }
 
     template<__size_t I, typename __enable_if<(I < sizeof...(Types)), nullptr_t>::type = nullptr, typename... Args>
-    constexpr explicit variant(in_place_index_t<I>, Args&&... args): _index(variant_npos),
-                                                                     _storage(__integral_constant<__size_t, I>(), forward<Args>(args)...) {
+    constexpr explicit variant(in_place_index_t<I>, Args&&... args): _index(static_cast<__index_type>(variant_npos)),
+                                                                     _storage() {
       static_assert(__is_constructible_t<__nth_type<I>, Args...>::value, "Invalid arguments for variant constructor");
+      __construct_at(&this->template __unsafe_get<__integral_constant<__size_t, I>::value>(), forward<Args>(args)...);
       _index = I;
     }
 

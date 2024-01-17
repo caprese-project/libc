@@ -1,3 +1,6 @@
+#ifndef CAPRESE_LIBC_INTERNAL_CXX_TYPE_TRAITS_DECAY_H_
+#define CAPRESE_LIBC_INTERNAL_CXX_TYPE_TRAITS_DECAY_H_
+
 #include <internal/cxx/type_traits/modify.h>
 #include <internal/cxx/type_traits/type.h>
 
@@ -29,3 +32,5 @@ namespace std {
     using type = typename __decay_helper<U>::type;
   };
 } // namespace std
+
+#endif // CAPRESE_LIBC_INTERNAL_CXX_TYPE_TRAITS_DECAY_H_

@@ -20,6 +20,12 @@
 namespace std {
   template<typename K, typename V, typename Compare = __less<K>, typename Allocator = allocator<pair<const K, V>>>
   class map {
+    struct __key_extractor {
+      constexpr const K& operator()(const pair<const K, V>& value) const {
+        return value.first;
+      }
+    };
+
   public:
     using key_type    = K;
     using value_type  = pair<const K, V>;
@@ -41,31 +47,8 @@ namespace std {
       map::key_compare comp;
     };
 
-    struct __compare {
-      constexpr __compare() = default;
-
-      constexpr bool operator()(const value_type& lhs, const value_type& rhs) const {
-        return comp(lhs.first, rhs.first);
-      }
-
-      constexpr bool operator()(const value_type& lhs, const key_type& rhs) const {
-        return comp(lhs.first, rhs);
-      }
-
-      constexpr bool operator()(const key_type& lhs, const value_type& rhs) const {
-        return comp(lhs, rhs.first);
-      }
-
-      constexpr bool operator()(const key_type& lhs, const key_type& rhs) const {
-        return comp(lhs, rhs);
-      }
-
-    protected:
-      map::key_compare comp;
-    };
-
     using allocator_type         = Allocator;
-    using __container_type       = __binary_tree<value_type, __compare, allocator_type>;
+    using __container_type       = __binary_tree<value_type, key_compare, allocator_type, __key_extractor>;
     using reference              = value_type&;
     using const_reference        = const value_type&;
     using iterator               = typename __container_type::iterator;
@@ -85,7 +68,7 @@ namespace std {
   public:
     map(): map(key_compare()) { }
 
-    explicit map(const key_compare& compare, const allocator_type& allocator = allocator_type()): _compare(compare), _allocator(allocator), _container(__compare(), allocator) { }
+    explicit map(const key_compare& compare, const allocator_type& allocator = allocator_type()): _compare(compare), _allocator(allocator), _container(compare, allocator) { }
 
     explicit map(const allocator_type& allocator): map(key_compare(), allocator) { }
 
@@ -211,7 +194,7 @@ namespace std {
     }
 
     pair<iterator, bool> insert(value_type&& value) {
-      return _container.emplace(move(value));
+      return _container.insert(move(value));
     }
 
     template<typename InputIterator>

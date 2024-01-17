@@ -719,6 +719,20 @@ namespace std {
     return lhs.compare(rhs) == 0;
   }
 
+#if __cpp_lib_three_way_comparison
+
+  template<typename Char, typename Traits, typename Allocator>
+  inline auto operator<=>(const __basic_string<Char, Traits, Allocator>& lhs, const __basic_string<Char, Traits, Allocator>& rhs) noexcept -> decltype(__char_traits_comparison_category<Traits>(0)) {
+    return __char_traits_comparison_category<Traits>(lhs.compare(rhs));
+  }
+
+  template<typename Char, typename Traits, typename Allocator>
+  inline auto operator<=>(const __basic_string<Char, Traits, Allocator>& lhs, const Char* rhs) noexcept -> decltype(__char_traits_comparison_category<Traits>(0)) {
+    return __char_traits_comparison_category<Traits>(lhs.compare(rhs));
+  }
+
+#else // ^^^ __cpp_lib_three_way_comparison ^^^ / vvv !__cpp_lib_three_way_comparison vvv
+
   template<typename Char, typename Traits, typename Allocator>
   __constexpr_cxx_std_20 bool operator==(const Char* lhs, const __basic_string<Char, Traits, Allocator>& rhs) {
     return rhs == lhs;
@@ -798,6 +812,8 @@ namespace std {
   __constexpr_cxx_std_20 bool operator>=(const Char* lhs, const __basic_string<Char, Traits, Allocator>& rhs) {
     return rhs.compare(lhs) <= 0;
   }
+
+#endif // !__cpp_lib_three_way_comparison
 
 #if __cpp_deduction_guides
 

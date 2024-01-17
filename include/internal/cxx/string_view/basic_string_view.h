@@ -8,6 +8,7 @@
 #include <internal/cxx/stddef.h>
 #include <internal/cxx/stdexcept/logic_error.h>
 #include <internal/cxx/string/char_traits.h>
+#include <internal/cxx/type_traits/identity.h>
 #include <internal/cxx/type_traits/type.h>
 #include <internal/cxx/type_traits/type_relation.h>
 #include <internal/exception.h>
@@ -490,6 +491,12 @@ namespace std {
 
   template<typename Char, typename Traits>
   constexpr auto operator<=>(basic_string_view<Char, Traits> lhs, basic_string_view<Char, Traits> rhs) noexcept -> decltype(__char_traits_comparison_category<Traits>(0)) {
+    return __char_traits_comparison_category<Traits>(lhs.compare(rhs));
+  }
+
+  template<typename Char, typename Traits>
+  constexpr auto operator<=>(basic_string_view<Char, Traits> lhs, typename __type_identity<basic_string_view<Char, Traits>>::type rhs) noexcept
+      -> decltype(__char_traits_comparison_category<Traits>(0)) {
     return __char_traits_comparison_category<Traits>(lhs.compare(rhs));
   }
 

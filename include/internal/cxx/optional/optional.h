@@ -6,6 +6,7 @@
 #include <internal/cxx/memory/uninit.h>
 #include <internal/cxx/optional/bad_optional_access.h>
 #include <internal/cxx/optional/nullopt.h>
+#include <internal/cxx/stddef.h>
 #include <internal/cxx/stl_base/spec_members.h>
 #include <internal/cxx/type_traits/decay.h>
 #include <internal/cxx/type_traits/modify.h>
@@ -109,7 +110,7 @@ namespace std {
 
     constexpr void copy(const __optional_storage_base& other) {
       if (this->_has_value && other->_has_value) {
-        __base::_storage._value = other->_storage._value;
+        this->_storage._value = other->_storage._value;
       } else if (this->_has_value && !other->_has_value) {
         this->destroy();
       } else if (!this->_has_value && other->_has_value) {
@@ -119,7 +120,7 @@ namespace std {
 
     constexpr void move(__optional_storage_base&& other) {
       if (this->_has_value && other->_has_value) {
-        __base::_storage._value = move(other->_storage._value);
+        this->_storage._value = move(other->_storage._value);
       } else if (this->_has_value && !other->_has_value) {
         this->destroy();
       } else if (!this->_has_value && other->_has_value) {
@@ -132,7 +133,7 @@ namespace std {
         __throw(bad_optional_access());
       }
 
-      return __base::_storage._value;
+      return this->_storage._value;
     }
 
     constexpr const T& get() const {
@@ -140,7 +141,7 @@ namespace std {
         __throw(bad_optional_access());
       }
 
-      return __base::_storage._value;
+      return this->_storage._value;
     }
   };
 
@@ -208,7 +209,7 @@ namespace std {
     }
 
     constexpr __optional_storage& operator=(__optional_storage&& other) {
-      __base::move(other);
+      __base::move(std::move(other));
       return *this;
     }
   };
@@ -245,10 +246,10 @@ namespace std {
     constexpr __optional_base& operator=(const __optional_base&) = default;
     constexpr __optional_base& operator=(__optional_base&&)      = default;
 
-    template<typename... Args, typename __enable_if<__is_constructible_t<T, Args...>::value, nullptr_t>::type = nullptr>
+    template<typename... Args, typename __enable_if<__is_constructible_t<T, Args...>::value, __nullptr_t>::type = nullptr>
     constexpr explicit __optional_base(in_place_t, Args&&... args): _storage(in_place, forward<Args>(args)...) { }
 
-    template<typename U, typename... Args, typename __enable_if<__is_constructible_t<T, initializer_list<U>&, Args...>::value, nullptr_t>::type = nullptr>
+    template<typename U, typename... Args, typename __enable_if<__is_constructible_t<T, initializer_list<U>&, Args...>::value, __nullptr_t>::type = nullptr>
     constexpr explicit __optional_base(in_place_t, initializer_list<U> init_list, Args&&... args): _storage(init_list, forward<Args>(args)...) { }
   };
 
@@ -266,10 +267,10 @@ namespace std {
 
     constexpr __optional_base(const __optional_base& other): _storage(other._storage, __optional_non_trivial_tag {}) { }
 
-    template<typename... Args, typename __enable_if<__is_constructible_t<T, Args...>::value, nullptr_t>::type = nullptr>
+    template<typename... Args, typename __enable_if<__is_constructible_t<T, Args...>::value, __nullptr_t>::type = nullptr>
     constexpr explicit __optional_base(in_place_t, Args&&... args): _storage(in_place, forward<Args>(args)...) { }
 
-    template<typename U, typename... Args, typename __enable_if<__is_constructible_t<T, initializer_list<U>&, Args...>::value, nullptr_t>::type = nullptr>
+    template<typename U, typename... Args, typename __enable_if<__is_constructible_t<T, initializer_list<U>&, Args...>::value, __nullptr_t>::type = nullptr>
     constexpr explicit __optional_base(in_place_t, initializer_list<U> init_list, Args&&... args): _storage(init_list, forward<Args>(args)...) { }
   };
 
@@ -287,10 +288,10 @@ namespace std {
 
     constexpr __optional_base(__optional_base&& other) noexcept(__is_nothrow_move_constructible<T>::value): _storage(move(other._storage), __optional_non_trivial_tag {}) { }
 
-    template<typename... Args, typename __enable_if<__is_constructible_t<T, Args...>::value, nullptr_t>::type = nullptr>
+    template<typename... Args, typename __enable_if<__is_constructible_t<T, Args...>::value, __nullptr_t>::type = nullptr>
     constexpr explicit __optional_base(in_place_t, Args&&... args): _storage(in_place, forward<Args>(args)...) { }
 
-    template<typename U, typename... Args, typename __enable_if<__is_constructible_t<T, initializer_list<U>&, Args...>::value, nullptr_t>::type = nullptr>
+    template<typename U, typename... Args, typename __enable_if<__is_constructible_t<T, initializer_list<U>&, Args...>::value, __nullptr_t>::type = nullptr>
     constexpr explicit __optional_base(in_place_t, initializer_list<U> init_list, Args&&... args): _storage(init_list, forward<Args>(args)...) { }
   };
 
@@ -309,10 +310,10 @@ namespace std {
 
     constexpr __optional_base(__optional_base&& other) noexcept(__is_nothrow_move_constructible<T>::value): _storage(move(other._storage), __optional_non_trivial_tag {}) { }
 
-    template<typename... Args, typename __enable_if<__is_constructible_t<T, Args...>::value, nullptr_t>::type = nullptr>
+    template<typename... Args, typename __enable_if<__is_constructible_t<T, Args...>::value, __nullptr_t>::type = nullptr>
     constexpr explicit __optional_base(in_place_t, Args&&... args): _storage(in_place, forward<Args>(args)...) { }
 
-    template<typename U, typename... Args, typename __enable_if<__is_constructible_t<T, initializer_list<U>&, Args...>::value, nullptr_t>::type = nullptr>
+    template<typename U, typename... Args, typename __enable_if<__is_constructible_t<T, initializer_list<U>&, Args...>::value, __nullptr_t>::type = nullptr>
     constexpr explicit __optional_base(in_place_t, initializer_list<U> init_list, Args&&... args): _storage(init_list, forward<Args>(args)...) { }
   };
 
@@ -322,10 +323,10 @@ namespace std {
                                          true,
                                          __is_copy_constructible<T>::value,
                                          __is_move_constructible<T>::value,
-                                         __conjunction<__is_copy_constructible<T>, __is_copy_assignable<T>>,
-                                         __conjunction<__is_move_constructible<T>, __is_move_assignable<T>>> {
+                                         __conjunction<__is_copy_constructible<T>, __is_copy_assignable<T>>::value,
+                                         __conjunction<__is_move_constructible<T>, __is_move_assignable<T>>::value> {
     static_assert(!__is_reference<T>::value);
-    static_assert(!__is_same_t<nullopt_t, __remove_cv<T>::type>::value);
+    static_assert(!__is_same_t<nullopt_t, typename __remove_cv<T>::type>::value);
     static_assert(__is_destructible_t<T>::value);
 
     using __base = __optional_base<T>;
@@ -339,10 +340,10 @@ namespace std {
                                                    __is_constructible_t<T, const optional<U>&>,
                                                    __is_constructible_t<T, optional<U>&&>,
                                                    __is_constructible_t<T, const optional<U>&&>,
-                                                   __is_convertible_t<optional<U>&, T>,
-                                                   __is_convertible_t<const optional<U>&, T>,
-                                                   __is_convertible_t<optional<U>&&, T>,
-                                                   __is_convertible_t<const optional<U>&&, T>>;
+                                                   __is_convertible<optional<U>&, T>,
+                                                   __is_convertible<const optional<U>&, T>,
+                                                   __is_convertible<optional<U>&&, T>,
+                                                   __is_convertible<const optional<U>&&, T>>;
 
     template<typename U>
     using __assigns_from_optional =
@@ -364,33 +365,33 @@ namespace std {
 
     template<typename U>
     using __non_explicit_copy_convertible =
-        typename __enable_if<__conjunction<__negation<__is_same_t<T, U>>, __is_constructible_t<T, const U&>, __is_convertible<const U&, T>, __negation<__converts_from_optional<U>>>, bool>::type;
+        typename __enable_if<__conjunction<__negation<__is_same_t<T, U>>, __is_constructible_t<T, const U&>, __is_convertible<const U&, T>, __negation<__converts_from_optional<U>>>::value, bool>::type;
 
     template<typename U>
     using __explicit_copy_convertible = typename __enable_if<
-        __conjunction<__negation<__is_same_t<T, U>>, __is_constructible_t<T, const U&>, __negation<__is_convertible<const U&, T>>, __negation<__converts_from_optional<U>>>,
+        __conjunction<__negation<__is_same_t<T, U>>, __is_constructible_t<T, const U&>, __negation<__is_convertible<const U&, T>>, __negation<__converts_from_optional<U>>>::value,
         bool>::type;
 
     template<typename U>
     using __non_explicit_move_convertible =
-        typename __enable_if<__conjunction<__negation<__is_same_t<T, U>>, __is_constructible_t<T, U>, __is_convertible<U, T>, __negation<__converts_from_optional<U>>>, bool>::type;
+        typename __enable_if<__conjunction<__negation<__is_same_t<T, U>>, __is_constructible_t<T, U>, __is_convertible<U, T>, __negation<__converts_from_optional<U>>>::value, bool>::type;
 
     template<typename U>
     using __explicit_move_convertible =
-        typename __enable_if<__conjunction<__negation<__is_same_t<T, U>>, __is_constructible_t<T, U>, __negation<__is_convertible<U, T>>, __negation<__converts_from_optional<U>>>, bool>::type;
+        typename __enable_if<__conjunction<__negation<__is_same_t<T, U>>, __is_constructible_t<T, U>, __negation<__is_convertible<U, T>>, __negation<__converts_from_optional<U>>>::value, bool>::type;
 
     template<typename U>
-    using __assignable = typename __enable_if<__conjunction<__negation<__is_same_t<T, U>>, __is_same<T, typename __decay<U>::type>, __is_constructible_t<T, U>, __is_assignable_t<T&, U>>,
+    using __assignable = typename __enable_if<__conjunction<__negation<__is_same_t<T, U>>, __is_same_t<T, typename __decay<U>::type>, __is_constructible_t<T, U>, __is_assignable_t<T&, U>>::value,
                                               optional&>::type;
 
     template<typename U>
     using __copy_assignable = typename __enable_if<
-        __conjunction<__negation<__is_same_t<T, U>>, __is_constructible_t<T, const U&>, __is_assignable_t<T, const U&>, __negation<__converts_from_optional<U>>, __negation<__assigns_from_optional<U>>>,
+        __conjunction<__negation<__is_same_t<T, U>>, __is_constructible_t<T, const U&>, __is_assignable_t<T, const U&>, __negation<__converts_from_optional<U>>, __negation<__assigns_from_optional<U>>>::value,
         optional&>::type;
 
     template<typename U>
     using __move_assignable = typename __enable_if<
-        __conjunction<__negation<__is_same_t<T, U>>, __is_constructible_t<T, U>, __is_assignable_t<T&, U>, __negation<__converts_from_optional<U>>, __negation<__assigns_from_optional<U>>>,
+        __conjunction<__negation<__is_same_t<T, U>>, __is_constructible_t<T, U>, __is_assignable_t<T&, U>, __negation<__converts_from_optional<U>>, __negation<__assigns_from_optional<U>>>::value,
         optional&>::type;
 
   public:
@@ -432,10 +433,10 @@ namespace std {
       }
     }
 
-    template<typename... Args, typename __enable_if<__is_constructible_t<T, Args...>, nullptr_t>::type = nullptr>
+    template<typename... Args, typename __enable_if<__is_constructible_t<T, Args...>::value, __nullptr_t>::type = nullptr>
     explicit constexpr optional(in_place_t, Args&&... args) noexcept(__is_nothrow_constructible_t<T, Args...>::value): __base(in_place, forward<Args>(args)...) { }
 
-    template<typename U, typename... Args, typename __enable_if<__is_constructible_t<T, initializer_list<U>&, Args...>, nullptr_t>::type = nullptr>
+    template<typename U, typename... Args, typename __enable_if<__is_constructible_t<T, initializer_list<U>&, Args...>::value, __nullptr_t>::type = nullptr>
     explicit constexpr optional(in_place_t, initializer_list<U> init_list, Args&&... args) noexcept(__is_nothrow_constructible_t<T, initializer_list<U>&, Args...>::value)
         : __base(in_place, init_list, forward<Args>(args)...) { }
 
@@ -482,14 +483,14 @@ namespace std {
     }
 
     template<typename... Args>
-    __constexpr_cxx_std_23 typename __enable_if<__is_constructible_t<T, Args...>, T&>::type emplace(Args&&... args) noexcept(__is_nothrow_constructible_t<T, Args...>::value) {
+    __constexpr_cxx_std_23 typename __enable_if<__is_constructible_t<T, Args...>::value, T&>::type emplace(Args&&... args) noexcept(__is_nothrow_constructible_t<T, Args...>::value) {
       __base::_storage.destroy();
       __base::_storage.construct(forward<Args>(args)...);
       return __base::_storage.get();
     }
 
     template<typename U, typename... Args>
-    __constexpr_cxx_std_23 typename __enable_if<__is_constructible_t<T, initializer_list<U>&, Args...>, T&>::type emplace(initializer_list<U> init_list, Args&&... args) noexcept(
+    __constexpr_cxx_std_23 typename __enable_if<__is_constructible_t<T, initializer_list<U>&, Args...>::value, T&>::type emplace(initializer_list<U> init_list, Args&&... args) noexcept(
         __is_nothrow_constructible_t<T, initializer_list<U>&, Args...>::value) {
       __base::_storage.destroy();
       __base::_storage.construct(init_list, forward<Args>(args)...);
@@ -514,7 +515,7 @@ namespace std {
       __base::_storage.destroy();
     }
 
-    constexpr constexpr const T* operator->() const noexcept {
+    constexpr const T* operator->() const noexcept {
       return __addressof(__base::_storage.get());
     }
 
@@ -522,7 +523,7 @@ namespace std {
       return __addressof(__base::_storage.get());
     }
 
-    constexpr constexpr const T& operator*() const& noexcept {
+    constexpr const T& operator*() const& noexcept {
       return __base::_storage.get();
     }
 
@@ -530,7 +531,7 @@ namespace std {
       return __base::_storage.get();
     }
 
-    constexpr constexpr const T&& operator*() const&& noexcept {
+    constexpr const T&& operator*() const&& noexcept {
       return move(__base::_storage.get());
     }
 
@@ -538,15 +539,15 @@ namespace std {
       return move(__base::_storage.get());
     }
 
-    constexpr constexpr explicit operator bool() const noexcept {
+    constexpr explicit operator bool() const noexcept {
       return this->has_value();
     }
 
-    constexpr constexpr bool has_value() const noexcept {
+    constexpr bool has_value() const noexcept {
       return __base::_storage._has_value;
     }
 
-    constexpr constexpr const T& value() const& noexcept {
+    constexpr const T& value() const& noexcept {
       if (!this->has_value()) {
         __throw(bad_optional_access());
       }
@@ -562,7 +563,7 @@ namespace std {
       return __base::_storage.get();
     }
 
-    constexpr constexpr const T&& value() const&& noexcept {
+    constexpr const T&& value() const&& noexcept {
       if (!this->has_value()) {
         __throw(bad_optional_access());
       }

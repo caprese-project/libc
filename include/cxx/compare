@@ -5,6 +5,8 @@
 
 #ifdef __CXX_STD_20__
 
+#define __cpp_lib_three_way_comparison 201907L
+
 namespace std {
   enum class __compare_order {
     less       = -1,

@@ -13,7 +13,7 @@
 #include <internal/cxx/utility/pair.h>
 
 namespace std {
-  template<typename T, typename Compare, typename Allocator>
+  template<typename T, typename Compare, typename Allocator, typename KeyExtractor>
   class __avl_tree;
 
   template<typename T>
@@ -356,11 +356,11 @@ namespace std {
     }
   };
 
-  template<typename T, typename Compare, typename Allocator>
+  template<typename T, typename Compare, typename Allocator, typename KeyExtractor>
   class __avl_tree_iterator {
   private:
     using node_type = __avl_tree_node<typename std::__remove_const<T>::type>;
-    using tree_type = __avl_tree<typename std::__remove_const<T>::type, Compare, Allocator>;
+    using tree_type = __avl_tree<typename std::__remove_const<T>::type, Compare, Allocator, KeyExtractor>;
 
   public:
     using difference_type   = __ptrdiff_t;
@@ -369,7 +369,7 @@ namespace std {
     using reference         = value_type&;
     using iterator_category = bidirectional_iterator_tag;
 
-    template<typename, typename, typename>
+    template<typename, typename, typename, typename>
     friend class __avl_tree;
 
   private:
@@ -484,7 +484,7 @@ namespace std {
     }
   };
 
-  template<typename T, typename Compare, typename Allocator>
+  template<typename T, typename Compare, typename Allocator, typename KeyExtractor>
   class __avl_tree {
   public:
     using node_type      = __avl_tree_node<T>;
@@ -599,15 +599,15 @@ namespace std {
       this->_size = 0;
     }
 
-    template<typename U>
-    iterator erase(U&& value) {
+    template<typename Key>
+    iterator erase(Key&& key) {
       __if_unlikely (this->_root == nullptr) {
         return this->end();
       }
 
-      iterator iter = this->lower_bound(value);
+      iterator iter = this->lower_bound(key);
       // !(*iter < value) && value < *iter -> value != *iter
-      if (iter == this->end() || this->_compare(value, *iter)) {
+      if (iter == this->end() || this->_compare(key, KeyExtractor()(*iter))) {
         return iter;
       }
 
@@ -652,9 +652,8 @@ namespace std {
         return std::pair<iterator, bool>(iterator(this, this->_root), true);
       }
 
-      iterator iter = this->lower_bound(value);
-      // !(*iter < value) && !(value < *iter) -> value == *iter
-      if (iter != this->end() && !this->_compare(value, *iter)) {
+      iterator iter = this->find(KeyExtractor()(value));
+      if (iter != this->end()) {
         return std::pair<iterator, bool>(iter, false);
       }
 
@@ -687,60 +686,60 @@ namespace std {
       return std::pair<iterator, bool>(iterator(this, this->_root), true);
     }
 
-    template<typename U>
-    iterator find(U&& value) {
-      iterator iter = this->lower_bound(value);
-      if (iter != this->end() && !this->_compare(value, *iter)) {
+    template<typename Key>
+    iterator find(Key&& key) {
+      iterator iter = this->lower_bound(key);
+      if (iter != this->end() && !this->_compare(key, KeyExtractor()(*iter))) {
         return iter;
       }
       return this->end();
     }
 
-    template<typename U>
-    const_iterator find(U&& value) const {
-      const_iterator iter = this->lower_bound(value);
-      if (iter != this->end() && !this->_compare(value, *iter)) {
+    template<typename Key>
+    const_iterator find(Key&& key) const {
+      const_iterator iter = this->lower_bound(key);
+      if (iter != this->end() && !this->_compare(key, KeyExtractor()(*iter))) {
         return iter;
       }
       return this->end();
     }
 
-    template<typename U>
-    iterator lower_bound(U&& value) {
-      return iterator(this, this->__lower_bound(this->_root, std::forward<U>(value)));
+    template<typename Key>
+    iterator lower_bound(Key&& key) {
+      return iterator(this, this->__lower_bound(this->_root, std::forward<Key>(key)));
     }
 
-    template<typename U>
-    const_iterator lower_bound(U&& value) const {
-      return const_iterator(this, this->__lower_bound(this->_root, std::forward<U>(value)));
+    template<typename Key>
+    const_iterator lower_bound(Key&& key) const {
+      return const_iterator(this, this->__lower_bound(this->_root, std::forward<Key>(key)));
     }
 
-    template<typename U>
-    iterator upper_bound(U&& value) {
-      iterator iter = this->lower_bound(value);
-      if (iter != this->end() && !this->_compare(value, *iter)) {
+    template<typename Key>
+    iterator upper_bound(Key&& key) {
+      iterator iter = this->lower_bound(key);
+      if (iter != this->end() && !this->_compare(key, KeyExtractor()(*iter))) {
         ++iter;
       }
       return iter;
     }
 
-    template<typename U>
-    const_iterator upper_bound(U&& value) const {
-      const_iterator iter = this->lower_bound(value);
-      if (iter != this->end() && !this->_compare(value, *iter)) {
+    template<typename Key>
+    const_iterator upper_bound(Key&& key) const {
+      const_iterator iter = this->lower_bound(key);
+      if (iter != this->end() && !this->_compare(key, KeyExtractor()(*iter))) {
         ++iter;
       }
       return iter;
     }
 
   private:
-    template<typename U>
-    node_type* __lower_bound(node_type* node, U&& value) const {
+    template<typename Key>
+    node_type* __lower_bound(node_type* node, Key&& key) const {
       while (node != nullptr) {
-        if (this->_compare(node->value, value)) {
+        if (this->_compare(KeyExtractor()(node->value), key)) {
           node = node->right;
-        } else if (this->_compare(value, node->value)) {
-          node_type* left = this->__lower_bound(node->left, std::forward<U>(value));
+        } else if (this->_compare(key, KeyExtractor()(node->value))) {
+          node_type* left = this->__lower_bound(node->left, std::forward<Key>(key));
           if (left != nullptr) {
             node = left;
           }
@@ -753,8 +752,8 @@ namespace std {
     }
   };
 
-  template<typename T, typename Compare, typename Allocator>
-  using __binary_tree = __avl_tree<T, Compare, Allocator>;
+  template<typename T, typename Compare, typename Allocator, typename KeyExtractor>
+  using __binary_tree = __avl_tree<T, Compare, Allocator, KeyExtractor>;
 } // namespace std
 
 #endif // CAPRESE_LIBC_INTERNAL_CXX_STL_BASE_BINARY_TREE_H_

@@ -14,13 +14,19 @@
 namespace std {
   template<typename K, typename Compare = __less<K>, typename Allocator = allocator<K>>
   class set {
+    struct __key_extractor {
+      const K& operator()(const K& key) const {
+        return key;
+      }
+    };
+
   public:
     using key_type               = K;
     using value_type             = K;
     using key_compare            = Compare;
     using value_compare          = Compare;
     using allocator_type         = Allocator;
-    using __container_type       = __binary_tree<value_type, value_compare, allocator_type>;
+    using __container_type       = __binary_tree<value_type, value_compare, allocator_type, __key_extractor>;
     using reference              = value_type&;
     using const_reference        = const value_type&;
     using iterator               = typename __container_type::iterator;

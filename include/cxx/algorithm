@@ -8,9 +8,6 @@
 #include <iterator>
 
 namespace std {
-  template<typename T>
-  using less = __less<T>;
-
   template<typename ForwardIterator, typename T, typename Compare>
   __constexpr_cxx_std_20 ForwardIterator lower_bound(ForwardIterator first, ForwardIterator last, const T& value, Compare comp) {
     auto len = std::distance(first, last);

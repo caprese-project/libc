@@ -1,8 +1,10 @@
 #ifndef CAPRESE_LIBC_INTERNAL_CXX_TYPE_TRAITS_CHARACTERISTIC_H_
 #define CAPRESE_LIBC_INTERNAL_CXX_TYPE_TRAITS_CHARACTERISTIC_H_
 
+#include <internal/attribute.h>
 #include <internal/cxx/stddef.h>
 #include <internal/cxx/type_traits/constant.h>
+#include <internal/cxx/type_traits/detection.h>
 #include <internal/cxx/type_traits/logic.h>
 #include <internal/cxx/type_traits/modify.h>
 #include <internal/cxx/utility/declval.h>
