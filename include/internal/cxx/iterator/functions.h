@@ -192,7 +192,7 @@ namespace std {
   }
 
   template<typename BidirectionalIterator, typename Distance>
-  __constexpr_cxx_std_17 void __advance(BidirectionalIterator iter, Distance n, [[maybe_unused]] bidirectional_iterator_tag) {
+  __constexpr_cxx_std_17 void __advance(BidirectionalIterator& iter, Distance n, [[maybe_unused]] bidirectional_iterator_tag) {
     if (n > 0) {
       while (n--) {
         ++iter;
