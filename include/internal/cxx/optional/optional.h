@@ -121,11 +121,11 @@ namespace std {
 
     constexpr void move(__optional_storage_base&& other) {
       if (this->_has_value && other._has_value) {
-        this->_storage._value = move(other._storage._value);
+        this->_storage._value = std::move(other._storage._value);
       } else if (this->_has_value && !other._has_value) {
         this->destroy();
       } else if (!this->_has_value && other._has_value) {
-        this->construct(move(other._storage._value));
+        this->construct(std::move(other._storage._value));
       }
     }
 
