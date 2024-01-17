@@ -67,7 +67,8 @@ namespace std {
     __storage_type<T> _storage;
     bool              _has_value;
 
-    constexpr __optional_storage_base()                                          = default;
+    constexpr __optional_storage_base() noexcept: _has_value(false) { }
+
     constexpr __optional_storage_base(const __optional_storage_base&)            = default;
     constexpr __optional_storage_base(__optional_storage_base&&)                 = default;
     constexpr ~__optional_storage_base()                                         = default;
