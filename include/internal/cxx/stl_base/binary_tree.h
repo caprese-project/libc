@@ -652,8 +652,9 @@ namespace std {
         return std::pair<iterator, bool>(iterator(this, this->_root), true);
       }
 
-      iterator iter = this->find(KeyExtractor()(value));
-      if (iter != this->end()) {
+      iterator iter = this->lower_bound(KeyExtractor()(value));
+      // !(*iter < value) && !(value < *iter) -> value == *iter
+      if (iter != this->end() && !this->_compare(KeyExtractor()(value), KeyExtractor()(*iter))) {
         return std::pair<iterator, bool>(iter, false);
       }
 
