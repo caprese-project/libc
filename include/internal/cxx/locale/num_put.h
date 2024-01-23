@@ -10,6 +10,7 @@
 #include <internal/cxx/limits/numeric_limits.h>
 #include <internal/cxx/locale/locale.h>
 #include <internal/cxx/stddef.h>
+#include <internal/cxx/type_traits/sign.h>
 
 namespace std {
   template<typename Char, typename OutputIterator = ostreambuf_iterator<Char, char_traits<Char>>>
@@ -28,22 +29,29 @@ namespace std {
     streamsize itoa(char_type* buf, T value, ios_base& ios) const {
       __constexpr const char* digits = "0123456789abcdef";
 
+      __size_t uvalue;
+      if (value < 0) {
+        uvalue = static_cast<__size_t>(-(value + 1) + 1);
+      } else {
+        uvalue = value;
+      }
+
       char_type* ptr = buf;
       if (ios._is_dec()) {
         do {
-          *--ptr = digits[value % 10];
-          value /= 10;
-        } while (value != 0);
+          *--ptr = digits[uvalue % 10];
+          uvalue /= 10;
+        } while (uvalue != 0);
       } else if (ios._is_oct()) {
         do {
-          *--ptr = digits[value & 0b111];
-          value >>= 3;
-        } while (value != 0);
+          *--ptr = digits[uvalue & 0b111];
+          uvalue >>= 3;
+        } while (uvalue != 0);
       } else {
         do {
-          *--ptr = digits[value & 0b1111];
-          value >>= 4;
-        } while (value != 0);
+          *--ptr = digits[uvalue & 0b1111];
+          uvalue >>= 4;
+        } while (uvalue != 0);
       }
 
       return buf - ptr;
