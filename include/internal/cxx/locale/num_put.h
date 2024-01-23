@@ -27,7 +27,7 @@ namespace std {
 
     template<typename T>
     streamsize itoa(char_type* buf, T value, ios_base& ios) const {
-      __constexpr const char* digits = "0123456789abcdef";
+      __constexpr const char digits[] = "0123456789abcdef";
 
       __size_t uvalue;
       if (value < 0) {
