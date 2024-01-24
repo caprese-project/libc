@@ -5,7 +5,7 @@
 
 namespace std {
   __stdexcept_string::__stdexcept_string(const char* data): _data(nullptr), _size(0) {
-    _size = strlen(_data);
+    _size = strlen(data);
 
     __if_unlikely (_size == 0) {
       return;

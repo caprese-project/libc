@@ -104,7 +104,7 @@ namespace std {
     }
 
     virtual int_type pbackfail(int_type ch = traits_type::eof()) {
-      int_type result;
+      int_type result = traits_type::eof();
 
       if (this->eback() < this->gptr()) {
         if (traits_type::eq_int_type(ch, traits_type::eof())) {
@@ -120,8 +120,6 @@ namespace std {
             result = ch;
           }
         }
-      } else {
-        result = traits_type::eof();
       }
 
       return result;
