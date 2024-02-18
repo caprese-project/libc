@@ -1,4 +1,4 @@
-# Standard C Library Template
+# Standard C/C++ Library Template
 
 Standard C/C++ library template.
 
