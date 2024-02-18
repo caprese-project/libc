@@ -1,6 +1,6 @@
 # Caprese Standard C Library Template
 
-Standard C library template for operating systems that run on the Caprese microkernel.
+Standard C/C++ library template.
 
 ## How to Use
 
