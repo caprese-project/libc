@@ -1,6 +1,8 @@
 # Standard C/C++ Library Template
 
-Standard C/C++ library template.
+
+This is a library that implements only the OS-independent parts of the standard libraries for C and C++. By adding OS-dependent functions, it can be executed on any system.
+It allows for the use of functions and classes that are only supported in the host environment, even in proprietary OSes that do not conform to common APIs such as POSIX or WASI.
 
 ## How to Use
 
